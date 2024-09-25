@@ -48,7 +48,7 @@ const notifications: NotificationConfig[] = [
     title: 'IconArrow',
     body: 'Как вы себя чувствуете сегодня?',
     url: `${BASE_URL}/challenges?path=new`,
-    schedule: { every: 'minute', count: 1, repeats: true }, // Каждые 1 минуты
+    schedule: { every: 'minute', count: 1, repeats: true }, //Каждые 1 минуты
     attachments: [{ id: 'test2-image', url: IconArrow }],
     smallIcon: IconArrow,
   },
