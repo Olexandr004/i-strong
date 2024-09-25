@@ -1,0 +1,14 @@
+.home {
+  padding-top: 6.8rem;
+  overflow: hidden;
+
+  &__title {
+    margin-bottom: 3.6rem;
+    text-align: left !important;
+  }
+
+  &__content {
+    display: grid;
+    gap: 4.8rem;
+  }
+}

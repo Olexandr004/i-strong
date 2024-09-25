@@ -1,0 +1,21 @@
+.tiptap {
+  outline: none;
+  font-size: 1.6rem;
+
+  p {
+  }
+
+  ol,
+  li,
+  ul {
+    list-style: disc;
+  }
+
+  p.is-editor-empty:first-child::before {
+    color: var(--font-color-grey);
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    pointer-events: none;
+  }
+}

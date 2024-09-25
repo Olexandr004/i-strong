@@ -1,0 +1,65 @@
+.select_mood {
+  min-height: 100vh;
+  padding-top: 7.3rem;
+  padding-bottom: 7rem;
+
+  display: grid;
+  grid-gap: var(--gap-large);
+  align-content: space-between;
+  justify-items: center;
+
+  transition: background-color var(--transition);
+
+  &.red {
+    background-color: var(--accent-color-red);
+  }
+
+  &.blue {
+    background-color: var(--accent-color-light-blue);
+  }
+
+  &.green {
+    background-color: var(--accent-color-green);
+  }
+
+  &.yellow {
+    background-color: var(--accent-color-light-yellow);
+  }
+
+  &__head {
+    position: relative;
+    z-index: 3;
+    display: grid;
+    grid-gap: var(--gap-medium);
+    text-align: center;
+    font-size: 1.2rem;
+  }
+
+  &__emotions {
+    display: flex;
+    grid-gap: 1.8rem;
+  }
+
+  &__emotion {
+    transition: opacity var(--transition);
+
+    &.activated {
+      opacity: 0.3;
+    }
+
+    &.active {
+      opacity: 1;
+    }
+
+    & svg {
+      width: 5.4rem;
+      height: 5.4rem;
+    }
+  }
+
+  &__buttons {
+    width: 100%;
+    display: grid;
+    grid-gap: var(--gap-medium-small);
+  }
+}

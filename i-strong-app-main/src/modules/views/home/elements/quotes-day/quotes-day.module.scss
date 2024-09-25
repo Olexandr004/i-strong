@@ -1,0 +1,24 @@
+.quotes {
+  position: relative;
+  // padding-bottom: 4.8rem;
+
+  &__content {
+    position: relative;
+
+    &_text {
+      position: inherit;
+      top: 5vh;
+      left: 40%;
+      width: 60%;
+      padding: 12px;
+      border-radius: 12px 12px 12px 0px;
+      box-shadow: 0px 4px 20px 0px #00000026;
+    }
+  }
+
+  &__img {
+    width: 40%;
+    top: 88px;
+    gap: 0px;
+  }
+}

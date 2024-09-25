@@ -1,0 +1,134 @@
+.entry {
+  min-height: 100vh;
+  position: relative;
+  display: grid;
+  grid-gap: var(--gap-large);
+  overflow: hidden;
+
+  &__background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+
+    & svg {
+      left: 0;
+      top: 0;
+      color: var(--accent-color-light-blue);
+      width: 100%;
+      height: 100%;
+    }
+
+    &.sign_in {
+      & svg {
+        color: var(--accent-color-light-green);
+      }
+    }
+  }
+
+  &__inner {
+    height: 100%;
+    padding-top: 7.3rem;
+    padding-bottom: 7rem;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    justify-items: center;
+    align-items: start;
+    gap: 3.6rem;
+
+    @include large_screen {
+      gap: 7.8rem;
+    }
+  }
+
+  &__form {
+    height: 100%;
+    width: 100%;
+    display: grid;
+    gap: var(--gap-large);
+    align-content: space-between;
+  }
+
+  &__inputs {
+    padding: 0 1.5rem;
+    display: grid;
+    gap: 1.5rem;
+
+    @include large_screen {
+      gap: 2.4rem;
+    }
+  }
+
+  &__actions {
+    display: grid;
+    justify-items: center;
+    gap: var(--gap-medium);
+  }
+
+  &__navigation {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-extra-small);
+
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--font-color-grey);
+  }
+
+  &__sign_in {
+    color: var(--accent-color-blue);
+    text-decoration: underline;
+  }
+  &__last {
+    display: grid;
+    grid-gap: 0.8rem;
+    justify-items: right;
+  }
+  &__last_input {
+    display: grid;
+    grid-gap: 1.2rem;
+
+    .entry__agreement {
+      display: flex;
+      align-items: center;
+
+      input[type='checkbox'] {
+        flex-shrink: 0;
+        width: 1.6rem;
+        height: 1.6rem;
+        margin-right: 10px;
+        cursor: pointer;
+        appearance: none;
+        background-color: white;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:checked {
+          background-color: white;
+        }
+
+        &:checked::after {
+          content: '✔';
+          font-size: 1.2rem;
+          color: var(--font-color-primary);
+        }
+      }
+
+      label {
+        cursor: pointer;
+
+        a {
+          color: var(--font-color-primary);
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  &__forget_btn {
+    color: var(--accent-color-blue);
+  }
+}

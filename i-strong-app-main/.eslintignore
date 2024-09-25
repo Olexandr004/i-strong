@@ -1,0 +1,6 @@
+public
+package.json
+yarn.lock
+next.config.js
+src/app/graphql
+src/app/shared/validations
