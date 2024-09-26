@@ -1,4 +1,5 @@
 import { LocalNotifications } from '@capacitor/local-notifications'
+import { Preferences } from '@capacitor/preferences'
 
 import { IconArrow } from '@/shared/icons'
 import { ImageCapybaraDeletion } from '@/shared/images'
@@ -54,6 +55,18 @@ const notifications: NotificationConfig[] = [
   },
 ]
 
+// Функция для сохранения состояния уведомлений
+export const saveNotificationState = async (enabled: boolean) => {
+  await Preferences.set({ key: 'notificationsEnabled', value: JSON.stringify(enabled) })
+}
+
+// Функция для загрузки состояния уведомлений
+export const getNotificationState = async (): Promise<boolean> => {
+  const { value } = await Preferences.get({ key: 'notificationsEnabled' })
+  return value ? JSON.parse(value) : true // По умолчанию уведомления включены
+}
+
+// Запрос разрешений
 export const requestPermissions = async () => {
   const permission = await LocalNotifications.requestPermissions()
   if (permission.display !== 'granted') {
@@ -63,24 +76,31 @@ export const requestPermissions = async () => {
   return true
 }
 
+// Планирование уведомлений
 export const scheduleNotifications = async () => {
   const permissionsGranted = await requestPermissions()
   if (!permissionsGranted) return
 
-  try {
-    await LocalNotifications.schedule({
-      notifications: notifications.map((notification) => ({
-        title: notification.title,
-        body: notification.body,
-        id: notification.id,
-        schedule: notification.schedule,
-        actionTypeId: '',
-        extra: { url: notification.url },
-        attachments: notification.attachments,
-        smallIcon: notification.smallIcon,
-      })),
-    })
-  } catch (error) {
-    console.error('Error scheduling notifications', error)
+  const notificationsEnabled = await getNotificationState() // Проверка состояния уведомлений
+
+  if (notificationsEnabled) {
+    try {
+      await LocalNotifications.schedule({
+        notifications: notifications.map((notification) => ({
+          title: notification.title,
+          body: notification.body,
+          id: notification.id,
+          schedule: notification.schedule,
+          actionTypeId: '',
+          extra: { url: notification.url },
+          attachments: notification.attachments,
+          smallIcon: notification.smallIcon,
+        })),
+      })
+    } catch (error) {
+      console.error('Error scheduling notifications', error)
+    }
   }
 }
+
+export { LocalNotifications }

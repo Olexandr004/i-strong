@@ -1,20 +1,21 @@
 'use client'
 import { motion } from 'framer-motion'
 
-import { FC, useState } from 'react'
+import { FC } from 'react'
 
 import styles from './toggle-btn.module.scss'
 
-//interface
-interface IToggleButton {}
+// интерфейс
+interface IToggleButton {
+  isChecked: boolean
+  onToggle: () => void
+}
 
-//component
-export const ToggleButtonComponent: FC<Readonly<IToggleButton>> = () => {
-  const [isOn, setIsOn] = useState(false)
-
-  //return
+// компонент
+export const ToggleButtonComponent: FC<Readonly<IToggleButton>> = ({ isChecked, onToggle }) => {
+  // возвращение
   return (
-    <div className={`${styles.toggle} ${isOn && styles.active}`} onClick={() => setIsOn(!isOn)}>
+    <div className={`${styles.toggle} ${isChecked && styles.active}`} onClick={onToggle}>
       <motion.div
         className={styles.toggle__controller}
         layout
@@ -27,4 +28,5 @@ export const ToggleButtonComponent: FC<Readonly<IToggleButton>> = () => {
     </div>
   )
 }
+
 export default ToggleButtonComponent

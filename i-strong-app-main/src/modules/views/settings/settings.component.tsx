@@ -1,30 +1,61 @@
 'use client'
 import { useRouter } from 'next/navigation'
-
-import { FC } from 'react'
-
+import { FC, useState, useEffect } from 'react'
 import { ButtonComponent, ContactInfoComponent, PageHeaderComponent } from '@/shared/components'
 import { IconButtonComponent } from '@/shared/components/ui/icon-button'
 import ToggleBtnComponent from '@/shared/components/ui/toggle-btn/toggle-btn.component'
 import { IconEdit } from '@/shared/icons'
-
+import { scheduleNotifications, saveNotificationState } from '@/utils/native-app/notifications'
 import styles from './settings.module.scss'
 
-//interface
+// interface
 interface ISettings {}
 
-//component
+// Component
 export const SettingsComponent: FC<Readonly<ISettings>> = () => {
   const router = useRouter()
+  const [moodTrackerEnabled, setMoodTrackerEnabled] = useState<boolean>(false) // Начальное состояние
+  const [otherNotificationsEnabled, setOtherNotificationsEnabled] = useState<boolean>(false) // Начальное состояние
+
+  // Загрузка состояния уведомлений при загрузке компонента
+  useEffect(() => {
+    const loadNotificationState = async () => {
+      // Загрузка состояния из локального хранилища
+      const moodTrackerState = localStorage.getItem('moodTracker') === 'true'
+      const otherNotificationsState = localStorage.getItem('otherNotifications') === 'true'
+      setMoodTrackerEnabled(moodTrackerState)
+      setOtherNotificationsEnabled(otherNotificationsState)
+    }
+    loadNotificationState()
+  }, [])
 
   const handleResetRoit = () => {
     router.push('/settings/reset-password')
   }
+
   const handleDelete = () => {
     router.push('/account-deletion')
   }
 
-  //return
+  // Сохранение состояния Трекера настрою
+  const handleToggleMoodTracker = async () => {
+    const newState = !moodTrackerEnabled
+    setMoodTrackerEnabled(newState)
+    await saveNotificationState(newState) // Сохраняем состояние для Трекера настрою
+    localStorage.setItem('moodTracker', JSON.stringify(newState)) // Сохраняем в локальное хранилище
+    await scheduleNotifications() // Перепланируем уведомления при изменении состояния
+  }
+
+  // Сохранение состояния для других уведомлений
+  const handleToggleOtherNotifications = async () => {
+    const newState = !otherNotificationsEnabled
+    setOtherNotificationsEnabled(newState)
+    await saveNotificationState(newState) // Сохраняем состояние для других уведомлений
+    localStorage.setItem('otherNotifications', JSON.stringify(newState)) // Сохраняем в локальное хранилище
+    await scheduleNotifications() // Перепланируем уведомления при изменении состояния
+  }
+
+  // Return
   return (
     <section className={`${styles.settings} container`}>
       <PageHeaderComponent title={'Налаштування'} />
@@ -44,13 +75,11 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
           <div className={styles.settings_card__content}>
             <div className={styles.settings_card__field}>
               <span>Пароль для входу</span>
-
               <span className={styles.settings_card__field_value}>********</span>
             </div>
 
             <div className={styles.settings_card__field}>
               <span>Пароль для щоденника</span>
-
               <span className={styles.settings_card__field_value}>********</span>
             </div>
           </div>
@@ -64,14 +93,17 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
           <div className={styles.settings_card__content}>
             <div className={styles.settings_card__field}>
               <span>Трекер настрою</span>
-
-              <ToggleBtnComponent />
+              <ToggleBtnComponent
+                isChecked={moodTrackerEnabled}
+                onToggle={handleToggleMoodTracker}
+              />
             </div>
-
             <div className={styles.settings_card__field}>
               <span>Інші сповіщення</span>
-
-              <ToggleBtnComponent />
+              <ToggleBtnComponent
+                isChecked={otherNotificationsEnabled}
+                onToggle={handleToggleOtherNotifications}
+              />
             </div>
           </div>
         </div>
@@ -81,4 +113,5 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
     </section>
   )
 }
+
 export default SettingsComponent
