@@ -6,6 +6,7 @@ import { IconButtonComponent } from '@/shared/components/ui/icon-button'
 import ToggleBtnComponent from '@/shared/components/ui/toggle-btn/toggle-btn.component'
 import { IconEdit } from '@/shared/icons'
 import { scheduleNotifications, saveNotificationState } from '@/utils/native-app/notifications'
+import { Storage } from '@capacitor/storage' // Импортируем Storage из Capacitor
 import styles from './settings.module.scss'
 
 // interface
@@ -20,11 +21,12 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
   // Загрузка состояния уведомлений при загрузке компонента
   useEffect(() => {
     const loadNotificationState = async () => {
-      // Загрузка состояния из локального хранилища
-      const moodTrackerState = localStorage.getItem('moodTracker') === 'true'
-      const otherNotificationsState = localStorage.getItem('otherNotifications') === 'true'
-      setMoodTrackerEnabled(moodTrackerState)
-      setOtherNotificationsEnabled(otherNotificationsState)
+      // Загрузка состояния из Capacitor Storage
+      const moodTrackerState = await Storage.get({ key: 'moodTracker' })
+      const otherNotificationsState = await Storage.get({ key: 'otherNotifications' })
+
+      setMoodTrackerEnabled(moodTrackerState.value === 'true')
+      setOtherNotificationsEnabled(otherNotificationsState.value === 'true')
     }
     loadNotificationState()
   }, [])
@@ -42,7 +44,7 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
     const newState = !moodTrackerEnabled
     setMoodTrackerEnabled(newState)
     await saveNotificationState(newState) // Сохраняем состояние для Трекера настрою
-    localStorage.setItem('moodTracker', JSON.stringify(newState)) // Сохраняем в локальное хранилище
+    await Storage.set({ key: 'moodTracker', value: JSON.stringify(newState) }) // Сохраняем в Capacitor Storage
     await scheduleNotifications() // Перепланируем уведомления при изменении состояния
   }
 
@@ -51,7 +53,7 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
     const newState = !otherNotificationsEnabled
     setOtherNotificationsEnabled(newState)
     await saveNotificationState(newState) // Сохраняем состояние для других уведомлений
-    localStorage.setItem('otherNotifications', JSON.stringify(newState)) // Сохраняем в локальное хранилище
+    await Storage.set({ key: 'otherNotifications', value: JSON.stringify(newState) }) // Сохраняем в Capacitor Storage
     await scheduleNotifications() // Перепланируем уведомления при изменении состояния
   }
 
