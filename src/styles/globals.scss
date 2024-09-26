@@ -1,0 +1,72 @@
+@import 'breakpoints';
+@import 'text-editor';
+@import 'variables';
+@import 'themes';
+@import 'classnames';
+
+* {
+  color-scheme: only light;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body,
+html {
+  position: relative;
+  z-index: -2;
+  background-color: var(--bg-color-primary);
+  margin: 0;
+  height: 100vh;
+  width: 100vw;
+  font-size: 10px;
+  overflow: auto;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: unset;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+input,
+button {
+  padding: unset;
+  background-color: var(--bg-color-primary);
+  border: none;
+  outline: none;
+  font-size: inherit;
+  font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  cursor: pointer;
+  outline: none;
+  background-color: inherit;
+}
+
+a {
+  text-decoration: none;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  list-style: none;
+  text-overflow: ellipsis;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}

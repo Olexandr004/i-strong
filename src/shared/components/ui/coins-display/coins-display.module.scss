@@ -1,0 +1,18 @@
+.coin {
+  width: fit-content;
+  padding: 0.2rem 0.8rem;
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 1.2rem;
+  background-color: var(--button-default);
+  color: var(--icon-accent-color);
+  font-size: 1.2rem;
+
+  & svg {
+    width: 1.2rem;
+    height: 0.9rem;
+  }
+}

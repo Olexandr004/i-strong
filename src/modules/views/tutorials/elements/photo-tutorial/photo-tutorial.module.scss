@@ -1,0 +1,29 @@
+.photo_tutorial {
+  :global {
+    --swiper-pagination-color: var(--accent-color-yellow);
+    .swiper-pagination-bullets {
+      bottom: 0;
+    }
+  }
+
+  &__swiper {
+    height: 22.5rem;
+    overflow-y: visible;
+  }
+
+  &__swiper_wrapper {
+    height: 21rem;
+  }
+
+  &__image {
+    margin: 0 auto;
+    height: 21rem;
+    overflow: hidden;
+    width: fit-content;
+
+    & img {
+      height: 21rem !important;
+      border-radius: 8px;
+    }
+  }
+}

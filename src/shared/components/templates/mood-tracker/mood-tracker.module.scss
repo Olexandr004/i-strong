@@ -1,0 +1,73 @@
+.mood_tracker {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 2.4rem;
+  padding-bottom: 4.8rem;
+  &__title {
+    font-size: 1.6rem;
+    font-weight: 700;
+  }
+
+  &__box {
+    height: 13rem;
+    padding: 1.2rem;
+    display: grid;
+    align-content: space-between;
+    border-radius: 1.2rem;
+    background-color: var(--accent-color-light-blue);
+  }
+
+  &__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    font-size: 1rem;
+    color: var(--font-color-primary);
+    font-weight: 500;
+  }
+
+  &__time {
+    font-weight: 700;
+    font-size: 1.6rem;
+  }
+
+  &__bottom {
+    display: grid;
+    grid-template-columns: 0.6fr 0.4fr;
+    grid-gap: 1.8rem;
+  }
+
+  &__emotions {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.6rem;
+    opacity: 0.7;
+
+    & svg {
+      width: 3.2rem;
+      height: 3.2rem;
+      cursor: pointer;
+    }
+  }
+
+  &__options {
+    height: 6.8rem;
+    padding: 0.8rem;
+    display: grid;
+    align-content: space-between;
+
+    color: var(--font-color-grey);
+    border-radius: 0.8rem;
+    background-color: var(--bg-color-primary);
+  }
+
+  &__selected_emotion {
+    display: flex;
+    justify-content: flex-end;
+    & svg {
+      width: 7rem;
+      height: 7rem;
+    }
+  }
+}

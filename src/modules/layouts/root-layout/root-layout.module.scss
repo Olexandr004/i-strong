@@ -1,0 +1,27 @@
+.layout {
+  position: relative;
+
+  &__main {
+    &.with_footer {
+      padding-bottom: 14rem;
+    }
+  }
+
+  &__footer {
+    position: fixed;
+    z-index: 100;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+  }
+
+  &__toaster {
+    position: absolute;
+    z-index: 100;
+    max-width: 50%;
+    top: 3.6rem;
+    right: 0;
+    display: flex;
+    justify-content: flex-end;
+  }
+}

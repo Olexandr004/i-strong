@@ -1,0 +1,68 @@
+.description {
+  margin: 3.2rem 0 2.4rem;
+
+  &__title {
+    margin-bottom: 1.8rem;
+  }
+
+  &__content {
+    // display: -webkit-box;
+    // -webkit-line-clamp: 2;
+    // -webkit-box-orient: vertical;
+    overflow: hidden;
+
+    max-height: 3.8rem;
+    transition: max-height 0.4s ease-in-out;
+
+    margin-bottom: 1rem;
+  }
+
+  &__content.contentExpanded {
+    // -webkit-line-clamp: unset;
+    // overflow: visible;
+    max-height: 100rem;
+  }
+
+  &__item {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__item {
+    margin-bottom: 1.2rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &__toggle {
+    cursor: pointer;
+    display: block;
+    width: 2rem;
+    height: 1.2rem;
+    transition: transform 0.5s ease-in-out;
+    margin: 0 auto;
+  }
+
+  &__toggle_up {
+    transform: rotate(180deg);
+  }
+}
+
+.features {
+  margin-bottom: 1.8rem;
+
+  &__item {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__item {
+    margin-bottom: 1.2rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}

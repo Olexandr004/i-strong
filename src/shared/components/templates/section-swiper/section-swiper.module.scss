@@ -1,0 +1,43 @@
+.swiper {
+  padding-bottom: 4.8rem;
+
+  & h2 {
+    margin-bottom: 2.4rem;
+  }
+
+  &__completed {
+    color: var(--font-color-grey);
+  }
+
+  &__slider {
+    position: relative;
+    min-height: 174px;
+
+    &_card {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+  }
+
+  &__slider_position {
+    position: absolute;
+    width: 420px;
+
+    @media (min-width: 470px) {
+      width: 560px;
+    }
+
+    @media (min-width: 600px) {
+      width: 700px;
+    }
+
+    @media (min-width: 730px) {
+      width: 830px;
+    }
+
+    @media (min-width: 850px) {
+      width: 1130px;
+    }
+  }
+}

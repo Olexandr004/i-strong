@@ -1,0 +1,45 @@
+.menu_bar {
+  padding-bottom: 1.2rem;
+  margin-bottom: 2.4rem;
+  display: grid;
+  gap: 2.4rem;
+
+  &__top,
+  &__colors {
+    display: flex;
+    gap: 2.4rem;
+    justify-content: flex-start;
+
+    & svg {
+      width: 1.7rem;
+      height: 1.7rem;
+      color: var(--font-color-primary);
+    }
+  }
+
+  &__redo_btn {
+    & svg {
+      transform: scaleX(-1);
+    }
+  }
+
+  &__bold_text {
+    & svg {
+      width: 2.7rem;
+      height: 1.7rem;
+    }
+  }
+
+  &__list {
+    & svg {
+      width: 2rem;
+      height: 1.7rem;
+    }
+  }
+
+  &__color_btn {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+  }
+}

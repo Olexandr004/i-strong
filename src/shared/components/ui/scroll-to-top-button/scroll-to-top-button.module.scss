@@ -1,0 +1,18 @@
+.button__wrap {
+  position: fixed;
+  right: 54px;
+  bottom: 60px;
+  z-index: 3;
+
+  &__icon {
+    width: 5.2rem;
+    height: 5.2rem;
+    transform: rotate(90deg);
+    padding: 16px;
+    border-radius: 50%;
+    cursor: pointer;
+
+    background-color: var(--accent-color-yellow);
+    color: var(--font-color-primary);
+  }
+}
