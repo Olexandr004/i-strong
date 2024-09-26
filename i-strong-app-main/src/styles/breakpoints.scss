@@ -1,5 +1,0 @@
-@mixin large_screen {
-  @media (min-height: 700px) {
-    @content;
-  }
-}

@@ -1,3 +1,0 @@
-npm{
-  "extends": "next/core-web-vitals"
-}

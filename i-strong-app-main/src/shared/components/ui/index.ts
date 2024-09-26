@@ -1,7 +1,0 @@
-export * from './button'
-export * from './button-bar'
-export * from './button-card'
-export * from './coins-display'
-export * from './input'
-export * from './input-code'
-export * from './scroll-to-top-button'
