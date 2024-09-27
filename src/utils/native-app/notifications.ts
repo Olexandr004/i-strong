@@ -4,6 +4,7 @@ import { Preferences } from '@capacitor/preferences'
 import { IconArrow } from '@/shared/icons'
 import { ImageCapybaraDeletion } from '@/shared/images'
 const BASE_URL = `https://i-strong.vercel.app/`
+
 interface NotificationConfig {
   id: number
   title: string
@@ -11,7 +12,7 @@ interface NotificationConfig {
   url: string
   schedule: { at?: Date; every?: 'minute'; count?: number; repeats?: boolean }
   attachments: { id: string; url: string }[]
-  smallIcon: 'ic_stat_icon1'
+  smallIcon: string
 }
 
 const notifications: NotificationConfig[] = [
@@ -41,7 +42,7 @@ const notifications: NotificationConfig[] = [
     body: 'Як ти себе почуваеш?',
     url: `${BASE_URL}/diary`,
     schedule: { every: 'minute', count: 1, repeats: true }, // Каждые 1 минуты
-    attachments: [{ id: 'test-image', url: `${BASE_URL}/images/icon-arrow.svg` }], // Используйте URL вашего SVG-файла
+    attachments: [{ id: 'test-image', url: `${BASE_URL}/images/icon-arrow.svg` }],
     smallIcon: 'ic_stat_icon1',
   },
   {
@@ -70,13 +71,22 @@ export const getNotificationState = async (): Promise<boolean> => {
 export const requestPermissions = async () => {
   const permission = await LocalNotifications.requestPermissions()
   if (permission.display !== 'granted') {
-    console.error('Permission not granted for notifications')
+    console.error('Разрешение на уведомления не предоставлено')
     return false
   }
   return true
 }
 
-// Планирование уведомлений
+// Функция для отмены уведомлений
+export const cancelNotifications = async (ids: number[]) => {
+  try {
+    await Promise.all(ids.map((id) => LocalNotifications.cancel({ notifications: [{ id }] })))
+  } catch (error) {
+    console.error('Ошибка при отмене уведомлений', error)
+  }
+}
+
+// Функция для планирования уведомлений
 export const scheduleNotifications = async () => {
   const permissionsGranted = await requestPermissions()
   if (!permissionsGranted) return
@@ -98,9 +108,24 @@ export const scheduleNotifications = async () => {
         })),
       })
     } catch (error) {
-      console.error('Error scheduling notifications', error)
+      console.error('Ошибка при планировании уведомлений', error)
     }
   }
+}
+
+// Функция для переключения состояния уведомлений
+export const toggleNotifications = async () => {
+  const currentState = await getNotificationState()
+  const newState = !currentState // Меняем состояние на противоположное
+  await saveNotificationState(newState) // Сохраняем новое состояние
+
+  if (newState) {
+    await scheduleNotifications() // Если уведомления включены, планируем их
+  } else {
+    await cancelNotifications(notifications.map((notification) => notification.id)) // Отменяем все уведомления
+  }
+
+  return newState // Возвращаем новое состояние
 }
 
 export { LocalNotifications }

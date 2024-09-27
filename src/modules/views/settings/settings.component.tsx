@@ -19,10 +19,9 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
 
   // Загрузка состояния уведомлений при загрузке компонента
   useEffect(() => {
-    const loadNotificationState = () => {
-      // Загрузка состояния из localStorage
-      const moodTrackerState = localStorage.getItem('moodTracker')
-      const otherNotificationsState = localStorage.getItem('otherNotifications')
+    const loadNotificationState = async () => {
+      const moodTrackerState = await localStorage.getItem('moodTracker')
+      const otherNotificationsState = await localStorage.getItem('otherNotifications')
 
       setMoodTrackerEnabled(moodTrackerState === 'true')
       setOtherNotificationsEnabled(otherNotificationsState === 'true')
