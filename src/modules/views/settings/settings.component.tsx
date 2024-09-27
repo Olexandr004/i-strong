@@ -5,7 +5,7 @@ import { ButtonComponent, ContactInfoComponent, PageHeaderComponent } from '@/sh
 import { IconButtonComponent } from '@/shared/components/ui/icon-button'
 import ToggleBtnComponent from '@/shared/components/ui/toggle-btn/toggle-btn.component'
 import { IconEdit } from '@/shared/icons'
-import { scheduleNotifications, saveNotificationState } from '@/utils/native-app/notifications'
+import { toggleNotifications } from '@/utils/native-app/notifications'
 import styles from './settings.module.scss'
 
 // interface
@@ -14,8 +14,8 @@ interface ISettings {}
 // Component
 export const SettingsComponent: FC<Readonly<ISettings>> = () => {
   const router = useRouter()
-  const [moodTrackerEnabled, setMoodTrackerEnabled] = useState<boolean>(false) // Начальное состояние
-  const [otherNotificationsEnabled, setOtherNotificationsEnabled] = useState<boolean>(false) // Начальное состояние
+  const [moodTrackerEnabled, setMoodTrackerEnabled] = useState<boolean>(false)
+  const [otherNotificationsEnabled, setOtherNotificationsEnabled] = useState<boolean>(false)
 
   // Загрузка состояния уведомлений при загрузке компонента
   useEffect(() => {
@@ -37,22 +37,18 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
     router.push('/account-deletion')
   }
 
-  // Сохранение состояния Трекера настрою
+  // Обработчик для переключения состояния Трекера настрою
   const handleToggleMoodTracker = async () => {
-    const newState = !moodTrackerEnabled
-    setMoodTrackerEnabled(newState)
-    await saveNotificationState(newState) // Сохраняем состояние для Трекера настрою
+    const newState = await toggleNotifications() // Переключаем состояние уведомлений
+    setMoodTrackerEnabled(newState) // Обновляем состояние
     localStorage.setItem('moodTracker', JSON.stringify(newState)) // Сохраняем в localStorage
-    await scheduleNotifications() // Перепланируем уведомления при изменении состояния
   }
 
-  // Сохранение состояния для других уведомлений
+  // Обработчик для переключения состояния других уведомлений
   const handleToggleOtherNotifications = async () => {
-    const newState = !otherNotificationsEnabled
-    setOtherNotificationsEnabled(newState)
-    await saveNotificationState(newState) // Сохраняем состояние для других уведомлений
+    const newState = await toggleNotifications() // Переключаем состояние уведомлений
+    setOtherNotificationsEnabled(newState) // Обновляем состояние
     localStorage.setItem('otherNotifications', JSON.stringify(newState)) // Сохраняем в localStorage
-    await scheduleNotifications() // Перепланируем уведомления при изменении состояния
   }
 
   // Return
