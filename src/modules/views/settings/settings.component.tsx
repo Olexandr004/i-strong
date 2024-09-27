@@ -5,17 +5,13 @@ import { ButtonComponent, ContactInfoComponent, PageHeaderComponent } from '@/sh
 import { IconButtonComponent } from '@/shared/components/ui/icon-button'
 import ToggleBtnComponent from '@/shared/components/ui/toggle-btn/toggle-btn.component'
 import { IconEdit } from '@/shared/icons'
-import {
-  scheduleNotifications,
-  saveNotificationState,
-  getNotificationState,
-} from '@/utils/native-app/notifications'
+import { scheduleNotifications, saveNotificationState } from '@/utils/native-app/notifications'
 import styles from './settings.module.scss'
 
-// интерфейс
+// interface
 interface ISettings {}
 
-// компонент
+// Component
 export const SettingsComponent: FC<Readonly<ISettings>> = () => {
   const router = useRouter()
   const [moodTrackerEnabled, setMoodTrackerEnabled] = useState<boolean>(false) // Начальное состояние
@@ -24,11 +20,11 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
   // Загрузка состояния уведомлений при загрузке компонента
   useEffect(() => {
     const loadNotificationState = async () => {
-      const moodTrackerState = await getNotificationState() // Проверяем состояние уведомлений
-      const otherNotificationsState = localStorage.getItem('otherNotifications') === 'true'
+      const moodTrackerState = await localStorage.getItem('moodTracker')
+      const otherNotificationsState = await localStorage.getItem('otherNotifications')
 
-      setMoodTrackerEnabled(moodTrackerState)
-      setOtherNotificationsEnabled(otherNotificationsState)
+      setMoodTrackerEnabled(moodTrackerState === 'true')
+      setOtherNotificationsEnabled(otherNotificationsState === 'true')
     }
     loadNotificationState()
   }, [])
