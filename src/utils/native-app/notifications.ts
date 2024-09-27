@@ -3,7 +3,7 @@ import { Preferences } from '@capacitor/preferences'
 
 import { IconArrow } from '@/shared/icons'
 import { ImageCapybaraDeletion } from '@/shared/images'
-const BASE_URL = `https://i-strong-app.vercel.app`
+const BASE_URL = `https://i-strong.vercel.app/`
 interface NotificationConfig {
   id: number
   title: string
@@ -47,7 +47,7 @@ const notifications: NotificationConfig[] = [
   {
     id: 4,
     title: 'IconArrow',
-    body: 'Как вы себя чувствуете сегодня?',
+    body: 'C тобой все хорошо?',
     url: `${BASE_URL}/challenges?path=new`,
     schedule: { every: 'minute', count: 1, repeats: true }, // Каждые 1 минуты
     attachments: [{ id: 'test2-image', url: IconArrow }],
