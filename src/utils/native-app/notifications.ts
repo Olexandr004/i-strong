@@ -1,8 +1,7 @@
 import { LocalNotifications } from '@capacitor/local-notifications'
 import { Preferences } from '@capacitor/preferences'
+import { IconArrow } from '@/shared/icons' // Убедитесь, что это импортируется корректно
 
-import { IconArrow } from '@/shared/icons'
-import { ImageCapybaraDeletion } from '@/shared/images'
 const BASE_URL = `https://i-strong.vercel.app/`
 
 interface NotificationConfig {
@@ -15,13 +14,14 @@ interface NotificationConfig {
   smallIcon: string
 }
 
-const notifications: NotificationConfig[] = [
+// Общий массив уведомлений
+export const notifications: NotificationConfig[] = [
   {
     id: 1,
-    title: 'Нові челенджі',
-    body: 'Прийшли нові челенджі. Перейдіть за посиланням для перегляду.',
+    title: 'Вихід нового челенджу',
+    body: 'А ось і новий челендж🔥Що там цікавого підготувала Капібара цього разу?',
     url: `${BASE_URL}/challenges?path=new`,
-    schedule: { at: new Date(new Date().setHours(10, 0, 0)) }, // В 10:00
+    schedule: { every: 'minute', count: 1, repeats: true },
     attachments: [
       { id: 'challenges-image', url: `${BASE_URL}/path_to_your_image/challenges_image.png` },
     ],
@@ -29,52 +29,33 @@ const notifications: NotificationConfig[] = [
   },
   {
     id: 2,
-    title: 'Запис в щоденник',
-    body: 'Зробіть запис в щоденник. Перейдіть за посиланням.',
+    title: 'Опитування стану №1',
+    body: 'Привіт, ти як? Поділись своїм станом з Капібарою та отримай монетку.',
     url: `${BASE_URL}/diary`,
-    schedule: { at: new Date(new Date().setHours(18, 0, 0)) }, // В 18:00
-    attachments: [{ id: 'diary-image', url: `${BASE_URL}/path_to_your_image/diary_image.png` }],
-    smallIcon: 'ic_stat_icon1',
-  },
-  {
-    id: 3,
-    title: 'Тест',
-    body: 'Як ти себе почуваеш?',
-    url: `${BASE_URL}/diary`,
-    schedule: { every: 'minute', count: 1, repeats: true }, // Каждые 1 минуты
+    schedule: { every: 'minute', count: 1, repeats: true },
     attachments: [{ id: 'test-image', url: `${BASE_URL}/images/icon-arrow.svg` }],
     smallIcon: 'ic_stat_icon1',
   },
   {
-    id: 4,
-    title: 'IconArrow',
-    body: 'C тобой все хорошо?',
-    url: `${BASE_URL}/challenges?path=new`,
-    schedule: { every: 'minute', count: 1, repeats: true }, // Каждые 1 минуты
+    id: 3,
+    title: 'Опитування стану №2',
+    body: 'Хей, як пройшов твій день? Розкажи Капібарі - і монетка твоя!',
+    url: `${BASE_URL}/diary`,
+    schedule: { every: 'minute', count: 1, repeats: true },
     attachments: [{ id: 'test2-image', url: IconArrow }],
-    smallIcon: IconArrow,
+    smallIcon: 'ic_stat_icon1',
   },
 ]
 
 // Функция для сохранения состояния уведомлений
-export const saveNotificationState = async (enabled: boolean) => {
-  await Preferences.set({ key: 'notificationsEnabled', value: JSON.stringify(enabled) })
+export const saveNotificationState = async (key: string, enabled: boolean) => {
+  await Preferences.set({ key, value: JSON.stringify(enabled) })
 }
 
 // Функция для загрузки состояния уведомлений
-export const getNotificationState = async (): Promise<boolean> => {
-  const { value } = await Preferences.get({ key: 'notificationsEnabled' })
+export const getNotificationState = async (key: string): Promise<boolean> => {
+  const { value } = await Preferences.get({ key })
   return value ? JSON.parse(value) : true // По умолчанию уведомления включены
-}
-
-// Запрос разрешений
-export const requestPermissions = async () => {
-  const permission = await LocalNotifications.requestPermissions()
-  if (permission.display !== 'granted') {
-    console.error('Разрешение на уведомления не предоставлено')
-    return false
-  }
-  return true
 }
 
 // Функция для отмены уведомлений
@@ -87,45 +68,57 @@ export const cancelNotifications = async (ids: number[]) => {
 }
 
 // Функция для планирования уведомлений
-export const scheduleNotifications = async () => {
+export const scheduleNotifications = async (enabledNotifications: NotificationConfig[]) => {
   const permissionsGranted = await requestPermissions()
   if (!permissionsGranted) return
 
-  const notificationsEnabled = await getNotificationState() // Проверка состояния уведомлений
-
-  if (notificationsEnabled) {
-    try {
-      await LocalNotifications.schedule({
-        notifications: notifications.map((notification) => ({
-          title: notification.title,
-          body: notification.body,
-          id: notification.id,
-          schedule: notification.schedule,
-          actionTypeId: '',
-          extra: { url: notification.url },
-          attachments: notification.attachments,
-          smallIcon: notification.smallIcon,
-        })),
-      })
-    } catch (error) {
-      console.error('Ошибка при планировании уведомлений', error)
-    }
+  try {
+    await LocalNotifications.schedule({
+      notifications: enabledNotifications.map((notification) => ({
+        title: notification.title,
+        body: notification.body,
+        id: notification.id,
+        schedule: notification.schedule,
+        actionTypeId: '',
+        extra: { url: notification.url },
+        attachments: notification.attachments,
+        smallIcon: notification.smallIcon,
+      })),
+    })
+  } catch (error) {
+    console.error('Ошибка при планировании уведомлений', error)
   }
 }
 
 // Функция для переключения состояния уведомлений
-export const toggleNotifications = async () => {
-  const currentState = await getNotificationState()
-  const newState = !currentState // Меняем состояние на противоположное
-  await saveNotificationState(newState) // Сохраняем новое состояние
+export const toggleNotifications = async (type: 'moodTracker' | 'challenge') => {
+  const key =
+    type === 'moodTracker' ? 'moodTrackerNotificationsEnabled' : 'challengeNotificationsEnabled'
+  const currentState = await getNotificationState(key)
+  const newState = !currentState
+  await saveNotificationState(key, newState)
+
+  const enabledNotifications = notifications.filter(
+    (notification) =>
+      (type === 'moodTracker' && (notification.id === 2 || notification.id === 3)) ||
+      (type === 'challenge' && notification.id === 1),
+  )
 
   if (newState) {
-    await scheduleNotifications() // Если уведомления включены, планируем их
+    await scheduleNotifications(enabledNotifications) // Если уведомления включены, планируем их
   } else {
-    await cancelNotifications(notifications.map((notification) => notification.id)) // Отменяем все уведомления
+    await cancelNotifications(enabledNotifications.map((notification) => notification.id))
   }
 
-  return newState // Возвращаем новое состояние
+  return newState
 }
 
-export { LocalNotifications }
+// Запрос разрешений
+export const requestPermissions = async () => {
+  const permission = await LocalNotifications.requestPermissions()
+  if (permission.display !== 'granted') {
+    console.error('Разрешение на уведомления не предоставлено')
+    return false
+  }
+  return true
+}

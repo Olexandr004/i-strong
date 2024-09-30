@@ -5,28 +5,27 @@ import { ButtonComponent, ContactInfoComponent, PageHeaderComponent } from '@/sh
 import { IconButtonComponent } from '@/shared/components/ui/icon-button'
 import ToggleBtnComponent from '@/shared/components/ui/toggle-btn/toggle-btn.component'
 import { IconEdit } from '@/shared/icons'
-import { toggleNotifications } from '@/utils/native-app/notifications'
+import { toggleNotifications, getNotificationState } from '@/utils/native-app/notifications'
 import styles from './settings.module.scss'
 
-// interface
 interface ISettings {}
 
-// Component
 export const SettingsComponent: FC<Readonly<ISettings>> = () => {
   const router = useRouter()
+
   const [moodTrackerEnabled, setMoodTrackerEnabled] = useState<boolean>(false)
-  const [otherNotificationsEnabled, setOtherNotificationsEnabled] = useState<boolean>(false)
+  const [challengeNotificationsEnabled, setChallengeNotificationsEnabled] = useState<boolean>(false)
 
   // Загрузка состояния уведомлений при загрузке компонента
   useEffect(() => {
-    const loadNotificationState = async () => {
-      const moodTrackerState = await localStorage.getItem('moodTracker')
-      const otherNotificationsState = await localStorage.getItem('otherNotifications')
+    const loadNotificationStates = async () => {
+      const moodTrackerState = await getNotificationState('moodTrackerNotificationsEnabled')
+      const challengeState = await getNotificationState('challengeNotificationsEnabled')
 
-      setMoodTrackerEnabled(moodTrackerState === 'true')
-      setOtherNotificationsEnabled(otherNotificationsState === 'true')
+      setMoodTrackerEnabled(moodTrackerState)
+      setChallengeNotificationsEnabled(challengeState)
     }
-    loadNotificationState()
+    loadNotificationStates()
   }, [])
 
   const handleResetRoit = () => {
@@ -37,21 +36,18 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
     router.push('/account-deletion')
   }
 
-  // Обработчик для переключения состояния Трекера настрою
+  // Сохранение состояния для трекера настроения
   const handleToggleMoodTracker = async () => {
-    const newState = await toggleNotifications() // Переключаем состояние уведомлений
-    setMoodTrackerEnabled(newState) // Обновляем состояние
-    localStorage.setItem('moodTracker', JSON.stringify(newState)) // Сохраняем в localStorage
+    const newState = await toggleNotifications('moodTracker')
+    setMoodTrackerEnabled(newState)
   }
 
-  // Обработчик для переключения состояния других уведомлений
-  const handleToggleOtherNotifications = async () => {
-    const newState = await toggleNotifications() // Переключаем состояние уведомлений
-    setOtherNotificationsEnabled(newState) // Обновляем состояние
-    localStorage.setItem('otherNotifications', JSON.stringify(newState)) // Сохраняем в localStorage
+  // Сохранение состояния для уведомлений челленджей
+  const handleToggleChallengeNotifications = async () => {
+    const newState = await toggleNotifications('challenge')
+    setChallengeNotificationsEnabled(newState)
   }
 
-  // Return
   return (
     <section className={`${styles.settings} container`}>
       <PageHeaderComponent title={'Налаштування'} />
@@ -95,10 +91,10 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
               />
             </div>
             <div className={styles.settings_card__field}>
-              <span>Інші сповіщення</span>
+              <span>Сповіщення про челенджі</span>
               <ToggleBtnComponent
-                isChecked={otherNotificationsEnabled}
-                onToggle={handleToggleOtherNotifications}
+                isChecked={challengeNotificationsEnabled}
+                onToggle={handleToggleChallengeNotifications}
               />
             </div>
           </div>

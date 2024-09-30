@@ -18,7 +18,11 @@ import { RootLayoutComponent } from '@/modules/layouts'
 import { useTanStackClient } from '@/packages/tanstack-client'
 import { useCommonStore } from '@/shared/stores'
 import useKeyboard from '@/utils/native-app/keyboard'
-import { scheduleNotifications } from '@/utils/native-app/notifications'
+import {
+  scheduleNotifications,
+  notifications,
+  getNotificationState,
+} from '@/utils/native-app/notifications'
 
 //interface
 interface IRootLayout {
@@ -50,7 +54,22 @@ const RootLayout: FC<Readonly<IRootLayout>> = ({ home, entry }) => {
   }, [errorText, successfulText])
   useKeyboard()
   useEffect(() => {
-    scheduleNotifications()
+    const loadNotifications = async () => {
+      // Получите состояния уведомлений
+      const moodTrackerState = await getNotificationState('moodTrackerNotificationsEnabled')
+      const challengeState = await getNotificationState('challengeNotificationsEnabled')
+
+      // Создайте массив уведомлений для планирования
+      const notificationsToSchedule = notifications.filter(
+        (notification) =>
+          (notification.id === 1 && challengeState) || // Челленджи
+          ((notification.id === 2 || notification.id === 3) && moodTrackerState), // Трекер настроения
+      )
+
+      await scheduleNotifications(notificationsToSchedule) // Передайте массив уведомлений
+    }
+
+    loadNotifications()
   }, [])
 
   //return
