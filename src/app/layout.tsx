@@ -1,22 +1,18 @@
 'use client'
 import type { Metadata, Viewport } from 'next'
-
 import { FC, ReactNode, useEffect } from 'react'
-
 import '@/styles/globals.scss'
 import 'swiper/css'
 
 // metadata
 export const viewport: Viewport = initialViewport
-// export const metadata: Metadata = initialMetadata
 
 import { QueryClientProvider } from '@tanstack/react-query'
-
 import { mainFont } from '@/fonts'
 import { initialMetadata, initialViewport } from '@/metadata'
 import { RootLayoutComponent } from '@/modules/layouts'
 import { useTanStackClient } from '@/packages/tanstack-client'
-import { useCommonStore } from '@/shared/stores'
+import { useCommonStore } from '@/shared/stores' // Проверьте правильность импорта
 import useKeyboard from '@/utils/native-app/keyboard'
 import {
   scheduleNotifications,
@@ -37,6 +33,7 @@ const RootLayout: FC<Readonly<IRootLayout>> = ({ home, entry }) => {
   const errorText = useCommonStore((state) => state.errorText)
   const successfulText = useCommonStore((state) => state.successfulText)
   const { queryClient } = useTanStackClient()
+
   useEffect(() => {
     const handleClick = () => {
       if (errorText) {
@@ -52,21 +49,21 @@ const RootLayout: FC<Readonly<IRootLayout>> = ({ home, entry }) => {
       document.removeEventListener('click', handleClick)
     }
   }, [errorText, successfulText])
+
   useKeyboard()
+
   useEffect(() => {
     const loadNotifications = async () => {
-      // Получите состояния уведомлений
       const moodTrackerState = await getNotificationState('moodTrackerNotificationsEnabled')
       const challengeState = await getNotificationState('challengeNotificationsEnabled')
 
-      // Создайте массив уведомлений для планирования
       const notificationsToSchedule = notifications.filter(
         (notification) =>
-          (notification.id === 1 && challengeState) || // Челленджи
-          ((notification.id === 2 || notification.id === 3) && moodTrackerState), // Трекер настроения
+          (notification.id === 1 && challengeState) ||
+          ((notification.id === 2 || notification.id === 3) && moodTrackerState),
       )
 
-      await scheduleNotifications(notificationsToSchedule) // Передайте массив уведомлений
+      await scheduleNotifications(notificationsToSchedule)
     }
 
     loadNotifications()
@@ -81,4 +78,5 @@ const RootLayout: FC<Readonly<IRootLayout>> = ({ home, entry }) => {
     </html>
   )
 }
+
 export default RootLayout
