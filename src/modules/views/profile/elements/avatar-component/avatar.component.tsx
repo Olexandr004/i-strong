@@ -1,26 +1,42 @@
 'use client'
-import Image from 'next/image'
 
 import { FC, useEffect, useState } from 'react'
-
+import { useMutation, UseMutationResult } from '@tanstack/react-query'
+import ky from 'ky'
+import Image from 'next/image'
 import { ButtonComponent } from '@/shared/components'
 import { BaseModalComponent } from '@/shared/components'
-import { IconClear, IconClose, IconEdit } from '@/shared/icons'
-import { ImageAvatar, ImageCapybara } from '@/shared/images'
-import { useCommonStore } from '@/shared/stores'
-
+import { IconClose } from '@/shared/icons'
+import { ImageAvatar } from '@/shared/images'
+import { useCommonStore, useUserStore } from '@/shared/stores'
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera'
 import styles from './avatar.module.scss'
 
-interface IAvatarModal {}
+// Интерфейс для ответа об ошибке
+interface ErrorResponse {
+  error?: string
+}
 
-const AvatarComponent: FC<Readonly<IAvatarModal>> = () => {
+interface UpdateAvatarResponse {
+  avatar: { avatar: string }
+}
+
+const AvatarComponent: FC = () => {
   const { avatarImage, handleChangeCommonStore } = useCommonStore((state) => ({
     avatarImage: state.avatarImage,
     handleChangeCommonStore: state.handleChangeCommonStore,
   }))
+
+  const { user, handleChangeUserStore } = useUserStore((state) => ({
+    user: state.user,
+    handleChangeUserStore: state.handleChangeUserStore,
+  }))
+
+  const token = user?.access_token // Извлекаем токен
+
   const [currentImage, setCurrentImage] = useState<string>(avatarImage || ImageAvatar.src)
   const [isSaveButtonDisabled, setIsSaveButtonDisabled] = useState(true)
-  const [isEditMode, setIsEditMode] = useState(false)
+  const [error, setError] = useState<string | null>(null) // State для ошибок
 
   useEffect(() => {
     if (avatarImage) {
@@ -28,33 +44,145 @@ const AvatarComponent: FC<Readonly<IAvatarModal>> = () => {
     }
   }, [avatarImage])
 
-  const handleButtonClick = (text: string) => {
-    const newImage = ImageCapybara.src
-    setCurrentImage(newImage)
-    setIsSaveButtonDisabled(false)
-    console.log(text)
+  const handleButtonClick = async (text: string) => {
+    let newImage: string | undefined
+
+    if (text === 'Зробити фото') {
+      const image = await Camera.getPhoto({
+        quality: 90,
+        allowEditing: false,
+        resultType: CameraResultType.Uri,
+      })
+      newImage = image.webPath
+    } else if (text === 'Загрузити з галереї') {
+      const image = await Camera.getPhoto({
+        quality: 90,
+        allowEditing: false,
+        source: CameraSource.Photos,
+        resultType: CameraResultType.Uri,
+      })
+      newImage = image.webPath
+    }
+
+    if (newImage) {
+      setCurrentImage(newImage)
+      setIsSaveButtonDisabled(false)
+      setError(null) // Сброс ошибки при выборе нового изображения
+    }
   }
 
-  const handleClearClick = () => {
-    setCurrentImage(ImageAvatar.src)
-    setIsSaveButtonDisabled(false)
+  // Мутация для обновления аватара
+  const mutation: UseMutationResult<UpdateAvatarResponse, unknown, Blob, unknown> = useMutation({
+    mutationFn: async (file: Blob) => {
+      const formData = new FormData()
+      formData.append('media', file, 'avatar.jpg') // Добавляем файл в FormData
+
+      const api = ky.extend({
+        prefixUrl: 'https://istrongapp.com/api',
+        throwHttpErrors: false,
+      })
+
+      try {
+        // Выполняем запрос с правильной типизацией
+        const response = await api.post('users/profile/update-avatar/', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        })
+
+        // Проверка статуса ответа
+        if (!response.ok) {
+          const jsonResponse = await response.json().catch(() => ({})) // Обрабатываем ошибку JSON
+          const errorResponse: ErrorResponse =
+            typeof jsonResponse === 'object' && jsonResponse !== null
+              ? (jsonResponse as ErrorResponse)
+              : {}
+
+          console.error('Ошибка на сервере:', errorResponse) // Логируем ошибку
+          throw new Error(errorResponse.error || 'Відбулася помилка під час оновлення аватара')
+        }
+
+        return await response.json()
+      } catch (error) {
+        console.error('Ошибка при выполнении запроса:', error) // Логируем ошибку
+        throw new Error('Не вдалося оновити аватар')
+      }
+    },
+    onSuccess: (responseData) => {
+      console.log('Аватар успешно обновлён:', responseData) // Логируем успешный ответ
+      handleChangeCommonStore({ avatarImage: responseData.avatar.avatar })
+
+      // Создаем новый объект user с обязательными свойствами
+      const updatedUser = {
+        id: user?.id || 0, // Задаем значение по умолчанию
+        name: user?.name || '',
+        phone_number: user?.phone_number || '',
+        access_token: user?.access_token || '',
+        coins: user?.coins || 0,
+        avatar: responseData.avatar.avatar,
+        mood: user?.mood || { mood: '', date: '' },
+        has_dairy_password: user?.has_dairy_password || false,
+        activity: user?.activity || {
+          challenges_visited: false,
+          diary_visited: false,
+          id: 0,
+          instructions_visited: false,
+          mood_stats_visited: false,
+          shop_visited: false,
+        },
+      }
+
+      handleChangeUserStore({ user: updatedUser }) // Обновляем avatar в user
+      setIsSaveButtonDisabled(true)
+      setError(null) // Сброс ошибки
+    },
+    onError: (error: unknown) => {
+      let errorMessage = 'Неизвестная ошибка'
+      if (error instanceof Error) {
+        errorMessage = error.message // Получаем сообщение об ошибке
+      }
+      setError(errorMessage) // Устанавливаем ошибку в состояние
+      console.error('Ошибка при обновлении аватара:', error) // Логируем ошибку
+    },
+  })
+
+  const handleSaveClick = async () => {
+    try {
+      const file = await fetch(currentImage).then((res) => res.blob())
+
+      // Проверка на формат и размер файла
+      const validFormats = ['image/jpeg', 'image/jpg', 'image/png', 'image/heif']
+      if (!validFormats.includes(file.type)) {
+        throw new Error(
+          'Неприпустимий формат файлу. Формати, що підтримуються: jpg, jpeg, png, heif.',
+        )
+      }
+
+      if (file.size > 5 * 1024 * 1024) {
+        throw new Error('Розмір файлу не повинен перевищувати 5 МБ.')
+      }
+
+      // Вызываем мутацию для отправки файла
+      mutation.mutate(file)
+    } catch (error) {
+      let errorMessage = 'Неизвестная ошибка'
+      if (error instanceof Error) {
+        errorMessage = error.message // Получаем сообщение об ошибке
+      }
+      setError(errorMessage) // Устанавливаем ошибку в состояние
+      console.error('Ошибка при сохранении аватара:', error) // Логируем ошибку
+    }
   }
 
-  const handleSaveClick = () => {
-    handleChangeCommonStore({ avatarImage: currentImage })
-    setIsSaveButtonDisabled(true)
-    setIsEditMode(false)
-  }
-
-  const handleEditClick = () => {
-    setIsEditMode(true)
-  }
+  // Получаем статус загрузки из мутации
+  const isLoading = mutation.status === 'pending' // Здесь используем 'pending' вместо 'loading'
 
   return (
     <BaseModalComponent>
       <div className={styles.modal__box}>
         <div className={styles.header}>
-          <span className={styles.header__title}>Аватарка</span>
+          <span>Аватарка</span>
           <IconClose onClick={() => handleChangeCommonStore({ isModalActive: false })} />
         </div>
         <div className={styles.image_container}>
@@ -66,7 +194,7 @@ const AvatarComponent: FC<Readonly<IAvatarModal>> = () => {
             style={{ objectFit: 'cover', width: '100%', height: '100%' }}
           />
         </div>
-        <div className={styles.buttons} style={{ display: isEditMode ? 'block' : 'none' }}>
+        <div className={styles.buttons}>
           <ButtonComponent variant={'outlined'} onClick={() => handleButtonClick('Зробити фото')}>
             Зробити фото
           </ButtonComponent>
@@ -78,16 +206,15 @@ const AvatarComponent: FC<Readonly<IAvatarModal>> = () => {
           </ButtonComponent>
         </div>
         <div className={styles.footer}>
-          {isEditMode && currentImage !== ImageAvatar.src ? (
-            <IconClear onClick={handleClearClick} />
-          ) : (
-            <IconEdit onClick={handleEditClick} />
-          )}
-
-          <ButtonComponent size={'small'} disabled={isSaveButtonDisabled} onClick={handleSaveClick}>
-            Зберегти
+          <ButtonComponent
+            size={'regular'}
+            disabled={isSaveButtonDisabled || isLoading}
+            onClick={handleSaveClick}
+          >
+            {isLoading ? 'Збереження...' : 'Зберегти'}
           </ButtonComponent>
         </div>
+        {error && <div>{error}</div>} {/* Отображение ошибок */}
       </div>
     </BaseModalComponent>
   )

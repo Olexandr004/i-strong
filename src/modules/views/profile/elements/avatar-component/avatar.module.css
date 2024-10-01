@@ -1,0 +1,56 @@
+.modal__box {
+  width: 100%;
+  padding: 1.2rem 1.2rem 1.8rem;
+  display: grid;
+  gap: 1.2rem;
+}
+.modal__box img {
+  border-radius: 100%;
+  padding: 0 30px;
+}
+.modal__box svg {
+  width: 20px;
+  height: 20px;
+}
+.modal__box .header,
+.modal__box .footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.modal__box .header button,
+.modal__box .footer button {
+  width: 132px;
+}
+.modal__box .header span,
+.modal__box .footer span {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 20px;
+  color: #ffc75a;
+}
+
+.footer svg {
+  width: 23px;
+  height: 23px;
+}
+.footer button {
+  margin: 0 auto;
+}
+
+.image_container {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  object-fit: contain;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+/*# sourceMappingURL=avatar.module.css.map */
