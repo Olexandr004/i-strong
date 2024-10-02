@@ -6,7 +6,7 @@ import ky from 'ky'
 import Image from 'next/image'
 import { ButtonComponent } from '@/shared/components'
 import { BaseModalComponent } from '@/shared/components'
-import { IconClose } from '@/shared/icons'
+import { IconClose, IconDelete } from '@/shared/icons'
 import { ImageAvatar } from '@/shared/images'
 import { useCommonStore, useUserStore } from '@/shared/stores'
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera'
@@ -83,7 +83,6 @@ const AvatarComponent: FC = () => {
       })
 
       try {
-        // Выполняем запрос с правильной типизацией
         const response = await api.post('users/profile/update-avatar/', {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -91,7 +90,6 @@ const AvatarComponent: FC = () => {
           body: formData,
         })
 
-        // Проверка статуса ответа
         if (!response.ok) {
           const jsonResponse = await response.json().catch(() => ({})) // Обрабатываем ошибку JSON
           const errorResponse: ErrorResponse =
@@ -110,12 +108,12 @@ const AvatarComponent: FC = () => {
       }
     },
     onSuccess: (responseData) => {
-      console.log('Аватар успешно обновлён:', responseData) // Логируем успешный ответ
+      console.log('Аватар успешно обновлён:', responseData)
       handleChangeCommonStore({ avatarImage: responseData.avatar.avatar })
 
-      // Создаем новый объект user с обязательными свойствами
+      // Обновляем avatar в user
       const updatedUser = {
-        id: user?.id || 0, // Задаем значение по умолчанию
+        id: user?.id || 0,
         name: user?.name || '',
         phone_number: user?.phone_number || '',
         access_token: user?.access_token || '',
@@ -133,17 +131,20 @@ const AvatarComponent: FC = () => {
         },
       }
 
-      handleChangeUserStore({ user: updatedUser }) // Обновляем avatar в user
+      handleChangeUserStore({ user: updatedUser })
       setIsSaveButtonDisabled(true)
-      setError(null) // Сброс ошибки
+      setError(null)
+
+      // Закрываем модальное окно после успешного сохранения
+      handleChangeCommonStore({ isModalActive: false })
     },
     onError: (error: unknown) => {
       let errorMessage = 'Неизвестная ошибка'
       if (error instanceof Error) {
-        errorMessage = error.message // Получаем сообщение об ошибке
+        errorMessage = error.message
       }
-      setError(errorMessage) // Устанавливаем ошибку в состояние
-      console.error('Ошибка при обновлении аватара:', error) // Логируем ошибку
+      setError(errorMessage)
+      console.error('Ошибка при обновлении аватара:', error)
     },
   })
 
@@ -168,15 +169,20 @@ const AvatarComponent: FC = () => {
     } catch (error) {
       let errorMessage = 'Неизвестная ошибка'
       if (error instanceof Error) {
-        errorMessage = error.message // Получаем сообщение об ошибке
+        errorMessage = error.message
       }
-      setError(errorMessage) // Устанавливаем ошибку в состояние
-      console.error('Ошибка при сохранении аватара:', error) // Логируем ошибку
+      setError(errorMessage)
+      console.error('Ошибка при сохранении аватара:', error)
     }
   }
 
-  // Получаем статус загрузки из мутации
-  const isLoading = mutation.status === 'pending' // Здесь используем 'pending' вместо 'loading'
+  // Кнопка "Видалити"
+  const handleDeleteClick = () => {
+    setCurrentImage(ImageAvatar.src) // Сброс аватара на изображение по умолчанию
+    setIsSaveButtonDisabled(false) // Активируем кнопку "Зберегти"
+  }
+
+  const isLoading = mutation.status === 'pending'
 
   return (
     <BaseModalComponent>
@@ -206,6 +212,12 @@ const AvatarComponent: FC = () => {
           </ButtonComponent>
         </div>
         <div className={styles.footer}>
+          <div>
+            <button onClick={handleDeleteClick} className={styles.button}>
+              <IconDelete />
+              Видалити
+            </button>
+          </div>
           <ButtonComponent
             size={'regular'}
             disabled={isSaveButtonDisabled || isLoading}
@@ -214,7 +226,7 @@ const AvatarComponent: FC = () => {
             {isLoading ? 'Збереження...' : 'Зберегти'}
           </ButtonComponent>
         </div>
-        {error && <div>{error}</div>} {/* Отображение ошибок */}
+        {error && <div>{error}</div>}
       </div>
     </BaseModalComponent>
   )

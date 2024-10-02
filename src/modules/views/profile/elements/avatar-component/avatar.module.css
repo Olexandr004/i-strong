@@ -21,6 +21,9 @@
 .modal__box .header button,
 .modal__box .footer button {
   width: 132px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .modal__box .header span,
 .modal__box .footer span {

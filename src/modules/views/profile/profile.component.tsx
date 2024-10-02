@@ -1,8 +1,9 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-
+import { useEffect } from 'react'
 import { FC } from 'react'
+import ky from 'ky'
 
 import { ChallengeType } from '@/interfaces/challenge'
 import { AvatarComponent } from '@/modules/views/profile/elements'
@@ -28,6 +29,23 @@ const PROFILE_LINKS = (activeChallengeTypeButton: ChallengeType) => [
   { title: 'Налаштування', icon: <IconSetting />, link: '/settings' },
 ]
 
+// Функция для получения аватарки с сервера
+const fetchUserAvatar = async (token: string) => {
+  try {
+    const response = await ky
+      .get('https://istrongapp.com/api/users/profile', {
+        headers: {
+          Authorization: `Bearer ${token}`, // Добавляем заголовок с токеном
+        },
+      })
+      .json<{ avatar: string }>()
+    return response.avatar // Вернёт URL аватара
+  } catch (error) {
+    console.error('Ошибка при загрузке аватара:', error)
+    return null // Обработка ошибок
+  }
+}
+
 //component
 export const ProfileComponent: FC<Readonly<IProfile>> = () => {
   const router = useRouter()
@@ -49,6 +67,22 @@ export const ProfileComponent: FC<Readonly<IProfile>> = () => {
   const { avatarImage } = useCommonStore((state) => ({
     avatarImage: state.avatarImage,
   }))
+
+  // Загружаем аватарку с сервера при монтировании
+  useEffect(() => {
+    const loadAvatar = async () => {
+      if (user?.access_token) {
+        const avatar = await fetchUserAvatar(user.access_token)
+        if (avatar) {
+          handleChangeCommonStore({ avatarImage: avatar })
+        }
+      } else {
+        console.error('Токен не найден')
+      }
+    }
+
+    loadAvatar()
+  }, [user?.access_token]) // Загружаем аватар при монтировании компонента
 
   //return
   return (
