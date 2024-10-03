@@ -5,7 +5,20 @@
   gap: 1.2rem;
   img {
     border-radius: 100%;
-    padding: 0 30px;
+    padding: 0 3.5rem;
+    width: 158px;
+    height: 158px;
+    order: 1;
+    flex-grow: 0;
+    @media (min-width: 390px) {
+      padding: 0 4.5rem;
+    }
+    @media (min-width: 400px) {
+      padding: 0 5.5rem;
+    }
+    @media (min-width: 420px) {
+      padding: 0 6.5rem;
+    }
   }
   svg {
     width: 20px;
@@ -14,7 +27,7 @@
   .header,
   .footer {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
     button {
       width: 132px;
@@ -25,8 +38,18 @@
     span {
       font-style: normal;
       font-weight: 700;
-      font-size: 16px;
-      line-height: 20px;
+      font-size: 1.6rem;
+      line-height: 2rem;
+      color: #ffc75a;
+    }
+  }
+  .header {
+    justify-content: space-between;
+    span {
+      font-style: normal;
+      font-weight: 700;
+      font-size: 1.6rem;
+      line-height: 2rem;
       color: #ffc75a;
     }
   }
@@ -37,8 +60,21 @@
     width: 23px;
     height: 23px;
   }
-  button {
+  .button {
     margin: 0 auto;
+    span {
+      font-style: normal;
+      font-weight: 500;
+      font-size: 12px;
+      line-height: 15px;
+      color: #7d7d7d;
+    }
+  }
+  .icon_delete {
+    width: 21.66px;
+    height: 24px;
+    order: 0;
+    flex-grow: 0;
   }
 }
 

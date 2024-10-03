@@ -5,28 +5,83 @@ import { ButtonComponent, ContactInfoComponent, PageHeaderComponent } from '@/sh
 import { IconButtonComponent } from '@/shared/components/ui/icon-button'
 import ToggleBtnComponent from '@/shared/components/ui/toggle-btn/toggle-btn.component'
 import { IconEdit } from '@/shared/icons'
-import { toggleNotifications, getNotificationState } from '@/utils/native-app/notifications'
+import { useUserStore } from '@/shared/stores'
 import styles from './settings.module.scss'
 
 interface ISettings {}
 
 export const SettingsComponent: FC<Readonly<ISettings>> = () => {
   const router = useRouter()
+  const { user, handleChangeUserStore } = useUserStore()
 
   const [moodTrackerEnabled, setMoodTrackerEnabled] = useState<boolean>(false)
   const [challengeNotificationsEnabled, setChallengeNotificationsEnabled] = useState<boolean>(false)
 
-  // Загрузка состояния уведомлений при загрузке компонента
+  // Функция для загрузки состояния уведомлений
+  const fetchNotificationPreferences = async (token: string) => {
+    const response = await fetch('https://istrongapp.com/api/users/profile/', {
+      method: 'GET', // Измените метод на GET
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    })
+
+    const responseText = await response.text()
+    console.log('Response Status:', response.status)
+    console.log('Response Text:', responseText)
+
+    if (!response.ok) {
+      throw new Error(
+        `Failed to fetch notification preferences: ${response.status} - ${responseText}`,
+      )
+    }
+
+    return JSON.parse(responseText)
+  }
+
   useEffect(() => {
     const loadNotificationStates = async () => {
-      const moodTrackerState = await getNotificationState('moodTrackerNotificationsEnabled')
-      const challengeState = await getNotificationState('challengeNotificationsEnabled')
-
-      setMoodTrackerEnabled(moodTrackerState)
-      setChallengeNotificationsEnabled(challengeState)
+      if (user?.access_token) {
+        try {
+          const preferences = await fetchNotificationPreferences(user.access_token)
+          setMoodTrackerEnabled(preferences.notifications_preferences.mood_survey)
+          setChallengeNotificationsEnabled(preferences.notifications_preferences.challenges)
+        } catch (error) {
+          console.error('Error loading notification states:', error)
+        }
+      }
     }
     loadNotificationStates()
-  }, [])
+  }, [user])
+
+  // Функция для обновления настроек уведомлений на сервере
+  const updateNotificationPreferences = async (
+    token: string,
+    moodSurvey: boolean,
+    challenges: boolean,
+  ) => {
+    const response = await fetch(
+      'https://istrongapp.com/api/users/profile/notifications-preferences/',
+      {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          mood_survey: moodSurvey,
+          challenges: challenges,
+        }),
+      },
+    )
+
+    if (!response.ok) {
+      throw new Error('Failed to update notification preferences')
+    }
+
+    return await response.json()
+  }
 
   const handleResetRoit = () => {
     router.push('/settings/reset-password')
@@ -38,14 +93,42 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
 
   // Сохранение состояния для трекера настроения
   const handleToggleMoodTracker = async () => {
-    const newState = await toggleNotifications('moodTracker')
+    const newState = !moodTrackerEnabled // Изменяем состояние
     setMoodTrackerEnabled(newState)
+
+    if (user?.access_token) {
+      try {
+        const response = await updateNotificationPreferences(
+          user.access_token,
+          newState,
+          challengeNotificationsEnabled,
+        )
+        // Обновляем состояние пользователя
+        handleChangeUserStore(response.user) // Обновлено: сохраняем обновленные данные пользователя
+      } catch (error) {
+        console.error('Error updating notification preferences:', error)
+      }
+    }
   }
 
   // Сохранение состояния для уведомлений челленджей
   const handleToggleChallengeNotifications = async () => {
-    const newState = await toggleNotifications('challenge')
+    const newState = !challengeNotificationsEnabled // Изменяем состояние
     setChallengeNotificationsEnabled(newState)
+
+    if (user?.access_token) {
+      try {
+        const response = await updateNotificationPreferences(
+          user.access_token,
+          moodTrackerEnabled,
+          newState,
+        )
+        // Обновляем состояние пользователя
+        handleChangeUserStore(response.user) // Обновлено: сохраняем обновленные данные пользователя
+      } catch (error) {
+        console.error('Error updating notification preferences:', error)
+      }
+    }
   }
 
   return (

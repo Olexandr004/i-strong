@@ -214,8 +214,8 @@ const AvatarComponent: FC = () => {
         <div className={styles.footer}>
           <div>
             <button onClick={handleDeleteClick} className={styles.button}>
-              <IconDelete />
-              Видалити
+              <IconDelete className={styles.icon_delete} />
+              <span>Видалити</span>
             </button>
           </div>
           <ButtonComponent
