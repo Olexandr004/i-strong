@@ -58,8 +58,8 @@ const AvatarComponent: FC = () => {
           correctOrientation: true,
         })
 
-        // Получаем webPath и dataUrl
-        newImage = image.webPath || image.dataUrl
+        // Используем только webPath
+        newImage = image.webPath
       } else if (text === 'Загрузити з галереї') {
         const image = await Camera.getPhoto({
           quality: 90,
@@ -68,14 +68,14 @@ const AvatarComponent: FC = () => {
           resultType: CameraResultType.Uri,
         })
 
-        // Получаем webPath и dataUrl
-        newImage = image.webPath || image.dataUrl
+        // Используем только webPath
+        newImage = image.webPath
       }
 
       // Проверяем, получен ли новый URL
       if (newImage) {
         console.log('Полученное изображение:', newImage) // Логирование URL изображения
-        setCurrentImage(newImage)
+        setCurrentImage(newImage) // Устанавливаем новое изображение
         setIsSaveButtonDisabled(false)
         setError(null) // Сброс ошибки при выборе нового изображения
       } else {
@@ -210,10 +210,12 @@ const AvatarComponent: FC = () => {
           <IconClose onClick={() => handleChangeCommonStore({ isModalActive: false })} />
         </div>
         <div className={styles.image_container}>
-          <img
+          <Image
             src={currentImage}
             alt='User Avatar'
-            style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+            layout='fill' // Используйте fill для заполнения контейнера
+            objectFit='cover' // Обеспечьте, чтобы изображение сохраняло пропорции
+            priority // Опционально, чтобы приоритетно загружать изображение
           />
         </div>
         <div className={styles.buttons}>
