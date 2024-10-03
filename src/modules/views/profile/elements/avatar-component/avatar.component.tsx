@@ -68,7 +68,12 @@ const AvatarComponent: FC = () => {
     }
 
     if (newImage) {
-      setCurrentImage(newImage)
+      // Преобразуем URL в Blob
+      const response = await fetch(newImage)
+      const blob = await response.blob()
+      const url = URL.createObjectURL(blob) // Создаем URL из Blob
+
+      setCurrentImage(url) // Устанавливаем URL для отображения
       setIsSaveButtonDisabled(false)
       setError(null) // Сброс ошибки при выборе нового изображения
     }
@@ -196,11 +201,9 @@ const AvatarComponent: FC = () => {
           <IconClose onClick={() => handleChangeCommonStore({ isModalActive: false })} />
         </div>
         <div className={styles.image_container}>
-          <Image
-            src={currentImage ? currentImage : ImageAvatar.src}
-            alt={'name photo'}
-            fill
-            sizes={'40vw'}
+          <img
+            src={currentImage}
+            alt='User Avatar'
             style={{ objectFit: 'cover', width: '100%', height: '100%' }}
           />
         </div>
