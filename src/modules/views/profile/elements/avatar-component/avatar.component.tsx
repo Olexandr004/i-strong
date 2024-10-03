@@ -74,14 +74,16 @@ const AvatarComponent: FC = () => {
 
       // Проверяем, получен ли новый URL
       if (newImage) {
+        console.log('Полученное изображение:', newImage) // Логирование URL изображения
         setCurrentImage(newImage)
         setIsSaveButtonDisabled(false)
         setError(null) // Сброс ошибки при выборе нового изображения
       } else {
-        throw new Error('Не удалось получить URL изображения')
+        setError('Не удалось получить URL изображения') // Устанавливаем ошибку
+        console.error('Не удалось получить URL изображения')
       }
     } catch (err) {
-      setError('Произошла ошибка при загрузке изображения')
+      setError('Произошла ошибка при загрузке изображения') // Устанавливаем ошибку
       console.error('Ошибка при загрузке изображения:', err)
     }
   }
