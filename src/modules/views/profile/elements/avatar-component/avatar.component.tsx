@@ -47,35 +47,42 @@ const AvatarComponent: FC = () => {
   const handleButtonClick = async (text: string) => {
     let newImage: string | undefined
 
-    if (text === 'Зробити фото') {
-      const image = await Camera.getPhoto({
-        quality: 90,
-        allowEditing: false,
-        resultType: CameraResultType.Uri,
-        source: CameraSource.Camera,
-        saveToGallery: true,
-        correctOrientation: true,
-      })
-      newImage = image.webPath
-    } else if (text === 'Загрузити з галереї') {
-      const image = await Camera.getPhoto({
-        quality: 90,
-        allowEditing: false,
-        source: CameraSource.Photos,
-        resultType: CameraResultType.Uri,
-      })
-      newImage = image.webPath
-    }
+    try {
+      if (text === 'Зробити фото') {
+        const image = await Camera.getPhoto({
+          quality: 90,
+          allowEditing: false,
+          resultType: CameraResultType.Uri,
+          source: CameraSource.Camera,
+          saveToGallery: true,
+          correctOrientation: true,
+        })
 
-    if (newImage) {
-      // Преобразуем URL в Blob
-      const response = await fetch(newImage)
-      const blob = await response.blob()
-      const url = URL.createObjectURL(blob) // Создаем URL из Blob
+        // Получаем webPath и dataUrl
+        newImage = image.webPath || image.dataUrl
+      } else if (text === 'Загрузити з галереї') {
+        const image = await Camera.getPhoto({
+          quality: 90,
+          allowEditing: false,
+          source: CameraSource.Photos,
+          resultType: CameraResultType.Uri,
+        })
 
-      setCurrentImage(url) // Устанавливаем URL для отображения
-      setIsSaveButtonDisabled(false)
-      setError(null) // Сброс ошибки при выборе нового изображения
+        // Получаем webPath и dataUrl
+        newImage = image.webPath || image.dataUrl
+      }
+
+      // Проверяем, получен ли новый URL
+      if (newImage) {
+        setCurrentImage(newImage)
+        setIsSaveButtonDisabled(false)
+        setError(null) // Сброс ошибки при выборе нового изображения
+      } else {
+        throw new Error('Не удалось получить URL изображения')
+      }
+    } catch (err) {
+      setError('Произошла ошибка при загрузке изображения')
+      console.error('Ошибка при загрузке изображения:', err)
     }
   }
 
