@@ -231,20 +231,19 @@ const AvatarComponent: FC = () => {
         </div>
         <div className={styles.footer}>
           <div>
-            <button onClick={handleDeleteClick} className={styles.button}>
-              <IconDelete className={styles.icon_delete} />
-              <span>Видалити</span>
+            <ButtonComponent
+              size={'regular'}
+              onClick={handleSaveClick}
+              disabled={isSaveButtonDisabled || isLoading}
+            >
+              {isLoading ? 'Збереження...' : 'Зберегти'}
+            </ButtonComponent>
+            <button onClick={handleDeleteClick}>
+              <IconDelete /> Видалити
             </button>
           </div>
-          <ButtonComponent
-            size={'regular'}
-            disabled={isSaveButtonDisabled || isLoading}
-            onClick={handleSaveClick}
-          >
-            {isLoading ? 'Збереження...' : 'Зберегти'}
-          </ButtonComponent>
+          {error && <p className={styles.error}>{error}</p>} {/* Вывод ошибки на экран */}
         </div>
-        {error && <div>{error}</div>}
       </div>
     </BaseModalComponent>
   )
