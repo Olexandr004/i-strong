@@ -52,6 +52,9 @@ const AvatarComponent: FC = () => {
         quality: 90,
         allowEditing: false,
         resultType: CameraResultType.Uri,
+        source: CameraSource.Camera,
+        saveToGallery: true,
+        correctOrientation: true,
       })
       newImage = image.webPath
     } else if (text === 'Загрузити з галереї') {
@@ -151,6 +154,7 @@ const AvatarComponent: FC = () => {
   const handleSaveClick = async () => {
     try {
       const file = await fetch(currentImage).then((res) => res.blob())
+      console.log('File MIME type:', file.type) // Проверьте MIME-тип файла
 
       // Проверка на формат и размер файла
       const validFormats = ['image/jpeg', 'image/jpg', 'image/png', 'image/heif']
