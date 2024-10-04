@@ -73,37 +73,25 @@ const AvatarComponent: FC = () => {
         const image = await Camera.getPhoto({
           quality: 90,
           allowEditing: false,
-          resultType: CameraResultType.Uri,
+          resultType: CameraResultType.Base64, // Измените на Base64
           source: CameraSource.Camera,
           saveToGallery: true,
           correctOrientation: true,
         })
-        newImage = image.webPath // Получаем URL для изображения
+        newImage = `data:image/jpeg;base64,${image.base64String}` // Получаем URL для изображения
       } else if (text === 'Загрузити з галереї') {
         const image = await Camera.getPhoto({
           quality: 90,
           allowEditing: false,
           source: CameraSource.Photos,
-          resultType: CameraResultType.Uri,
+          resultType: CameraResultType.Base64, // Измените на Base64
         })
-        newImage = image.webPath // Получаем URL для изображения
+        newImage = `data:image/jpeg;base64,${image.base64String}` // Получаем URL для изображения
       }
 
       if (newImage) {
-        // Получаем blob
-        const response = await fetch(newImage)
-        if (!response.ok) {
-          setError('Не удалось получить изображение')
-          setLog(`Ошибка fetch: ${response.statusText}`)
-          return
-        }
-
-        const blob = await response.blob()
-
-        // Создаем URL для blob
-        const blobUrl = URL.createObjectURL(blob)
-        setLog(`Полученное изображение: ${blobUrl}`)
-        setCurrentImage(blobUrl) // Устанавливаем blob URL в качестве текущего изображения
+        setLog(`Полученное изображение: ${newImage}`)
+        setCurrentImage(newImage) // Устанавливаем Base64 URL в качестве текущего изображения
         setIsSaveButtonDisabled(false)
         setError(null)
       } else {
