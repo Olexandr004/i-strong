@@ -47,6 +47,27 @@ const AvatarComponent: FC = () => {
     let newImage: string | undefined
 
     try {
+      // Запрашиваем разрешение на доступ к галерее
+      if (text === 'Загрузити з галереї') {
+        const status = await Camera.requestPermissions({ permissions: ['camera', 'photos'] })
+
+        if (status.camera !== 'granted' || status.photos !== 'granted') {
+          setError('Необходимо предоставить доступ к камере и галерее')
+          return
+        }
+      }
+
+      // Запрашиваем разрешение на доступ к камере
+      if (text === 'Зробити фото') {
+        const status = await Camera.requestPermissions({ permissions: ['camera'] })
+
+        if (status.camera !== 'granted') {
+          setError('Необходимо предоставить доступ к камере')
+          return
+        }
+      }
+
+      // Логика получения изображения
       if (text === 'Зробити фото') {
         const image = await Camera.getPhoto({
           quality: 90,
@@ -71,9 +92,9 @@ const AvatarComponent: FC = () => {
         const response = await fetch(newImage)
         const blob = await response.blob()
         const blobUrl = URL.createObjectURL(blob)
-
+        console.log('MIME type of image:', blob.type)
         setLog(`Полученное изображение: ${blobUrl}`)
-        setCurrentImage(blobUrl) // Set the blob URL as the current image
+        setCurrentImage(blobUrl)
         setIsSaveButtonDisabled(false)
         setError(null)
       } else {
