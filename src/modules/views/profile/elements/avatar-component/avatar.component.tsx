@@ -12,7 +12,6 @@ import { useCommonStore, useUserStore } from '@/shared/stores'
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera'
 import styles from './avatar.module.scss'
 
-// Интерфейс для ответа об ошибке
 interface ErrorResponse {
   error?: string
 }
@@ -32,11 +31,12 @@ const AvatarComponent: FC = () => {
     handleChangeUserStore: state.handleChangeUserStore,
   }))
 
-  const token = user?.access_token // Извлекаем токен
+  const token = user?.access_token
 
   const [currentImage, setCurrentImage] = useState<string>(avatarImage || ImageAvatar.src)
   const [isSaveButtonDisabled, setIsSaveButtonDisabled] = useState(true)
-  const [error, setError] = useState<string | null>(null) // State для ошибок
+  const [error, setError] = useState<string | null>(null)
+  const [log, setLog] = useState<string | null>(null) // State для логов
 
   useEffect(() => {
     if (avatarImage) {
@@ -57,8 +57,6 @@ const AvatarComponent: FC = () => {
           saveToGallery: true,
           correctOrientation: true,
         })
-
-        // Используем только webPath
         newImage = image.webPath
       } else if (text === 'Загрузити з галереї') {
         const image = await Camera.getPhoto({
@@ -67,32 +65,28 @@ const AvatarComponent: FC = () => {
           source: CameraSource.Photos,
           resultType: CameraResultType.Uri,
         })
-
-        // Используем только webPath
         newImage = image.webPath
       }
 
-      // Проверяем, получен ли новый URL
       if (newImage) {
-        console.log('Полученное изображение:', newImage) // Логирование URL изображения
-        setCurrentImage(newImage) // Устанавливаем новое изображение
+        setLog(`Полученное изображение: ${newImage}`) // Логирование URL изображения на экран
+        setCurrentImage(newImage)
         setIsSaveButtonDisabled(false)
-        setError(null) // Сброс ошибки при выборе нового изображения
+        setError(null)
       } else {
-        setError('Не удалось получить URL изображения') // Устанавливаем ошибку
-        console.error('Не удалось получить URL изображения')
+        setError('Не удалось получить URL изображения')
+        setLog('Не удалось получить URL изображения')
       }
     } catch (err) {
-      setError('Произошла ошибка при загрузке изображения') // Устанавливаем ошибку
-      console.error('Ошибка при загрузке изображения:', err)
+      setError('Произошла ошибка при загрузке изображения')
+      setLog(`Ошибка при загрузке изображения: ${err}`)
     }
   }
 
-  // Мутация для обновления аватара
   const mutation: UseMutationResult<UpdateAvatarResponse, unknown, Blob, unknown> = useMutation({
     mutationFn: async (file: Blob) => {
       const formData = new FormData()
-      formData.append('media', file, 'avatar.jpg') // Добавляем файл в FormData
+      formData.append('media', file, 'avatar.jpg')
 
       const api = ky.extend({
         prefixUrl: 'https://istrongapp.com/api',
@@ -108,27 +102,24 @@ const AvatarComponent: FC = () => {
         })
 
         if (!response.ok) {
-          const jsonResponse = await response.json().catch(() => ({})) // Обрабатываем ошибку JSON
+          const jsonResponse = await response.json().catch(() => ({}))
           const errorResponse: ErrorResponse =
             typeof jsonResponse === 'object' && jsonResponse !== null
               ? (jsonResponse as ErrorResponse)
               : {}
 
-          console.error('Ошибка на сервере:', errorResponse) // Логируем ошибку
           throw new Error(errorResponse.error || 'Відбулася помилка під час оновлення аватара')
         }
 
         return await response.json()
       } catch (error) {
-        console.error('Ошибка при выполнении запроса:', error) // Логируем ошибку
         throw new Error('Не вдалося оновити аватар')
       }
     },
     onSuccess: (responseData) => {
-      console.log('Аватар успешно обновлён:', responseData)
+      setLog(`Аватар успешно обновлён: ${responseData.avatar.avatar}`)
       handleChangeCommonStore({ avatarImage: responseData.avatar.avatar })
 
-      // Обновляем avatar в user
       const updatedUser = {
         id: user?.id || 0,
         name: user?.name || '',
@@ -151,8 +142,6 @@ const AvatarComponent: FC = () => {
       handleChangeUserStore({ user: updatedUser })
       setIsSaveButtonDisabled(true)
       setError(null)
-
-      // Закрываем модальное окно после успешного сохранения
       handleChangeCommonStore({ isModalActive: false })
     },
     onError: (error: unknown) => {
@@ -161,16 +150,15 @@ const AvatarComponent: FC = () => {
         errorMessage = error.message
       }
       setError(errorMessage)
-      console.error('Ошибка при обновлении аватара:', error)
+      setLog(`Ошибка при обновлении аватара: ${errorMessage}`)
     },
   })
 
   const handleSaveClick = async () => {
     try {
       const file = await fetch(currentImage).then((res) => res.blob())
-      console.log('File MIME type:', file.type) // Проверьте MIME-тип файла
+      setLog(`File MIME type: ${file.type}`)
 
-      // Проверка на формат и размер файла
       const validFormats = ['image/jpeg', 'image/jpg', 'image/png', 'image/heif']
       if (!validFormats.includes(file.type)) {
         throw new Error(
@@ -182,7 +170,6 @@ const AvatarComponent: FC = () => {
         throw new Error('Розмір файлу не повинен перевищувати 5 МБ.')
       }
 
-      // Вызываем мутацию для отправки файла
       mutation.mutate(file)
     } catch (error) {
       let errorMessage = 'Неизвестная ошибка'
@@ -190,14 +177,13 @@ const AvatarComponent: FC = () => {
         errorMessage = error.message
       }
       setError(errorMessage)
-      console.error('Ошибка при сохранении аватара:', error)
+      setLog(`Ошибка при сохранении аватара: ${errorMessage}`)
     }
   }
 
-  // Кнопка "Видалити"
   const handleDeleteClick = () => {
-    setCurrentImage(ImageAvatar.src) // Сброс аватара на изображение по умолчанию
-    setIsSaveButtonDisabled(false) // Активируем кнопку "Зберегти"
+    setCurrentImage(ImageAvatar.src)
+    setIsSaveButtonDisabled(false)
   }
 
   const isLoading = mutation.status === 'pending'
@@ -210,13 +196,7 @@ const AvatarComponent: FC = () => {
           <IconClose onClick={() => handleChangeCommonStore({ isModalActive: false })} />
         </div>
         <div className={styles.image_container}>
-          <Image
-            src={currentImage}
-            alt='User Avatar'
-            layout='fill' // Используйте fill для заполнения контейнера
-            objectFit='cover' // Обеспечьте, чтобы изображение сохраняло пропорции
-            priority // Опционально, чтобы приоритетно загружать изображение
-          />
+          <Image src={currentImage} alt='User Avatar' layout='fill' objectFit='cover' priority />
         </div>
         <div className={styles.buttons}>
           <ButtonComponent variant={'outlined'} onClick={() => handleButtonClick('Зробити фото')}>
@@ -242,7 +222,8 @@ const AvatarComponent: FC = () => {
               <IconDelete /> Видалити
             </button>
           </div>
-          {error && <p className={styles.error}>{error}</p>} {/* Вывод ошибки на экран */}
+          {error && <p className={styles.error}>{error}</p>}
+          {log && <p className={styles.log}>{log}</p>} {/* Вывод логов на экран */}
         </div>
       </div>
     </BaseModalComponent>
