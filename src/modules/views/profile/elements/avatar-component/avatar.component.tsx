@@ -256,7 +256,6 @@ const AvatarComponent: FC = () => {
           </div>
         </div>
         {error && <div className={styles.error}>{error}</div>}
-        {log && <div className={styles.log}>{log}</div>}
       </div>
     </BaseModalComponent>
   )
