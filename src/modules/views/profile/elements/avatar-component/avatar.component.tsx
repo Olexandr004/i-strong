@@ -3,7 +3,6 @@
 import { FC, useEffect, useState } from 'react'
 import { useMutation, UseMutationResult } from '@tanstack/react-query'
 import ky from 'ky'
-import Image from 'next/image'
 import { ButtonComponent } from '@/shared/components'
 import { BaseModalComponent } from '@/shared/components'
 import { IconClose, IconDelete } from '@/shared/icons'
@@ -69,10 +68,9 @@ const AvatarComponent: FC = () => {
       }
 
       if (newImage) {
-        // Fetch the image as a blob
         const response = await fetch(newImage)
         const blob = await response.blob()
-        const blobUrl = URL.createObjectURL(blob) // Create a blob URL for the image
+        const blobUrl = URL.createObjectURL(blob)
 
         setLog(`Полученное изображение: ${blobUrl}`)
         setCurrentImage(blobUrl) // Set the blob URL as the current image
@@ -201,7 +199,8 @@ const AvatarComponent: FC = () => {
           <IconClose onClick={() => handleChangeCommonStore({ isModalActive: false })} />
         </div>
         <div className={styles.image_container}>
-          <Image src={currentImage} alt='User Avatar' layout='fill' objectFit='cover' priority />
+          {/* Используем стандартный тег <img> для отображения Blob URL */}
+          <img src={currentImage} alt='User Avatar' className={styles.image} />
         </div>
         <div className={styles.buttons}>
           <ButtonComponent variant={'outlined'} onClick={() => handleButtonClick('Зробити фото')}>
