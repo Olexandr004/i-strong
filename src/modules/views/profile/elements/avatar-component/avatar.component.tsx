@@ -10,6 +10,7 @@ import { IconClose, IconDelete } from '@/shared/icons'
 import { ImageAvatar } from '@/shared/images'
 import { useCommonStore, useUserStore } from '@/shared/stores'
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera'
+import { isPlatform } from '@ionic/react' // Импорт для проверки платформы
 import styles from './avatar.module.scss'
 
 interface ErrorResponse {
@@ -44,6 +45,14 @@ const AvatarComponent: FC = () => {
     }
   }, [avatarImage])
 
+  // Функция для корректировки пути на мобильных устройствах
+  const getImageUrl = (imageUri: string) => {
+    if (isPlatform('mobile') && imageUri.startsWith('_capacitor_file_')) {
+      return imageUri.replace('_capacitor_file_', 'capacitor://')
+    }
+    return imageUri
+  }
+
   const handleButtonClick = async (text: string) => {
     let newImage: string | undefined
 
@@ -69,8 +78,9 @@ const AvatarComponent: FC = () => {
       }
 
       if (newImage) {
-        setLog(`Полученное изображение: ${newImage}`) // Логирование URL изображения на экран
-        setCurrentImage(newImage)
+        const correctedImageUrl = getImageUrl(newImage) // Корректировка пути
+        setLog(`Полученное изображение: ${correctedImageUrl}`) // Логирование URL изображения на экран
+        setCurrentImage(correctedImageUrl)
         setIsSaveButtonDisabled(false)
         setError(null)
       } else {
