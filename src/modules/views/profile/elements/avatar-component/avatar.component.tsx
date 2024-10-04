@@ -92,6 +92,12 @@ const AvatarComponent: FC = () => {
       if (newImage) {
         // Получаем blob
         const response = await fetch(newImage)
+        if (!response.ok) {
+          setError('Не удалось получить изображение')
+          setLog(`Ошибка fetch: ${response.statusText}`)
+          return
+        }
+
         const blob = await response.blob()
 
         // Создаем URL для blob
@@ -230,7 +236,10 @@ const AvatarComponent: FC = () => {
             layout='fill'
             objectFit='cover'
             priority
-            onError={() => setError('Не удалось загрузить изображение')}
+            onError={() => {
+              setError('Не удалось загрузить изображение')
+              setLog(`Ошибка при загрузке изображения: Не удалось загрузить изображение`)
+            }}
           />
         </div>
         <div className={styles.buttons}>
@@ -253,13 +262,13 @@ const AvatarComponent: FC = () => {
             >
               {isLoading ? 'Збереження...' : 'Зберегти'}
             </ButtonComponent>
-            <button onClick={handleDeleteClick}>
-              <IconDelete /> Видалити
-            </button>
+            <ButtonComponent variant={'outlined'} onClick={handleDeleteClick}>
+              <IconDelete />
+            </ButtonComponent>
           </div>
-          {error && <p className={styles.error}>{error}</p>}
-          {log && <p className={styles.log}>{log}</p>} {/* Вывод логов */}
         </div>
+        {error && <div className={styles.error}>{error}</div>}
+        {log && <div className={styles.log}>{log}</div>}
       </div>
     </BaseModalComponent>
   )
