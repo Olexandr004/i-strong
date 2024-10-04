@@ -58,7 +58,12 @@ const AvatarComponent: FC = () => {
           saveToGallery: true,
           correctOrientation: true,
         })
-        newImage = Capacitor.convertFileSrc(image.webPath!)
+        // Проверяем среду (веб или нативное приложение)
+        if (Capacitor.isNativePlatform()) {
+          newImage = Capacitor.convertFileSrc(image.webPath!)
+        } else {
+          newImage = image.webPath!
+        }
       } else if (text === 'Загрузити з галереї') {
         const image = await Camera.getPhoto({
           quality: 90,
@@ -66,7 +71,11 @@ const AvatarComponent: FC = () => {
           source: CameraSource.Photos,
           resultType: CameraResultType.Uri,
         })
-        newImage = Capacitor.convertFileSrc(image.webPath!)
+        if (Capacitor.isNativePlatform()) {
+          newImage = Capacitor.convertFileSrc(image.webPath!)
+        } else {
+          newImage = image.webPath!
+        }
       }
 
       if (newImage) {
