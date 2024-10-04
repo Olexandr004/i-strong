@@ -6,6 +6,13 @@ import { IconButtonComponent } from '@/shared/components/ui/icon-button'
 import ToggleBtnComponent from '@/shared/components/ui/toggle-btn/toggle-btn.component'
 import { IconEdit } from '@/shared/icons'
 import { useUserStore } from '@/shared/stores'
+import {
+  notifications,
+  scheduleNotifications,
+  cancelNotifications,
+  getNotificationState,
+  saveNotificationState,
+} from '@/utils/native-app/notifications' // Импортируйте ваши функции
 import styles from './settings.module.scss'
 
 interface ISettings {}
@@ -17,43 +24,22 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
   const [moodTrackerEnabled, setMoodTrackerEnabled] = useState<boolean>(false)
   const [challengeNotificationsEnabled, setChallengeNotificationsEnabled] = useState<boolean>(false)
 
-  // Функция для загрузки состояния уведомлений
+  // Функция для загрузки состояния уведомлений с сервера
   const fetchNotificationPreferences = async (token: string) => {
     const response = await fetch('https://istrongapp.com/api/users/profile/', {
-      method: 'GET', // Измените метод на GET
+      method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
     })
 
-    const responseText = await response.text()
-    console.log('Response Status:', response.status)
-    console.log('Response Text:', responseText)
-
     if (!response.ok) {
-      throw new Error(
-        `Failed to fetch notification preferences: ${response.status} - ${responseText}`,
-      )
+      throw new Error(`Failed to fetch notification preferences: ${response.status}`)
     }
 
-    return JSON.parse(responseText)
+    return await response.json()
   }
-
-  useEffect(() => {
-    const loadNotificationStates = async () => {
-      if (user?.access_token) {
-        try {
-          const preferences = await fetchNotificationPreferences(user.access_token)
-          setMoodTrackerEnabled(preferences.notifications_preferences.mood_survey)
-          setChallengeNotificationsEnabled(preferences.notifications_preferences.challenges)
-        } catch (error) {
-          console.error('Error loading notification states:', error)
-        }
-      }
-    }
-    loadNotificationStates()
-  }, [user])
 
   // Функция для обновления настроек уведомлений на сервере
   const updateNotificationPreferences = async (
@@ -83,28 +69,42 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
     return await response.json()
   }
 
-  const handleResetRoit = () => {
-    router.push('/settings/reset-password')
-  }
-
-  const handleDelete = () => {
-    router.push('/account-deletion')
-  }
+  // Загрузка состояния уведомлений при инициализации
+  useEffect(() => {
+    const loadNotificationStates = async () => {
+      if (user?.access_token) {
+        try {
+          const preferences = await fetchNotificationPreferences(user.access_token)
+          setMoodTrackerEnabled(preferences.notifications_preferences.mood_survey)
+          setChallengeNotificationsEnabled(preferences.notifications_preferences.challenges)
+        } catch (error) {
+          console.error('Error loading notification states:', error)
+        }
+      }
+    }
+    loadNotificationStates()
+  }, [user])
 
   // Сохранение состояния для трекера настроения
   const handleToggleMoodTracker = async () => {
     const newState = !moodTrackerEnabled // Изменяем состояние
     setMoodTrackerEnabled(newState)
+    await saveNotificationState('moodTrackerNotificationsEnabled', newState) // Сохраняем состояние в Preferences
 
     if (user?.access_token) {
       try {
-        const response = await updateNotificationPreferences(
+        await updateNotificationPreferences(
           user.access_token,
           newState,
           challengeNotificationsEnabled,
         )
-        // Обновляем состояние пользователя
-        handleChangeUserStore(response.user) // Обновлено: сохраняем обновленные данные пользователя
+        if (newState) {
+          await scheduleNotifications(
+            notifications.filter((notification) => notification.id === 2 || notification.id === 3),
+          )
+        } else {
+          await cancelNotifications([2, 3])
+        }
       } catch (error) {
         console.error('Error updating notification preferences:', error)
       }
@@ -115,16 +115,16 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
   const handleToggleChallengeNotifications = async () => {
     const newState = !challengeNotificationsEnabled // Изменяем состояние
     setChallengeNotificationsEnabled(newState)
+    await saveNotificationState('challengeNotificationsEnabled', newState) // Сохраняем состояние в Preferences
 
     if (user?.access_token) {
       try {
-        const response = await updateNotificationPreferences(
-          user.access_token,
-          moodTrackerEnabled,
-          newState,
-        )
-        // Обновляем состояние пользователя
-        handleChangeUserStore(response.user) // Обновлено: сохраняем обновленные данные пользователя
+        await updateNotificationPreferences(user.access_token, moodTrackerEnabled, newState)
+        if (newState) {
+          await scheduleNotifications(notifications.filter((notification) => notification.id === 1))
+        } else {
+          await cancelNotifications([1])
+        }
       } catch (error) {
         console.error('Error updating notification preferences:', error)
       }
@@ -142,7 +142,10 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
           <div className={styles.settings_card__header}>
             <h2>Конфіденційність</h2>
 
-            <IconButtonComponent name={'Edit'} onClick={handleResetRoit}>
+            <IconButtonComponent
+              name={'Edit'}
+              onClick={() => router.push('/settings/reset-password')}
+            >
               <IconEdit />
             </IconButtonComponent>
           </div>
@@ -184,7 +187,9 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
         </div>
       </div>
 
-      <ButtonComponent onClick={handleDelete}>Видалити аккаунт</ButtonComponent>
+      <ButtonComponent onClick={() => router.push('/account-deletion')}>
+        Видалити аккаунт
+      </ButtonComponent>
     </section>
   )
 }

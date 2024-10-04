@@ -36,7 +36,6 @@ const AvatarComponent: FC = () => {
   const [currentImage, setCurrentImage] = useState<string>(avatarImage || ImageAvatar.src)
   const [isSaveButtonDisabled, setIsSaveButtonDisabled] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [log, setLog] = useState<string | null>(null) // State для логов
 
   useEffect(() => {
     if (avatarImage) {
@@ -53,7 +52,7 @@ const AvatarComponent: FC = () => {
         const status = await Camera.requestPermissions({ permissions: ['camera', 'photos'] })
 
         if (status.camera !== 'granted' || status.photos !== 'granted') {
-          setError('Необходимо предоставить доступ к камере и галерее')
+          setError('Необхідно надати доступ до камери та галереї')
           return
         }
       }
@@ -63,7 +62,7 @@ const AvatarComponent: FC = () => {
         const status = await Camera.requestPermissions({ permissions: ['camera'] })
 
         if (status.camera !== 'granted') {
-          setError('Необходимо предоставить доступ к камере')
+          setError('Необхідно надати доступ до камери')
           return
         }
       }
@@ -90,17 +89,14 @@ const AvatarComponent: FC = () => {
       }
 
       if (newImage) {
-        setLog(`Полученное изображение: ${newImage}`)
         setCurrentImage(newImage) // Устанавливаем Base64 URL в качестве текущего изображения
         setIsSaveButtonDisabled(false)
         setError(null)
       } else {
-        setError('Не удалось получить URL изображения')
-        setLog('Не удалось получить URL изображения')
+        setError('Не вдалося отримати URL зображення')
       }
     } catch (err) {
-      setError('Произошла ошибка при загрузке изображения')
-      setLog(`Ошибка при загрузке изображения: ${err}`)
+      setError('Виникла помилка при завантаженні зображення')
     }
   }
 
@@ -138,7 +134,6 @@ const AvatarComponent: FC = () => {
       }
     },
     onSuccess: (responseData) => {
-      setLog(`Аватар успешно обновлён: ${responseData.avatar.avatar}`)
       handleChangeCommonStore({ avatarImage: responseData.avatar.avatar })
 
       const updatedUser = {
@@ -166,12 +161,11 @@ const AvatarComponent: FC = () => {
       handleChangeCommonStore({ isModalActive: false })
     },
     onError: (error: unknown) => {
-      let errorMessage = 'Неизвестная ошибка'
+      let errorMessage = 'Невідома помилка'
       if (error instanceof Error) {
         errorMessage = error.message
       }
       setError(errorMessage)
-      setLog(`Ошибка при обновлении аватара: ${errorMessage}`)
     },
   })
 
@@ -179,7 +173,6 @@ const AvatarComponent: FC = () => {
     try {
       // Получаем blob из currentImage
       const file = await fetch(currentImage).then((res) => res.blob())
-      setLog(`File MIME type: ${file.type}`)
 
       const validFormats = ['image/jpeg', 'image/jpg', 'image/png', 'image/heif']
       if (!validFormats.includes(file.type)) {
@@ -194,12 +187,11 @@ const AvatarComponent: FC = () => {
 
       mutation.mutate(file)
     } catch (error) {
-      let errorMessage = 'Неизвестная ошибка'
+      let errorMessage = 'Невідома помилка'
       if (error instanceof Error) {
         errorMessage = error.message
       }
       setError(errorMessage)
-      setLog(`Ошибка при сохранении аватара: ${errorMessage}`)
     }
   }
 
@@ -225,8 +217,7 @@ const AvatarComponent: FC = () => {
             objectFit='cover'
             priority
             onError={() => {
-              setError('Не удалось загрузить изображение')
-              setLog(`Ошибка при загрузке изображения: Не удалось загрузить изображение`)
+              setError('Неможливо завантажити зображення')
             }}
           />
         </div>
@@ -242,20 +233,19 @@ const AvatarComponent: FC = () => {
           </ButtonComponent>
         </div>
         <div className={styles.footer}>
-          <div>
-            <ButtonComponent
-              size={'regular'}
-              onClick={handleSaveClick}
-              disabled={isSaveButtonDisabled || isLoading}
-            >
-              {isLoading ? 'Збереження...' : 'Зберегти'}
-            </ButtonComponent>
-            <ButtonComponent variant={'outlined'} onClick={handleDeleteClick}>
-              <IconDelete />
-            </ButtonComponent>
-          </div>
+          <button onClick={handleDeleteClick} className={styles.button}>
+            <IconDelete />
+            <span>Видалити</span>
+          </button>
+          <ButtonComponent
+            size={'regular'}
+            onClick={handleSaveClick}
+            disabled={isSaveButtonDisabled || isLoading}
+          >
+            {isLoading ? 'Збереження...' : 'Зберегти'}
+          </ButtonComponent>
         </div>
-        {error && <div className={styles.error}>{error}</div>}
+        {error && <div>{error}</div>}
       </div>
     </BaseModalComponent>
   )

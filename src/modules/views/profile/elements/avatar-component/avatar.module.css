@@ -34,7 +34,7 @@
 .modal__box .header,
 .modal__box .footer {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
 }
 .modal__box .header button,
@@ -68,7 +68,7 @@
   height: 23px;
 }
 .footer .button {
-  margin: 0 auto;
+  margin-left: -20px;
 }
 .footer .button span {
   font-style: normal;

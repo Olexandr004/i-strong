@@ -27,7 +27,7 @@
   .header,
   .footer {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
     button {
       width: 132px;
@@ -61,7 +61,7 @@
     height: 23px;
   }
   .button {
-    margin: 0 auto;
+    margin-left: -20px;
     span {
       font-style: normal;
       font-weight: 500;
