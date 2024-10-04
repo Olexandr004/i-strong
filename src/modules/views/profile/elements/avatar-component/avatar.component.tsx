@@ -10,7 +10,6 @@ import { IconClose, IconDelete } from '@/shared/icons'
 import { ImageAvatar } from '@/shared/images'
 import { useCommonStore, useUserStore } from '@/shared/stores'
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera'
-import { Capacitor } from '@capacitor/core'
 import styles from './avatar.module.scss'
 
 interface ErrorResponse {
@@ -58,12 +57,7 @@ const AvatarComponent: FC = () => {
           saveToGallery: true,
           correctOrientation: true,
         })
-        // Проверяем среду (веб или нативное приложение)
-        if (Capacitor.isNativePlatform()) {
-          newImage = Capacitor.convertFileSrc(image.webPath!)
-        } else {
-          newImage = image.webPath!
-        }
+        newImage = image.webPath
       } else if (text === 'Загрузити з галереї') {
         const image = await Camera.getPhoto({
           quality: 90,
@@ -71,16 +65,17 @@ const AvatarComponent: FC = () => {
           source: CameraSource.Photos,
           resultType: CameraResultType.Uri,
         })
-        if (Capacitor.isNativePlatform()) {
-          newImage = Capacitor.convertFileSrc(image.webPath!)
-        } else {
-          newImage = image.webPath!
-        }
+        newImage = image.webPath
       }
 
       if (newImage) {
-        setLog(`Полученное изображение: ${newImage}`)
-        setCurrentImage(newImage)
+        // Fetch the image as a blob
+        const response = await fetch(newImage)
+        const blob = await response.blob()
+        const blobUrl = URL.createObjectURL(blob) // Create a blob URL for the image
+
+        setLog(`Полученное изображение: ${blobUrl}`)
+        setCurrentImage(blobUrl) // Set the blob URL as the current image
         setIsSaveButtonDisabled(false)
         setError(null)
       } else {
@@ -233,7 +228,7 @@ const AvatarComponent: FC = () => {
             </button>
           </div>
           {error && <p className={styles.error}>{error}</p>}
-          {log && <p className={styles.log}>{log}</p>} {/* Вывод логов на экран */}
+          {log && <p className={styles.log}>{log}</p>}
         </div>
       </div>
     </BaseModalComponent>
