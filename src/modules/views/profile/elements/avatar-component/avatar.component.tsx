@@ -3,6 +3,7 @@
 import { FC, useEffect, useState } from 'react'
 import { useMutation, UseMutationResult } from '@tanstack/react-query'
 import ky from 'ky'
+import Image from 'next/image'
 import { ButtonComponent } from '@/shared/components'
 import { BaseModalComponent } from '@/shared/components'
 import { IconClose, IconDelete } from '@/shared/icons'
@@ -35,7 +36,7 @@ const AvatarComponent: FC = () => {
   const [currentImage, setCurrentImage] = useState<string>(avatarImage || ImageAvatar.src)
   const [isSaveButtonDisabled, setIsSaveButtonDisabled] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [log, setLog] = useState<string | null>(null)
+  const [log, setLog] = useState<string | null>(null) // State для логов
 
   useEffect(() => {
     if (avatarImage) {
@@ -77,7 +78,7 @@ const AvatarComponent: FC = () => {
           saveToGallery: true,
           correctOrientation: true,
         })
-        newImage = image.webPath
+        newImage = image.webPath // Получаем URL для изображения
       } else if (text === 'Загрузити з галереї') {
         const image = await Camera.getPhoto({
           quality: 90,
@@ -85,16 +86,18 @@ const AvatarComponent: FC = () => {
           source: CameraSource.Photos,
           resultType: CameraResultType.Uri,
         })
-        newImage = image.webPath
+        newImage = image.webPath // Получаем URL для изображения
       }
 
       if (newImage) {
+        // Получаем blob
         const response = await fetch(newImage)
         const blob = await response.blob()
+
+        // Создаем URL для blob
         const blobUrl = URL.createObjectURL(blob)
-        console.log('MIME type of image:', blob.type)
         setLog(`Полученное изображение: ${blobUrl}`)
-        setCurrentImage(blobUrl)
+        setCurrentImage(blobUrl) // Устанавливаем blob URL в качестве текущего изображения
         setIsSaveButtonDisabled(false)
         setError(null)
       } else {
@@ -180,6 +183,7 @@ const AvatarComponent: FC = () => {
 
   const handleSaveClick = async () => {
     try {
+      // Получаем blob из currentImage
       const file = await fetch(currentImage).then((res) => res.blob())
       setLog(`File MIME type: ${file.type}`)
 
@@ -220,8 +224,14 @@ const AvatarComponent: FC = () => {
           <IconClose onClick={() => handleChangeCommonStore({ isModalActive: false })} />
         </div>
         <div className={styles.image_container}>
-          {/* Используем стандартный тег <img> для отображения Blob URL */}
-          <img src={currentImage} alt='User Avatar' className={styles.image} />
+          <Image
+            src={currentImage}
+            alt='User Avatar'
+            layout='fill'
+            objectFit='cover'
+            priority
+            onError={() => setError('Не удалось загрузить изображение')}
+          />
         </div>
         <div className={styles.buttons}>
           <ButtonComponent variant={'outlined'} onClick={() => handleButtonClick('Зробити фото')}>
@@ -248,7 +258,7 @@ const AvatarComponent: FC = () => {
             </button>
           </div>
           {error && <p className={styles.error}>{error}</p>}
-          {log && <p className={styles.log}>{log}</p>}
+          {log && <p className={styles.log}>{log}</p>} {/* Вывод логов */}
         </div>
       </div>
     </BaseModalComponent>
