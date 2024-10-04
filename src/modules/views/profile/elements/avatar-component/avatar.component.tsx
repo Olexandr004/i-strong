@@ -10,7 +10,7 @@ import { IconClose, IconDelete } from '@/shared/icons'
 import { ImageAvatar } from '@/shared/images'
 import { useCommonStore, useUserStore } from '@/shared/stores'
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera'
-import { isPlatform } from '@ionic/react' // Импорт для проверки платформы
+import { Capacitor } from '@capacitor/core'
 import styles from './avatar.module.scss'
 
 interface ErrorResponse {
@@ -37,21 +37,13 @@ const AvatarComponent: FC = () => {
   const [currentImage, setCurrentImage] = useState<string>(avatarImage || ImageAvatar.src)
   const [isSaveButtonDisabled, setIsSaveButtonDisabled] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [log, setLog] = useState<string | null>(null) // State для логов
+  const [log, setLog] = useState<string | null>(null)
 
   useEffect(() => {
     if (avatarImage) {
       setCurrentImage(avatarImage)
     }
   }, [avatarImage])
-
-  // Функция для корректировки пути на мобильных устройствах
-  const getImageUrl = (imageUri: string) => {
-    if (isPlatform('mobile') && imageUri.startsWith('_capacitor_file_')) {
-      return imageUri.replace('_capacitor_file_', 'capacitor://')
-    }
-    return imageUri
-  }
 
   const handleButtonClick = async (text: string) => {
     let newImage: string | undefined
@@ -66,7 +58,7 @@ const AvatarComponent: FC = () => {
           saveToGallery: true,
           correctOrientation: true,
         })
-        newImage = image.webPath
+        newImage = Capacitor.convertFileSrc(image.webPath!)
       } else if (text === 'Загрузити з галереї') {
         const image = await Camera.getPhoto({
           quality: 90,
@@ -74,13 +66,12 @@ const AvatarComponent: FC = () => {
           source: CameraSource.Photos,
           resultType: CameraResultType.Uri,
         })
-        newImage = image.webPath
+        newImage = Capacitor.convertFileSrc(image.webPath!)
       }
 
       if (newImage) {
-        const correctedImageUrl = getImageUrl(newImage) // Корректировка пути
-        setLog(`Полученное изображение: ${correctedImageUrl}`) // Логирование URL изображения на экран
-        setCurrentImage(correctedImageUrl)
+        setLog(`Полученное изображение: ${newImage}`)
+        setCurrentImage(newImage)
         setIsSaveButtonDisabled(false)
         setError(null)
       } else {
