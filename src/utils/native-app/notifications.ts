@@ -21,7 +21,7 @@ export const notifications: NotificationConfig[] = [
     title: 'IStrong',
     body: 'А ось і новий челендж🔥Що там цікавого підготувала Капібара цього разу?',
     url: `${BASE_URL}/challenges?path=new`,
-    schedule: { every: 'minute', repeats: true }, //10:00
+    schedule: { at: new Date(new Date().setHours(10, 0, 0)), repeats: true }, //10:00
     attachments: [
       { id: 'challenges-image', url: `${BASE_URL}/path_to_your_image/challenges_image.png` },
     ],
@@ -32,7 +32,7 @@ export const notifications: NotificationConfig[] = [
     title: 'IStrong',
     body: 'Привіт, ти як? Поділись своїм станом з Капібарою та отримай монетку.',
     url: `${BASE_URL}/diary`,
-    schedule: { every: 'minute', repeats: true }, //9:00
+    schedule: { at: new Date(new Date().setHours(9, 0, 0)), repeats: true }, //9:00
     attachments: [{ id: 'test-image', url: `${BASE_URL}/images/icon-arrow.svg` }],
     smallIcon: 'ic_stat_icon1',
   },
@@ -41,7 +41,7 @@ export const notifications: NotificationConfig[] = [
     title: 'IStrong',
     body: 'Хей, як пройшов твій день? Розкажи Капібарі - і монетка твоя!',
     url: `${BASE_URL}/diary`,
-    schedule: { every: 'minute', repeats: true }, //18:00
+    schedule: { at: new Date(new Date().setHours(18, 0, 0)), repeats: true }, //18:00
     attachments: [{ id: 'test2-image', url: IconArrow }],
     smallIcon: 'ic_stat_icon1',
   },
