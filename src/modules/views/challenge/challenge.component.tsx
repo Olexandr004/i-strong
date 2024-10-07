@@ -132,7 +132,10 @@ export const ChallengeComponent: FC<Readonly<IChallengeComponent>> = () => {
                 id='challenge-impressions'
                 className={`text-5 ${styles.challenge__area_input}`}
                 value={note}
-                onChange={(e) => setNote(e.target.value)}
+                onChange={(e) => {
+                  const cleanedValue = e.target.value.replace(/ {3,}/g, '  ') // Заменяем более двух пробелов на два
+                  setNote(cleanedValue) // Обновляем состояние очищенным значением
+                }}
                 disabled={disableInteraction}
               ></textarea>
               <p className={`text-4-grey`}>*50+ символів</p>

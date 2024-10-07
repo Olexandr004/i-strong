@@ -48,7 +48,7 @@ const AvatarComponent: FC = () => {
 
     try {
       // Запрашиваем разрешение на доступ к галерее
-      if (text === 'Загрузити з галереї') {
+      if (text === 'Завантажити з галереї') {
         const status = await Camera.requestPermissions({ permissions: ['camera', 'photos'] })
 
         if (status.camera !== 'granted' || status.photos !== 'granted') {
@@ -78,7 +78,7 @@ const AvatarComponent: FC = () => {
           correctOrientation: true,
         })
         newImage = `data:image/jpeg;base64,${image.base64String}` // Получаем URL для изображения
-      } else if (text === 'Загрузити з галереї') {
+      } else if (text === 'Завантажити з галереї') {
         const image = await Camera.getPhoto({
           quality: 90,
           allowEditing: false,
@@ -227,9 +227,9 @@ const AvatarComponent: FC = () => {
           </ButtonComponent>
           <ButtonComponent
             variant={'outlined'}
-            onClick={() => handleButtonClick('Загрузити з галереї')}
+            onClick={() => handleButtonClick('Завантажити з галереї')}
           >
-            Загрузити з галереї
+            Завантажити з галереї
           </ButtonComponent>
         </div>
         <div className={styles.footer}>
