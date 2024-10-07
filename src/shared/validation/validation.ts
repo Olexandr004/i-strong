@@ -12,7 +12,7 @@ export const phoneNumberPattern: { value: any; message: string } = {
 
 export const passwordPattern: { value: any; message: string } = {
   // value: /^(?=\s*\S*[0-9]\S*\s*$)(?=\s*\S*[a-zA-Z]\S*\s*$)[a-zA-Z0-9@#$_&+()/]{8,15}$/,
-  value: /^(?=.*[a-z])(?=.*\d)[A-Za-z\d@$!%*?&()#_+]{8,15}$/,
+  value: /^(?=.*[a-zA-Z])(?=.*\d)[A-Za-z\d@$!%*?&()#_+]{8,15}$/,
   message:
     'Від 8 до 15 символів без пробілів, латинські літери, цифри, щонайменше одна літера і одна цифра',
 }
