@@ -1,8 +1,9 @@
 'use client'
 import type { Metadata, Viewport } from 'next'
-import { FC, ReactNode, useEffect } from 'react'
+import { FC, ReactNode, useEffect, useState } from 'react'
 import '@/styles/globals.scss'
 import 'swiper/css'
+import { useRouter } from 'next/navigation' // Импортируем useRouter
 
 // metadata
 export const viewport: Viewport = initialViewport
@@ -29,10 +30,12 @@ interface IRootLayout {
 
 //component
 const RootLayout: FC<Readonly<IRootLayout>> = ({ home, entry }) => {
+  const router = useRouter() // Инициализируем useRouter
   const handleChangeCommonStore = useCommonStore((state) => state.handleChangeCommonStore)
   const errorText = useCommonStore((state) => state.errorText)
   const successfulText = useCommonStore((state) => state.successfulText)
   const { queryClient } = useTanStackClient()
+  const [isOnline, setIsOnline] = useState(true) // Изначально считаем, что интернет есть
 
   useEffect(() => {
     const handleClick = () => {
@@ -69,11 +72,58 @@ const RootLayout: FC<Readonly<IRootLayout>> = ({ home, entry }) => {
     loadNotifications()
   }, [])
 
+  // Обработчики состояния сети
+  useEffect(() => {
+    const handleOnline = () => {
+      setIsOnline(true)
+      handleChangeCommonStore({ successfulText: `З'єднання відновлено!` })
+    }
+
+    const handleOffline = () => {
+      setIsOnline(false)
+      handleChangeCommonStore({ errorText: 'Немає підключення до Інтернету.' })
+
+      // Откладываем перенаправление на страницу оффлайна на 3 секунды, чтобы убедиться, что соединение действительно отсутствует
+      setTimeout(() => {
+        if (!navigator.onLine) {
+          router.push('/offline') // Перенаправляем на страницу оффлайна
+        }
+      }, 3000) // Задержка в 3 секунды
+    }
+
+    window.addEventListener('online', handleOnline)
+    window.addEventListener('offline', handleOffline)
+
+    // Удаляем обработчики событий при размонтировании
+    return () => {
+      window.removeEventListener('online', handleOnline)
+      window.removeEventListener('offline', handleOffline)
+    }
+  }, [router])
+
+  // Регистрация Service Worker
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker
+          .register('/sw.js') // Убедитесь, что путь к вашему Service Worker правильный
+          .then((registration) => {
+            console.log('Service Worker зарегистрирован с областью:', registration.scope)
+          })
+          .catch((error) => {
+            console.error('Ошибка регистрации Service Worker:', error)
+          })
+      })
+    }
+  }, [])
+
   //return
   return (
     <html lang='uk' className={mainFont.className}>
       <QueryClientProvider client={queryClient}>
-        <RootLayoutComponent entry={entry} home={home} />
+        <body>
+          <RootLayoutComponent entry={entry} home={home} />
+        </body>
       </QueryClientProvider>
     </html>
   )
