@@ -82,6 +82,12 @@ const RootLayout: FC<Readonly<IRootLayout>> = ({ home, entry }) => {
     const handleOffline = () => {
       setIsOnline(false)
       handleChangeCommonStore({ errorText: 'Немає підключення до Інтернету.' })
+
+      // Автоматически закрываем уведомление через 2 секунды
+      setTimeout(() => {
+        handleChangeCommonStore({ errorText: null }) // Сбрасываем текст ошибки
+      }, 2000)
+
       setTimeout(() => {
         if (!navigator.onLine) {
           router.push('/offline')
