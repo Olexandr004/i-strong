@@ -84,7 +84,7 @@ const RootLayout: FC<Readonly<IRootLayout>> = ({ home, entry }) => {
       handleChangeCommonStore({ errorText: 'Немає підключення до Інтернету.' })
       setTimeout(() => {
         if (!navigator.onLine) {
-          router.push('/offline.html')
+          router.push('/offline')
         }
       }, 3000)
     }

@@ -1,7 +1,7 @@
 // sw.js
 
 const CACHE_NAME = 'offline-cache';
-const OFFLINE_URL = 'offline.html'; // Или ваш HTML-файл для отображения оффлайн
+const OFFLINE_URL = '/offline'; // Или ваш HTML-файл для отображения оффлайн
 
 const RESOURCES_TO_CACHE = [
     OFFLINE_URL,
