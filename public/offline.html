@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Упс! Немає підключення</title>
+	<style>
+		.offline {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			width: 100%;
+			overflow: hidden;
+			transform: translate(-50%, -50%);
+		}
+		.offline h1 {
+			font-style: normal;
+			font-weight: 900;
+			font-size: 3.2rem;
+			line-height: 3.9rem;
+			text-align: center;
+			color: #1e1e1e;
+			align-self: stretch;
+			margin-bottom: 10px;
+		}
+		.offline p {
+			font-style: normal;
+			font-weight: 700;
+			font-size: 1.6rem;
+			line-height: 2rem;
+			text-align: center;
+			color: #1e1e1e;
+			order: 1;
+			align-self: stretch;
+			margin-bottom: 80px;
+		}
+		.offline img {
+			width: 100%;
+			height: 100%;
+		}
+		.offline .error_text {
+			padding: 0 10px;
+			height: 94px;
+			width: 95%;
+			position: absolute;
+			bottom: 330px;
+			z-index: -1;
+		}
+		.offline .error_capibara {
+			min-height: 362px;
+			object-fit: cover;
+			max-width: 100%;
+		}
+		.actionButton {
+			position: absolute;
+			left: 50%;
+			bottom: 62px;
+			border: none;
+			cursor: pointer;
+			display: none;
+			transform: translateX(-50%);
+			flex-direction: row;
+			justify-content: center;
+			align-items: center;
+			padding: 8px 24px;
+			gap: 8px;
+			width: 272px;
+			height: 42px;
+			background: #FFC75A;
+			box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.15);
+			border-radius: 24px;
+			/* Text/3 */
+			font-style: normal;
+			font-weight: 700;
+			font-size: 1.1rem;
+			line-height: 2rem;
+			color: #1E1E1E;
+		}
+	</style>
+</head>
+<body>
+<div class="offline">
+	<h1>Упс!</h1>
+	<p>Здається, щось пішло не так!</p>
+	<img src="/image/error-text.png" alt="error-text" class="error_text">
+	<img src="/image/error-capibara.png" alt="error-capibara" class="error_capibara">
+</div>
+
+<button class="actionButton" id="actionButton">
+	Повернутися назад
+</button>
+
+<script>
+	// Проверка состояния сети
+	const actionButton = document.getElementById('actionButton');
+	
+	function updateNetworkStatus() {
+		if (navigator.onLine) {
+			actionButton.textContent = 'Повернутися назад'; // Текст кнопки при онлайн
+			actionButton.style.display = 'block'; // Показываем кнопку при восстановлении соединения
+			actionButton.onclick = () => window.history.back(); // Обработчик для возврата на предыдущую страницу
+		} else {
+			actionButton.textContent = `Перевірити з'єднання`; // Текст кнопки при оффлайн
+			actionButton.style.display = 'block'; // Показываем кнопку при отсутствии соединения
+			actionButton.onclick = () => window.location.reload(); // Перезагружаем страницу при нажатии
+		}
+	}
+	
+	// События для онлайн/офлайн
+	window.addEventListener('online', updateNetworkStatus);
+	window.addEventListener('offline', updateNetworkStatus);
+	
+	// Проверка статуса при загрузке страницы
+	updateNetworkStatus();
+</script>
+</body>
+</html>

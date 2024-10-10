@@ -3,7 +3,7 @@ import type { Metadata, Viewport } from 'next'
 import { FC, ReactNode, useEffect, useState } from 'react'
 import '@/styles/globals.scss'
 import 'swiper/css'
-import { useRouter } from 'next/navigation' // Импортируем useRouter
+import { useRouter } from 'next/navigation'
 
 // metadata
 export const viewport: Viewport = initialViewport
@@ -21,21 +21,21 @@ import {
   getNotificationState,
 } from '@/utils/native-app/notifications'
 
-//interface
+// interface
 interface IRootLayout {
   entry: ReactNode
   home: ReactNode
   children: ReactNode
 }
 
-//component
+// component
 const RootLayout: FC<Readonly<IRootLayout>> = ({ home, entry }) => {
-  const router = useRouter() // Инициализируем useRouter
+  const router = useRouter()
   const handleChangeCommonStore = useCommonStore((state) => state.handleChangeCommonStore)
   const errorText = useCommonStore((state) => state.errorText)
   const successfulText = useCommonStore((state) => state.successfulText)
   const { queryClient } = useTanStackClient()
-  const [isOnline, setIsOnline] = useState(true) // Изначально считаем, что интернет есть
+  const [isOnline, setIsOnline] = useState(true)
 
   useEffect(() => {
     const handleClick = () => {
@@ -82,19 +82,16 @@ const RootLayout: FC<Readonly<IRootLayout>> = ({ home, entry }) => {
     const handleOffline = () => {
       setIsOnline(false)
       handleChangeCommonStore({ errorText: 'Немає підключення до Інтернету.' })
-
-      // Откладываем перенаправление на страницу оффлайна на 3 секунды, чтобы убедиться, что соединение действительно отсутствует
       setTimeout(() => {
         if (!navigator.onLine) {
-          router.push('/offline') // Перенаправляем на страницу оффлайна
+          router.push('/offline.html')
         }
-      }, 3000) // Задержка в 3 секунды
+      }, 3000)
     }
 
     window.addEventListener('online', handleOnline)
     window.addEventListener('offline', handleOffline)
 
-    // Удаляем обработчики событий при размонтировании
     return () => {
       window.removeEventListener('online', handleOnline)
       window.removeEventListener('offline', handleOffline)
@@ -104,20 +101,17 @@ const RootLayout: FC<Readonly<IRootLayout>> = ({ home, entry }) => {
   // Регистрация Service Worker
   useEffect(() => {
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker
-          .register('/sw.js') // Убедитесь, что путь к вашему Service Worker правильный
-          .then((registration) => {
-            console.log('Service Worker зарегистрирован с областью:', registration.scope)
-          })
-          .catch((error) => {
-            console.error('Ошибка регистрации Service Worker:', error)
-          })
-      })
+      navigator.serviceWorker
+        .register('/sw.js')
+        .then((registration) => {
+          console.log('Service Worker зарегистрирован с областью:', registration.scope)
+        })
+        .catch((error) => {
+          console.error('Ошибка регистрации Service Worker:', error)
+        })
     }
   }, [])
 
-  //return
   return (
     <html lang='uk' className={mainFont.className}>
       <QueryClientProvider client={queryClient}>
