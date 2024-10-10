@@ -56,20 +56,24 @@ const RootLayout: FC<Readonly<IRootLayout>> = ({ home, entry }) => {
   useKeyboard()
 
   useEffect(() => {
-    const loadNotifications = async () => {
-      const moodTrackerState = await getNotificationState('moodTrackerNotificationsEnabled')
-      const challengeState = await getNotificationState('challengeNotificationsEnabled')
-
-      const notificationsToSchedule = notifications.filter(
-        (notification) =>
-          (notification.id === 1 && challengeState) ||
-          ((notification.id === 2 || notification.id === 3) && moodTrackerState),
+    const checkAndScheduleNotifications = async () => {
+      const moodTrackerEnabled = await getNotificationState('moodTrackerNotificationsEnabled')
+      const challengeNotificationsEnabled = await getNotificationState(
+        'challengeNotificationsEnabled',
       )
 
-      await scheduleNotifications(notificationsToSchedule)
+      if (moodTrackerEnabled) {
+        await scheduleNotifications(
+          notifications.filter((notification) => notification.id === 2 || notification.id === 3),
+        )
+      }
+
+      if (challengeNotificationsEnabled) {
+        await scheduleNotifications(notifications.filter((notification) => notification.id === 1))
+      }
     }
 
-    loadNotifications()
+    checkAndScheduleNotifications()
   }, [])
 
   // Обработчики состояния сети
