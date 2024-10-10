@@ -1,9 +1,18 @@
 {
+  "rewrites": [
+    {
+      "source": "/offline",
+      "destination": "/offline.html"
+    }
+  ],
   "headers": [
     {
       "source": "/offline.html",
       "headers": [
-        { "key": "Cache-Control", "value": "max-age=3600" }
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        }
       ]
     }
   ]
