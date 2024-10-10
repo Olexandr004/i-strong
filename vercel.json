@@ -1,0 +1,10 @@
+{
+  "headers": [
+    {
+      "source": "/offline.html",
+      "headers": [
+        { "key": "Cache-Control", "value": "max-age=3600" }
+      ]
+    }
+  ]
+}
