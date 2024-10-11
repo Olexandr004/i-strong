@@ -38,10 +38,12 @@ const RootLayout: FC<Readonly<IRootLayout>> = ({ home, entry }) => {
   const [isOnline, setIsOnline] = useState(true)
   const pathname = usePathname()
 
-  // Сбрасываем состояние модального окна при изменении маршрута
+  // Сбрасываем состояние модального окна, если текущий путь равен '/'
   useEffect(() => {
-    handleChangeCommonStore({ isModalActive: false }) // Сбрасываем состояние модального окна
-  }, [handleChangeCommonStore, pathname])
+    if (pathname === '/') {
+      handleChangeCommonStore({ isModalActive: false });
+    }
+  }, [handleChangeCommonStore, pathname]);
 
   useEffect(() => {
     const handleClick = () => {
