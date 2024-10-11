@@ -41,9 +41,9 @@ const RootLayout: FC<Readonly<IRootLayout>> = ({ home, entry }) => {
   // Сбрасываем состояние модального окна, если текущий путь равен '/'
   useEffect(() => {
     if (pathname === '/') {
-      handleChangeCommonStore({ isModalActive: false });
+      handleChangeCommonStore({ isModalActive: false })
     }
-  }, [handleChangeCommonStore, pathname]);
+  }, [handleChangeCommonStore, pathname])
 
   useEffect(() => {
     const handleClick = () => {
