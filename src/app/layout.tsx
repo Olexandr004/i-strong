@@ -3,7 +3,7 @@ import type { Metadata, Viewport } from 'next'
 import { FC, ReactNode, useEffect, useState } from 'react'
 import '@/styles/globals.scss'
 import 'swiper/css'
-import { useRouter, usePathname } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
 // metadata
 export const viewport: Viewport = initialViewport
@@ -36,14 +36,6 @@ const RootLayout: FC<Readonly<IRootLayout>> = ({ home, entry }) => {
   const successfulText = useCommonStore((state) => state.successfulText)
   const { queryClient } = useTanStackClient()
   const [isOnline, setIsOnline] = useState(true)
-  const pathname = usePathname()
-
-  // Сбрасываем состояние модального окна, если текущий путь равен '/'
-  useEffect(() => {
-    if (pathname === '/') {
-      handleChangeCommonStore({ isModalActive: false })
-    }
-  }, [handleChangeCommonStore, pathname])
 
   useEffect(() => {
     const handleClick = () => {

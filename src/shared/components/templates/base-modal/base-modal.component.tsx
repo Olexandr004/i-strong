@@ -1,3 +1,4 @@
+import { App, AppState } from '@capacitor/app'
 import { AnimatePresence, motion } from 'framer-motion'
 import { FC, ReactNode, useEffect } from 'react'
 import { useCommonStore } from '@/shared/stores'
@@ -13,16 +14,19 @@ export const BaseModalComponent: FC<Readonly<IBaseModal>> = ({ children }) => {
   const isModalActive = useCommonStore((state) => state.isModalActive)
   const handleChangeCommonStore = useCommonStore((state) => state.handleChangeCommonStore)
 
-  // Закрытие модального окна при обновлении страницы
   useEffect(() => {
-    const handleBeforeUnload = () => {
-      handleChangeCommonStore({ isModalActive: false })
+    // Подписываемся на события изменения состояния приложения
+    const handleAppStateChange = ({ isActive }: AppState) => {
+      if (!isActive) {
+        // Если приложение сворачивается, закрываем модальное окно
+        handleChangeCommonStore({ isModalActive: false })
+      }
     }
 
-    window.addEventListener('beforeunload', handleBeforeUnload)
+    App.addListener('appStateChange', handleAppStateChange)
 
     return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload)
+      App.removeAllListeners()
     }
   }, [handleChangeCommonStore])
 
