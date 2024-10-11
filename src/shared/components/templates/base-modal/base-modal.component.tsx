@@ -3,26 +3,20 @@ import { FC, ReactNode, useEffect } from 'react'
 import { useCommonStore } from '@/shared/stores'
 import styles from './base-modal.module.scss'
 
-// interface
+//interface
 interface IBaseModal {
   children: ReactNode
 }
 
-// component
+//component
 export const BaseModalComponent: FC<Readonly<IBaseModal>> = ({ children }) => {
   const isModalActive = useCommonStore((state) => state.isModalActive)
   const handleChangeCommonStore = useCommonStore((state) => state.handleChangeCommonStore)
 
-  // Закрытие модального окна при обновлении страницы и выходе из приложения
+  // Закрытие модального окна при обновлении страницы
   useEffect(() => {
     const handleBeforeUnload = () => {
       handleChangeCommonStore({ isModalActive: false })
-    }
-
-    // Проверка состояния из localStorage
-    const savedModalState = localStorage.getItem('isModalActive')
-    if (savedModalState === 'true') {
-      handleChangeCommonStore({ isModalActive: true })
     }
 
     window.addEventListener('beforeunload', handleBeforeUnload)
@@ -32,12 +26,7 @@ export const BaseModalComponent: FC<Readonly<IBaseModal>> = ({ children }) => {
     }
   }, [handleChangeCommonStore])
 
-  // Обновление состояния в localStorage при изменении
-  useEffect(() => {
-    localStorage.setItem('isModalActive', String(isModalActive))
-  }, [isModalActive])
-
-  // return
+  //return
   return (
     <AnimatePresence mode={'wait'}>
       {isModalActive && (

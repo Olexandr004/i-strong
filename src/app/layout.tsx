@@ -37,6 +37,11 @@ const RootLayout: FC<Readonly<IRootLayout>> = ({ home, entry }) => {
   const { queryClient } = useTanStackClient()
   const [isOnline, setIsOnline] = useState(true)
 
+  // Сброс состояния модального окна при монтировании компонента
+  useEffect(() => {
+    handleChangeCommonStore({ isModalActive: false }) // Сброс состояния при монтировании
+  }, [handleChangeCommonStore])
+
   useEffect(() => {
     const handleClick = () => {
       if (errorText) {
