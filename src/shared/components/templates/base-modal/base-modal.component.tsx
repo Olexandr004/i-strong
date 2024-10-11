@@ -19,13 +19,16 @@ export const BaseModalComponent: FC<Readonly<IBaseModal>> = ({ children }) => {
       handleChangeCommonStore({ isModalActive: false })
     }
 
-    // Добавляем обработчик на событие beforeunload
     window.addEventListener('beforeunload', handleBeforeUnload)
 
-    // Удаляем обработчик при размонтировании
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload)
     }
+  }, [handleChangeCommonStore])
+
+  // Сброс состояния модального окна при монтировании компонента
+  useEffect(() => {
+    handleChangeCommonStore({ isModalActive: false }) // Сброс состояния при монтировании
   }, [handleChangeCommonStore])
 
   //return
