@@ -23,11 +23,18 @@ export const BaseModalComponent: FC<Readonly<IBaseModal>> = ({ children }) => {
       }
     }
 
-    App.addListener('appStateChange', handleAppStateChange)
+    // Создаем слушатель
+    const appStateListenerPromise = App.addListener('appStateChange', handleAppStateChange)
 
-    return () => {
-      App.removeAllListeners()
+    // Функция очистки
+    const cleanup = () => {
+      appStateListenerPromise.then((appStateListener) => {
+        appStateListener.remove() // Удаляем слушатель изменения состояния приложения
+      })
     }
+
+    // Возвращаем функцию очистки
+    return cleanup
   }, [handleChangeCommonStore])
 
   //return
