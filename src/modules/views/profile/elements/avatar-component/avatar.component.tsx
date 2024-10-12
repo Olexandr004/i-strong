@@ -231,7 +231,7 @@ const AvatarComponent: FC = () => {
             }}
           />
         </div>
-        {error && <div>{styles.error}</div>}
+        {error && <div className={styles.error}>{error}</div>}
         <div className={styles.buttons}>
           <ButtonComponent variant={'outlined'} onClick={() => handleButtonClick('Зробити фото')}>
             Зробити фото
