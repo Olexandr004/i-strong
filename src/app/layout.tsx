@@ -64,12 +64,20 @@ const RootLayout: FC<Readonly<IRootLayout>> = ({ home, entry }) => {
 
       if (moodTrackerEnabled) {
         await scheduleNotifications(
-          notifications.filter((notification) => notification.id === 2 || notification.id === 3),
+          notifications.filter(
+            (notification) =>
+              notification.id === 2 || notification.id === 3 || notification.id === 4,
+          ), // Добавьте id 4
         )
       }
 
       if (challengeNotificationsEnabled) {
-        await scheduleNotifications(notifications.filter((notification) => notification.id === 1))
+        await scheduleNotifications(
+          notifications.filter(
+            (notification) =>
+              notification.id === 1 || notification.id === 5 || notification.id === 6,
+          ), // Добавьте id 5 и 6
+        )
       }
     }
 

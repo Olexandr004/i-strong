@@ -45,6 +45,37 @@ export const notifications: NotificationConfig[] = [
     attachments: [{ id: 'test2-image', url: IconArrow }],
     smallIcon: 'ic_stat_icon1',
   },
+  {
+    id: 4,
+    title: 'IStrong',
+    body: 'Тестове повідомлення челенджа на 13:00. 🔥',
+    url: `${BASE_URL}/challenges?path=new`,
+    schedule: { at: new Date(new Date().setHours(13, 0, 0)), every: 'day', repeats: true }, //13:00
+    attachments: [
+      { id: 'test-challenge-image', url: `${BASE_URL}/path_to_your_image/challenges_image.png` },
+    ],
+    smallIcon: 'ic_stat_icon1',
+  },
+  {
+    id: 5,
+    title: 'IStrong',
+    body: 'Тестове повідомлення челенджа на 14:00. 🔥',
+    url: `${BASE_URL}/challenges?path=new`,
+    schedule: { at: new Date(new Date().setHours(14, 0, 0)), every: 'day', repeats: true }, //14:00
+    attachments: [
+      { id: 'test-challenge-image-2', url: `${BASE_URL}/path_to_your_image/challenges_image.png` },
+    ],
+    smallIcon: 'ic_stat_icon1',
+  },
+  {
+    id: 6,
+    title: 'IStrong',
+    body: 'Тестове повідомлення про настрій на 17:00. 😊',
+    url: `${BASE_URL}/diary`,
+    schedule: { at: new Date(new Date().setHours(17, 0, 0)), every: 'day', repeats: true }, //17:00
+    attachments: [{ id: 'test-mood-image', url: IconArrow }],
+    smallIcon: 'ic_stat_icon1',
+  },
 ]
 
 // Функция для сохранения состояния уведомлений

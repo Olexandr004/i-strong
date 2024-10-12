@@ -88,6 +88,7 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
   // Сохранение состояния для трекера настроения
   const handleToggleMoodTracker = async () => {
     const newState = !moodTrackerEnabled // Изменяем состояние
+    console.log('Mood Tracker Notifications Enabled:', newState)
     setMoodTrackerEnabled(newState)
     await saveNotificationState('moodTrackerNotificationsEnabled', newState) // Сохраняем состояние в Preferences
 
@@ -114,6 +115,7 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
   // Сохранение состояния для уведомлений челленджей
   const handleToggleChallengeNotifications = async () => {
     const newState = !challengeNotificationsEnabled // Изменяем состояние
+    console.log('Challenge Notifications Enabled:', newState) // Лог состояния
     setChallengeNotificationsEnabled(newState)
     await saveNotificationState('challengeNotificationsEnabled', newState) // Сохраняем состояние в Preferences
 
