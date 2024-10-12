@@ -97,7 +97,9 @@ const AvatarComponent: FC = () => {
 
         // Проверка формата изображения
         if (!validFormats.includes(blob.type)) {
-          throw new Error('Неприпустимий формат файлу. Формати, що підтримуються: jpg, jpeg, png, heif.')
+          throw new Error(
+            'Неприпустимий формат файлу. Формати, що підтримуються: jpg, jpeg, png, heif.',
+          )
         }
 
         // Проверка размера файла
