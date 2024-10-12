@@ -98,4 +98,10 @@
   margin-bottom: 30px;
 }
 
+.error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /*# sourceMappingURL=avatar.module.css.map */

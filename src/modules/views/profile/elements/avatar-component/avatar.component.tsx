@@ -45,6 +45,7 @@ const AvatarComponent: FC = () => {
 
   const handleButtonClick = async (text: string) => {
     let newImage: string | undefined
+    const previousImage = currentImage // Сохраняем текущее изображение
 
     try {
       // Запрашиваем разрешение на доступ к галерее
@@ -94,8 +95,14 @@ const AvatarComponent: FC = () => {
         const blob = await fetch(newImage).then((res) => res.blob())
         const validFormats = ['image/jpeg', 'image/jpg', 'image/png', 'image/heif']
 
-        if (!validFormats.includes(blob.type) || blob.size > 5 * 1024 * 1024) {
-          throw new Error('Неприпустимий формат файлу або розмір файлу перевищує 5 МБ.')
+        // Проверка формата изображения
+        if (!validFormats.includes(blob.type)) {
+          throw new Error('Неприпустимий формат файлу.')
+        }
+
+        // Проверка размера файла
+        if (blob.size > 5 * 1024 * 1024) {
+          throw new Error('Розмір файлу перевищує 5 МБ.')
         }
 
         // Устанавливаем новое изображение
@@ -108,9 +115,9 @@ const AvatarComponent: FC = () => {
     } catch (err) {
       const errorMessage = (err as Error).message || 'Виникла помилка при завантаженні зображення'
       setError(errorMessage)
-      // Ставим изображение по умолчанию
-      setCurrentImage(ImageAvatar.src)
-      setIsSaveButtonDisabled(true) // Если произошла ошибка, кнопку "Зберегти" следует отключить
+      // Восстанавливаем предыдущее изображение, если произошла ошибка
+      setCurrentImage(previousImage)
+      setIsSaveButtonDisabled(true)
     }
   }
 
@@ -224,7 +231,7 @@ const AvatarComponent: FC = () => {
             }}
           />
         </div>
-        {error && <div>{error}</div>}
+        {error && <div>{styles.error}</div>}
         <div className={styles.buttons}>
           <ButtonComponent variant={'outlined'} onClick={() => handleButtonClick('Зробити фото')}>
             Зробити фото
