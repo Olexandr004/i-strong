@@ -56,7 +56,7 @@
 			left: 50%;
 			bottom: 62px;
 			border: none;
-			display: none;
+			display: block;
 			transform: translateX(-50%);
 			flex-direction: row;
 			justify-content: center;
@@ -74,6 +74,13 @@
 			font-size: 1.1rem;
 			line-height: 2rem;
 			color: #1E1E1E;
+			transition: background 0.3s ease; /* Плавный переход для фона */
+		}
+		
+		/* Новый класс для стилей при нажатии */
+		.actionButton.clicked {
+			background: #BDBDBD; /* Новый фон */
+			box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.15); /* Тень */
 		}
 	</style>
 </head>
@@ -93,24 +100,41 @@
 	// Проверка состояния сети
 	const actionButton = document.getElementById('actionButton');
 	
+	actionButton.addEventListener('click', () => {
+		actionButton.classList.add('clicked'); // Добавляем класс при нажатии
+	});
+	
 	function updateNetworkStatus() {
 		if (navigator.onLine) {
-			actionButton.textContent = 'Повернутися назад'; // Текст кнопки при онлайн
-			actionButton.style.display = 'block'; // Показываем кнопку при восстановлении соединения
-			actionButton.onclick = () => window.history.back(); // Обработчик для возврата на предыдущую страницу
+			// Если интернет доступен, перенаправляем на предыдущую страницу
+			window.history.back();
 		} else {
-			actionButton.textContent = `Перевірити з'єднання`; // Текст кнопки при оффлайн
-			actionButton.style.display = 'block'; // Показываем кнопку при отсутствии соединения
-			actionButton.onclick = () => window.location.reload(); // Перезагружаем страницу при нажатии
+			actionButton.style.display = 'block'; // Показываем кнопку
 		}
 	}
 	
+	// Функция для обновления страницы с задержкой
+	function reloadPageWithDelay() {
+		setTimeout(() => {
+			window.location.reload(); // Обновляем страницу через 2 секунды
+		}, 2000); // 2000 миллисекунд = 2 секунды
+	}
+	
+	// Обновление статуса сети
+	window.onload = () => {
+		actionButton.classList.remove('clicked'); // Удаляем класс при загрузке
+	};
+	
 	// События для онлайн/офлайн
 	window.addEventListener('online', updateNetworkStatus);
-	window.addEventListener('offline', updateNetworkStatus);
+	window.addEventListener('offline', () => {
+		updateNetworkStatus(); // Проверяем статус сети при потере соединения
+		reloadPageWithDelay(); // Запускаем обновление страницы с задержкой
+	});
 	
 	// Проверка статуса при загрузке страницы
 	updateNetworkStatus();
 </script>
+
 </body>
 </html>
