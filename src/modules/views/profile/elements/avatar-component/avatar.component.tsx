@@ -68,35 +68,49 @@ const AvatarComponent: FC = () => {
       }
 
       // Логика получения изображения
+      let image
       if (text === 'Зробити фото') {
-        const image = await Camera.getPhoto({
+        image = await Camera.getPhoto({
           quality: 90,
           allowEditing: false,
-          resultType: CameraResultType.Base64, // Измените на Base64
+          resultType: CameraResultType.Base64,
           source: CameraSource.Camera,
           saveToGallery: true,
           correctOrientation: true,
         })
-        newImage = `data:image/jpeg;base64,${image.base64String}` // Получаем URL для изображения
       } else if (text === 'Завантажити з галереї') {
-        const image = await Camera.getPhoto({
+        image = await Camera.getPhoto({
           quality: 90,
           allowEditing: false,
           source: CameraSource.Photos,
-          resultType: CameraResultType.Base64, // Измените на Base64
+          resultType: CameraResultType.Base64,
         })
-        newImage = `data:image/jpeg;base64,${image.base64String}` // Получаем URL для изображения
       }
 
-      if (newImage) {
-        setCurrentImage(newImage) // Устанавливаем Base64 URL в качестве текущего изображения
+      if (image && image.base64String) {
+        newImage = `data:image/jpeg;base64,${image.base64String}` // Получаем URL для изображения
+
+        // Валидация формата и размера
+        const blob = await fetch(newImage).then((res) => res.blob())
+        const validFormats = ['image/jpeg', 'image/jpg', 'image/png', 'image/heif']
+
+        if (!validFormats.includes(blob.type) || blob.size > 5 * 1024 * 1024) {
+          throw new Error('Неприпустимий формат файлу або розмір файлу перевищує 5 МБ.')
+        }
+
+        // Устанавливаем новое изображение
+        setCurrentImage(newImage)
         setIsSaveButtonDisabled(false)
         setError(null)
       } else {
-        setError('Не вдалося отримати URL зображення')
+        throw new Error('Не вдалося отримати URL зображення')
       }
     } catch (err) {
-      setError('Виникла помилка при завантаженні зображення')
+      const errorMessage = (err as Error).message || 'Виникла помилка при завантаженні зображення'
+      setError(errorMessage)
+      // Ставим изображение по умолчанию
+      setCurrentImage(ImageAvatar.src)
+      setIsSaveButtonDisabled(true) // Если произошла ошибка, кнопку "Зберегти" следует отключить
     }
   }
 
@@ -174,17 +188,6 @@ const AvatarComponent: FC = () => {
       // Получаем blob из currentImage
       const file = await fetch(currentImage).then((res) => res.blob())
 
-      const validFormats = ['image/jpeg', 'image/jpg', 'image/png', 'image/heif']
-      if (!validFormats.includes(file.type)) {
-        throw new Error(
-          'Неприпустимий формат файлу. Формати, що підтримуються: jpg, jpeg, png, heif.',
-        )
-      }
-
-      if (file.size > 5 * 1024 * 1024) {
-        throw new Error('Розмір файлу не повинен перевищувати 5 МБ.')
-      }
-
       mutation.mutate(file)
     } catch (error) {
       let errorMessage = 'Невідома помилка'
@@ -221,6 +224,7 @@ const AvatarComponent: FC = () => {
             }}
           />
         </div>
+        {error && <div>{error}</div>}
         <div className={styles.buttons}>
           <ButtonComponent variant={'outlined'} onClick={() => handleButtonClick('Зробити фото')}>
             Зробити фото
@@ -245,7 +249,6 @@ const AvatarComponent: FC = () => {
             {isLoading ? 'Збереження...' : 'Зберегти'}
           </ButtonComponent>
         </div>
-        {error && <div>{error}</div>}
       </div>
     </BaseModalComponent>
   )
