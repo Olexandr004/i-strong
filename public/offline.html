@@ -68,7 +68,6 @@
 			background: #FFC75A;
 			box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.15);
 			border-radius: 24px;
-			/* Text/3 */
 			font-style: normal;
 			font-weight: 700;
 			font-size: 1.1rem;
@@ -79,6 +78,7 @@
 		
 		/* Новый класс для стилей при нажатии */
 		.actionButton.clicked {
+			color: #7D7D7D;
 			background: #BDBDBD; /* Новый фон */
 			box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.15); /* Тень */
 		}
@@ -102,6 +102,11 @@
 	
 	actionButton.addEventListener('click', () => {
 		actionButton.classList.add('clicked'); // Добавляем класс при нажатии
+		
+		// Убираем класс через 2 секунды
+		setTimeout(() => {
+			actionButton.classList.remove('clicked'); // Удаляем класс после 2 секунд
+		}, 2000);
 	});
 	
 	function updateNetworkStatus() {
@@ -115,9 +120,7 @@
 	
 	// Функция для обновления страницы с задержкой
 	function reloadPageWithDelay() {
-		setTimeout(() => {
-			window.location.reload(); // Обновляем страницу через 2 секунды
-		}, 2000); // 2000 миллисекунд = 2 секунды
+		window.location.reload(); // Обновляем страницу через 2 секунды
 	}
 	
 	// Обновление статуса сети
