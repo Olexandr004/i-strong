@@ -110,7 +110,10 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
               {year?.months?.map((month, index) => (
                 <div key={`${month.month}-${index}`} className={styles.diary__record_block}>
                   <p>
-                    {moment().month(month.month).format('MMMM')} {year.year}
+                    {moment()
+                      .month(month.month - 1)
+                      .format('MMMM')}{' '}
+                    {year.year}
                   </p>
 
                   <div className={styles.diary__record_cards}>

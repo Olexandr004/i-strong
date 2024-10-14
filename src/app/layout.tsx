@@ -57,27 +57,27 @@ const RootLayout: FC<Readonly<IRootLayout>> = ({ home, entry }) => {
 
   useEffect(() => {
     const checkAndScheduleNotifications = async () => {
-      const moodTrackerEnabled = await getNotificationState('moodTrackerNotificationsEnabled')
-      const challengeNotificationsEnabled = await getNotificationState(
-        'challengeNotificationsEnabled',
-      )
-
-      if (moodTrackerEnabled) {
-        await scheduleNotifications(
-          notifications.filter(
-            (notification) =>
-              notification.id === 2 || notification.id === 3 || notification.id === 4,
-          ), // Добавьте id 4
+      try {
+        const moodTrackerEnabled = await getNotificationState('moodTrackerNotificationsEnabled')
+        const challengeNotificationsEnabled = await getNotificationState(
+          'challengeNotificationsEnabled',
         )
-      }
 
-      if (challengeNotificationsEnabled) {
-        await scheduleNotifications(
-          notifications.filter(
-            (notification) =>
-              notification.id === 1 || notification.id === 5 || notification.id === 6,
-          ), // Добавьте id 5 и 6
-        )
+        // Запланировать уведомления для трекера настроения
+        if (moodTrackerEnabled) {
+          await scheduleNotifications(
+            notifications.filter((notification) => [2, 3, 4].includes(notification.id)),
+          )
+        }
+
+        // Запланировать уведомления для челленджей
+        if (challengeNotificationsEnabled) {
+          await scheduleNotifications(
+            notifications.filter((notification) => [1, 5, 6].includes(notification.id)),
+          )
+        }
+      } catch (error) {
+        console.error('Error scheduling notifications:', error)
       }
     }
 

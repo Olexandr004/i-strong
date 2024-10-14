@@ -87,10 +87,10 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
 
   // Сохранение состояния для трекера настроения
   const handleToggleMoodTracker = async () => {
-    const newState = !moodTrackerEnabled // Изменяем состояние
+    const newState = !moodTrackerEnabled
     console.log('Mood Tracker Notifications Enabled:', newState)
     setMoodTrackerEnabled(newState)
-    await saveNotificationState('moodTrackerNotificationsEnabled', newState) // Сохраняем состояние в Preferences
+    await saveNotificationState('moodTrackerNotificationsEnabled', newState)
 
     if (user?.access_token) {
       try {
@@ -101,10 +101,10 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
         )
         if (newState) {
           await scheduleNotifications(
-            notifications.filter((notification) => notification.id === 2 || notification.id === 3),
+            notifications.filter((notification) => [2, 3, 6].includes(notification.id)),
           )
         } else {
-          await cancelNotifications([2, 3])
+          await cancelNotifications([2, 3, 6])
         }
       } catch (error) {
         console.error('Error updating notification preferences:', error)
@@ -112,20 +112,21 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
     }
   }
 
-  // Сохранение состояния для уведомлений челленджей
   const handleToggleChallengeNotifications = async () => {
-    const newState = !challengeNotificationsEnabled // Изменяем состояние
-    console.log('Challenge Notifications Enabled:', newState) // Лог состояния
+    const newState = !challengeNotificationsEnabled
+    console.log('Challenge Notifications Enabled:', newState)
     setChallengeNotificationsEnabled(newState)
-    await saveNotificationState('challengeNotificationsEnabled', newState) // Сохраняем состояние в Preferences
+    await saveNotificationState('challengeNotificationsEnabled', newState)
 
     if (user?.access_token) {
       try {
         await updateNotificationPreferences(user.access_token, moodTrackerEnabled, newState)
         if (newState) {
-          await scheduleNotifications(notifications.filter((notification) => notification.id === 1))
+          await scheduleNotifications(
+            notifications.filter((notification) => [1, 4, 5].includes(notification.id)),
+          )
         } else {
-          await cancelNotifications([1])
+          await cancelNotifications([1, 4, 5])
         }
       } catch (error) {
         console.error('Error updating notification preferences:', error)

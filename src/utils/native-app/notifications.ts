@@ -1,6 +1,6 @@
 import { LocalNotifications } from '@capacitor/local-notifications'
 import { Preferences } from '@capacitor/preferences'
-import { IconArrow } from '@/shared/icons' // Убедитесь, что это импортируется корректно
+import { IconArrow } from '@/shared/icons'
 
 const BASE_URL = `https://i-strong.vercel.app/`
 
@@ -10,21 +10,30 @@ interface NotificationConfig {
   body: string
   url: string
   schedule: { at?: Date; every?: 'day'; count?: number; repeats?: boolean }
-  attachments: { id: string; url: string }[]
   smallIcon: string
 }
 
-// Общий массив уведомлений
+// Функция для корректировки времени уведомления
+const adjustNotificationTime = (hours: number, minutes: number): Date => {
+  const now = new Date()
+  const notificationTime = new Date()
+  notificationTime.setHours(hours, minutes, 0, 0)
+
+  if (notificationTime <= now) {
+    // Если текущее время уже прошло, переносим на следующий день
+    notificationTime.setDate(notificationTime.getDate() + 1)
+  }
+  return notificationTime
+}
+
+// Общий массив уведомлений с корректировкой времени
 export const notifications: NotificationConfig[] = [
   {
     id: 1,
     title: 'IStrong',
     body: 'А ось і новий челендж🔥Що там цікавого підготувала Капібара цього разу?',
     url: `${BASE_URL}/challenges?path=new`,
-    schedule: { at: new Date(new Date().setHours(10, 0, 0)), every: 'day', repeats: true }, //10:00
-    attachments: [
-      { id: 'challenges-image', url: `${BASE_URL}/path_to_your_image/challenges_image.png` },
-    ],
+    schedule: { at: adjustNotificationTime(10, 0), every: 'day', repeats: true }, // 10:00
     smallIcon: 'ic_stat_icon1',
   },
   {
@@ -32,8 +41,7 @@ export const notifications: NotificationConfig[] = [
     title: 'IStrong',
     body: 'Привіт, ти як? Поділись своїм станом з Капібарою та отримай монетку.',
     url: `${BASE_URL}/diary`,
-    schedule: { at: new Date(new Date().setHours(9, 0, 0)), every: 'day', repeats: true }, //9:00
-    attachments: [{ id: 'test-image', url: `${BASE_URL}/images/icon-arrow.svg` }],
+    schedule: { at: adjustNotificationTime(9, 0), every: 'day', repeats: true }, // 9:00
     smallIcon: 'ic_stat_icon1',
   },
   {
@@ -41,8 +49,7 @@ export const notifications: NotificationConfig[] = [
     title: 'IStrong',
     body: 'Хей, як пройшов твій день? Розкажи Капібарі - і монетка твоя!',
     url: `${BASE_URL}/diary`,
-    schedule: { at: new Date(new Date().setHours(18, 0, 0)), every: 'day', repeats: true }, //18:00
-    attachments: [{ id: 'test2-image', url: IconArrow }],
+    schedule: { at: adjustNotificationTime(18, 0), every: 'day', repeats: true }, // 18:00
     smallIcon: 'ic_stat_icon1',
   },
   {
@@ -50,10 +57,7 @@ export const notifications: NotificationConfig[] = [
     title: 'IStrong',
     body: 'Тестове повідомлення челенджа на 13:00. 🔥',
     url: `${BASE_URL}/challenges?path=new`,
-    schedule: { at: new Date(new Date().setHours(13, 0, 0)), every: 'day', repeats: true }, //13:00
-    attachments: [
-      { id: 'test-challenge-image', url: `${BASE_URL}/path_to_your_image/challenges_image.png` },
-    ],
+    schedule: { at: adjustNotificationTime(13, 0), every: 'day', repeats: true }, // 13:00
     smallIcon: 'ic_stat_icon1',
   },
   {
@@ -61,10 +65,7 @@ export const notifications: NotificationConfig[] = [
     title: 'IStrong',
     body: 'Тестове повідомлення челенджа на 14:00. 🔥',
     url: `${BASE_URL}/challenges?path=new`,
-    schedule: { at: new Date(new Date().setHours(14, 0, 0)), every: 'day', repeats: true }, //14:00
-    attachments: [
-      { id: 'test-challenge-image-2', url: `${BASE_URL}/path_to_your_image/challenges_image.png` },
-    ],
+    schedule: { at: adjustNotificationTime(14, 0), every: 'day', repeats: true }, // 14:00
     smallIcon: 'ic_stat_icon1',
   },
   {
@@ -72,8 +73,7 @@ export const notifications: NotificationConfig[] = [
     title: 'IStrong',
     body: 'Тестове повідомлення про настрій на 17:00. 😊',
     url: `${BASE_URL}/diary`,
-    schedule: { at: new Date(new Date().setHours(17, 0, 0)), every: 'day', repeats: true }, //17:00
-    attachments: [{ id: 'test-mood-image', url: IconArrow }],
+    schedule: { at: adjustNotificationTime(17, 0), every: 'day', repeats: true }, // 17:00
     smallIcon: 'ic_stat_icon1',
   },
 ]
@@ -112,7 +112,6 @@ export const scheduleNotifications = async (enabledNotifications: NotificationCo
         schedule: notification.schedule,
         actionTypeId: '',
         extra: { url: notification.url },
-        attachments: notification.attachments,
         smallIcon: notification.smallIcon,
       })),
     })
@@ -122,6 +121,7 @@ export const scheduleNotifications = async (enabledNotifications: NotificationCo
 }
 
 // Функция для переключения состояния уведомлений
+// Функция для переключения состояния уведомлений
 export const toggleNotifications = async (type: 'moodTracker' | 'challenge') => {
   const key =
     type === 'moodTracker' ? 'moodTrackerNotificationsEnabled' : 'challengeNotificationsEnabled'
@@ -129,11 +129,14 @@ export const toggleNotifications = async (type: 'moodTracker' | 'challenge') => 
   const newState = !currentState
   await saveNotificationState(key, newState)
 
-  const enabledNotifications = notifications.filter(
-    (notification) =>
-      (type === 'moodTracker' && (notification.id === 2 || notification.id === 3)) ||
-      (type === 'challenge' && notification.id === 1),
-  )
+  // Выбираем уведомления в зависимости от типа
+  const enabledNotifications = notifications.filter((notification) => {
+    if (type === 'moodTracker') {
+      return notification.id === 2 || notification.id === 3 || notification.id === 6 // Уведомления для moodTracker
+    } else {
+      return notification.id === 1 || notification.id === 4 || notification.id === 5 // Уведомления для challenge
+    }
+  })
 
   if (newState) {
     await scheduleNotifications(enabledNotifications) // Если уведомления включены, планируем их
