@@ -3,9 +3,8 @@ import { useRouter } from 'next/navigation'
 
 import { DiaryNoteCardComponent, DiaryPinCodeComponent } from './elements'
 import moment from 'moment/moment'
-import 'moment/locale/uk' // Импортируйте локаль
 
-import { FC, useState, useEffect } from 'react'
+import { FC, useState } from 'react'
 
 import { useCheckPinCode, useGetDiaryRecords, useGetRecordsByDate } from '@/api/diary.api'
 import { IPinCodeData } from '@/interfaces/user'
@@ -38,10 +37,6 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
       month: null,
     },
   )
-
-  useEffect(() => {
-    moment.locale('uk') // Убедитесь, что локаль устанавливается
-  }, [])
 
   const tabs = [
     { id: 'main', text: 'Основні', isActive: activeTab === 'main' },
@@ -95,7 +90,7 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
 
       <ButtonBarComponent buttons={tabs} onButtonClick={setActiveTab} />
 
-      {activeTab === 'main' && (
+      {activeTab == 'main' && (
         <>
           {!diaryRecords?.has_note_today ? (
             <ButtonComponent variant={'outlined'} onClick={handleCreateNewRecord}>
@@ -115,10 +110,7 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
               {year?.months?.map((month, index) => (
                 <div key={`${month.month}-${index}`} className={styles.diary__record_block}>
                   <p>
-                    {moment()
-                      .month(month.month - 1)
-                      .format('MMMM')}{' '}
-                    {year.year}
+                    {moment().month(month.month).format('MMMM')} {year.year}
                   </p>
 
                   <div className={styles.diary__record_cards}>
@@ -182,5 +174,4 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
     </section>
   )
 }
-
 export default DiaryComponent
