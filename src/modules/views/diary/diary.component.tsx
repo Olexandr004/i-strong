@@ -1,9 +1,8 @@
 'use client'
 import { useRouter } from 'next/navigation'
-
 import { DiaryNoteCardComponent, DiaryPinCodeComponent } from './elements'
-import { FC, useState } from 'react'
-
+import moment from 'moment/moment'
+import { FC, useEffect, useState } from 'react'
 import { useCheckPinCode, useGetDiaryRecords, useGetRecordsByDate } from '@/api/diary.api'
 import { IPinCodeData } from '@/interfaces/user'
 import { NotesComponent } from '@/modules/views/diary/elements/notes'
@@ -16,7 +15,6 @@ import { IconButtonComponent } from '@/shared/components/ui/icon-button'
 import { IconUpArrow } from '@/shared/icons'
 import { ImageCapybaraBook } from '@/shared/images'
 import { useUserStore } from '@/shared/stores'
-
 import styles from './diary.module.scss'
 
 //interface
@@ -25,7 +23,6 @@ interface IDiary {}
 //component
 export const DiaryComponent: FC<Readonly<IDiary>> = () => {
   const router = useRouter()
-
   const token = useUserStore((state) => state.user?.access_token)
 
   const [activeTab, setActiveTab] = useState('main')
@@ -77,6 +74,11 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
     mutateCheckPinCode(pinCodeData)
   }
 
+  useEffect(() => {
+    // Обновляем данные при монтировании компонента
+    diaryRecordsRefetch()
+  }, [diaryRecordsRefetch]) // добавляем зависимость на рефетч
+
   if (passShow) {
     return <DiaryPinCodeComponent onVerify={handlePinVerification} />
   }
@@ -107,16 +109,12 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
             <div className={styles.diary__records} key={`${year.year}-${index}`}>
               {year?.months?.map((month, index) => (
                 <div key={`${month.month}-${index}`} className={styles.diary__record_block}>
-                  {/* Используем новый подход для отображения месяца и года */}
-                  {(() => {
-                    const date = new Date(year.year, month.month - 1) // Создаем объект Date
-                    const monthName = date.toLocaleString('default', { month: 'long' }) // Получаем имя месяца
-                    return (
-                      <p>
-                        {monthName} {year.year}
-                      </p>
-                    )
-                  })()}
+                  <p>
+                    {moment()
+                      .month(month.month - 1)
+                      .format('MMMM')}{' '}
+                    {year.year}
+                  </p>
 
                   <div className={styles.diary__record_cards}>
                     <div className={styles.diary__visible_cards}>
