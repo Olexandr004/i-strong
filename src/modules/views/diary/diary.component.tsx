@@ -2,8 +2,6 @@
 import { useRouter } from 'next/navigation'
 
 import { DiaryNoteCardComponent, DiaryPinCodeComponent } from './elements'
-import moment from 'moment/moment'
-
 import { FC, useState } from 'react'
 
 import { useCheckPinCode, useGetDiaryRecords, useGetRecordsByDate } from '@/api/diary.api'
@@ -109,13 +107,16 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
             <div className={styles.diary__records} key={`${year.year}-${index}`}>
               {year?.months?.map((month, index) => (
                 <div key={`${month.month}-${index}`} className={styles.diary__record_block}>
-                  <p>
-                    {moment()
-                      .month(month.month - 1)
-                      .year(year.year)
-                      .format('MMMM')}{' '}
-                    {year.year}
-                  </p>
+                  {/* Используем новый подход для отображения месяца и года */}
+                  {(() => {
+                    const date = new Date(year.year, month.month - 1) // Создаем объект Date
+                    const monthName = date.toLocaleString('default', { month: 'long' }) // Получаем имя месяца
+                    return (
+                      <p>
+                        {monthName} {year.year}
+                      </p>
+                    )
+                  })()}
 
                   <div className={styles.diary__record_cards}>
                     <div className={styles.diary__visible_cards}>
