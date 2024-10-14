@@ -5,7 +5,7 @@ import { DiaryNoteCardComponent, DiaryPinCodeComponent } from './elements'
 import moment from 'moment/moment'
 import 'moment/locale/uk' // Импортируйте локаль
 
-import { FC, useState } from 'react'
+import { FC, useState, useEffect } from 'react'
 
 import { useCheckPinCode, useGetDiaryRecords, useGetRecordsByDate } from '@/api/diary.api'
 import { IPinCodeData } from '@/interfaces/user'
@@ -39,8 +39,9 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
     },
   )
 
-  // Установите локаль
-  moment.locale('uk') // Устанавливаем локаль
+  useEffect(() => {
+    moment.locale('uk') // Убедитесь, что локаль устанавливается
+  }, [])
 
   const tabs = [
     { id: 'main', text: 'Основні', isActive: activeTab === 'main' },
