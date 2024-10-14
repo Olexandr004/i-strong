@@ -75,9 +75,11 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
   }
 
   useEffect(() => {
-    // Обновляем данные при монтировании компонента
     diaryRecordsRefetch()
-  }, [diaryRecordsRefetch]) // добавляем зависимость на рефетч
+    const currentMonth = moment().month() + 1
+    const currentYear = moment().year()
+    setExtendedBlock({ year: currentYear, month: currentMonth })
+  }, [])
 
   if (passShow) {
     return <DiaryPinCodeComponent onVerify={handlePinVerification} />
