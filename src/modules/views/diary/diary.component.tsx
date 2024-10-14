@@ -3,6 +3,7 @@ import { useRouter } from 'next/navigation'
 
 import { DiaryNoteCardComponent, DiaryPinCodeComponent } from './elements'
 import moment from 'moment/moment'
+import 'moment/locale/uk' // Импортируйте локаль
 
 import { FC, useState } from 'react'
 
@@ -37,6 +38,9 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
       month: null,
     },
   )
+
+  // Установите локаль
+  moment.locale('uk') // Устанавливаем локаль
 
   const tabs = [
     { id: 'main', text: 'Основні', isActive: activeTab === 'main' },
@@ -90,7 +94,7 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
 
       <ButtonBarComponent buttons={tabs} onButtonClick={setActiveTab} />
 
-      {activeTab == 'main' && (
+      {activeTab === 'main' && (
         <>
           {!diaryRecords?.has_note_today ? (
             <ButtonComponent variant={'outlined'} onClick={handleCreateNewRecord}>
@@ -177,4 +181,5 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
     </section>
   )
 }
+
 export default DiaryComponent
