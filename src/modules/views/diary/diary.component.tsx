@@ -26,10 +26,12 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
   const token = useUserStore((state) => state.user?.access_token)
 
   const [activeTab, setActiveTab] = useState('main')
-  const [extendedBlock, setExtendedBlock] = useState<{ year: number; month: number }>({
-    year: moment().year(),
-    month: moment().month() + 1, // Месяцы в moment начинаются с 0, добавляем 1
-  })
+  const [extendedBlock, setExtendedBlock] = useState<{ year: null | number; month: null | number }>(
+    {
+      year: null,
+      month: null,
+    },
+  )
 
   const tabs = [
     { id: 'main', text: 'Основні', isActive: activeTab === 'main' },
@@ -49,15 +51,15 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
     isFetching,
   } = useGetRecordsByDate(
     token ?? '',
-    extendedBlock.year.toString(),
-    (extendedBlock.month + 1).toString(),
+    extendedBlock.year?.toString() ?? '',
+    extendedBlock.month?.toString() ?? '',
   )
 
   const handleRequestRecordsByDate = (year: number, month: number) => {
     if (extendedBlock.year === year && extendedBlock.month === month) {
-      setExtendedBlock({ year: moment().year(), month: moment().month() + 1 })
+      setExtendedBlock({ year: null, month: null })
     } else {
-      setExtendedBlock({ year, month: month - 1 }) // Добавляем корректировку месяца
+      setExtendedBlock({ year, month })
       setTimeout(() => diaryRecordsByDateRefetch(), 0)
     }
   }
@@ -73,11 +75,14 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
   }
 
   useEffect(() => {
-    // Если данные обновляются с сервера, обновляем их
-    if (diaryRecordsByDate) {
-      diaryRecordsByDateRefetch()
-    }
-  }, [diaryRecordsByDateRefetch])
+    // Получаем текущий месяц и год
+    const currentMonth = moment().month() - 1 // январь - 0, поэтому добавляем 1
+    const currentYear = moment().year()
+
+    // Обновляем записи
+    diaryRecordsRefetch() // обновляем записи
+    setExtendedBlock({ year: currentYear, month: currentMonth }) // устанавливаем правильный месяц
+  }, [diaryRecordsRefetch]) // Перезапускаем эффект при изменении diaryRecordsRefetch
 
   if (passShow) {
     return <DiaryPinCodeComponent onVerify={handlePinVerification} />
@@ -112,9 +117,8 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
                   <p>
                     {month.month && (
                       <p>
-                        {moment()
-                          .month(month.month - 1)
-                          .format('MMMM')}{' '}
+                        {moment(month.month, 'M').format('MMMM')}{' '}
+                        {/* Здесь 'M' - это формат месяца */}
                         {year.year}
                       </p>
                     )}
