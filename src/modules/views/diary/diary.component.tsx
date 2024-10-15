@@ -117,9 +117,7 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
                   <p>
                     {month.month && (
                       <p>
-                        {moment(month.month, 'M').format('MMMM')}{' '}
-                        {/* Здесь 'M' - это формат месяца */}
-                        {year.year}
+                        {moment(`${year.year}-${month.month}`, 'YYYY-M').format('MMMM')} {year.year}
                       </p>
                     )}
                   </p>
