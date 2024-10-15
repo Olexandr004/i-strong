@@ -50,14 +50,14 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
   } = useGetRecordsByDate(
     token ?? '',
     extendedBlock.year.toString(),
-    extendedBlock.month.toString(),
+    (extendedBlock.month + 1).toString(),
   )
 
   const handleRequestRecordsByDate = (year: number, month: number) => {
     if (extendedBlock.year === year && extendedBlock.month === month) {
       setExtendedBlock({ year: moment().year(), month: moment().month() + 1 })
     } else {
-      setExtendedBlock({ year, month })
+      setExtendedBlock({ year, month: month - 1 }) // Добавляем корректировку месяца
       setTimeout(() => diaryRecordsByDateRefetch(), 0)
     }
   }
