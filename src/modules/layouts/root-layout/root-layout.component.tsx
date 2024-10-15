@@ -1,8 +1,7 @@
 'use client'
 
 import { usePathname } from 'next/navigation'
-
-import { FC, ReactNode, useEffect } from 'react'
+import { FC, ReactNode, useEffect, useState } from 'react'
 
 import { useGetUserProfile } from '@/api/setting-user.api'
 import { LoadingComponent } from '@/modules/layouts/loading'
@@ -20,6 +19,7 @@ interface IRootLayout {
 //component
 export const RootLayoutComponent: FC<Readonly<IRootLayout>> = ({ entry, home }) => {
   const token = useUserStore((state) => state.user?.access_token)
+  const [loadingState, setLoadingState] = useState<'loading' | 'loaded'>('loading') // состояние загрузки
 
   const {
     data: UserProfile,
@@ -27,15 +27,18 @@ export const RootLayoutComponent: FC<Readonly<IRootLayout>> = ({ entry, home }) 
     isFetching,
   } = useGetUserProfile(token ?? '')
 
-  console.log(UserProfile)
-
   const pathName = usePathname()
 
   useEffect(() => {
-    if (token) {
-      userProfileRefetch()
+    const loadUserProfile = async () => {
+      if (token) {
+        await userProfileRefetch()
+      }
+      setLoadingState('loaded')
     }
-  }, [token])
+
+    loadUserProfile() // всегда вызываем загрузку, независимо от наличия токена
+  }, [token, userProfileRefetch])
 
   const isPageWithFooter = () => {
     return (
@@ -46,31 +49,28 @@ export const RootLayoutComponent: FC<Readonly<IRootLayout>> = ({ entry, home }) 
     )
   }
 
-  //return
+  // Отображаем экран загрузки до тех пор, пока не будет завершена загрузка профиля
+  if (loadingState === 'loading' || isFetching) {
+    return <LoadingComponent />
+  }
+
+  // После завершения загрузки, проверяем профиль и отображаем соответствующий контент
   return (
     <body className={styles.layout}>
-      {!isFetching ? (
+      {UserProfile && token ? (
         <>
-          {UserProfile && token ? (
-            <>
-              <main
-                className={`${styles.layout__main} ${isPageWithFooter() && styles.with_footer}`}
-              >
-                {home}
-              </main>
+          <main className={`${styles.layout__main} ${isPageWithFooter() && styles.with_footer}`}>
+            {home}
+          </main>
 
-              {isPageWithFooter() && (
-                <div className={styles.layout__footer}>
-                  <FooterComponent />
-                </div>
-              )}
-            </>
-          ) : (
-            <main>{entry}</main>
+          {isPageWithFooter() && (
+            <div className={styles.layout__footer}>
+              <FooterComponent />
+            </div>
           )}
         </>
       ) : (
-        <LoadingComponent />
+        <main>{entry}</main>
       )}
 
       <div className={styles.layout__toaster}>
@@ -79,4 +79,5 @@ export const RootLayoutComponent: FC<Readonly<IRootLayout>> = ({ entry, home }) 
     </body>
   )
 }
+
 export default RootLayoutComponent
