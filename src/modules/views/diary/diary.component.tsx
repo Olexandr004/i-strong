@@ -75,14 +75,14 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
   }
 
   useEffect(() => {
-    // Получаем текущий месяц и год
-    const currentMonth = moment().month() - 1 // январь - 0, поэтому добавляем 1
-    const currentYear = moment().year()
+    if (diaryRecords) {
+      const currentMonth = moment().month() + 1 // момент возвращает индекс, добавляем 1
+      const currentYear = moment().year()
 
-    // Обновляем записи
-    diaryRecordsRefetch() // обновляем записи
-    setExtendedBlock({ year: currentYear, month: currentMonth }) // устанавливаем правильный месяц
-  }, [diaryRecordsRefetch]) // Перезапускаем эффект при изменении diaryRecordsRefetch
+      // Здесь, возможно, необходимо установить `extendedBlock` в значения из `diaryRecords`
+      setExtendedBlock({ year: currentYear, month: currentMonth })
+    }
+  }, [diaryRecords])
 
   if (passShow) {
     return <DiaryPinCodeComponent onVerify={handlePinVerification} />
@@ -123,7 +123,7 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
                   </p>
 
                   <div className={styles.diary__record_cards}>
-                    <div className={styles.diary__visible_cards}>
+                    <div>
                       {month.notes.slice(0, 3).map((item: any) => (
                         <DiaryNoteCardComponent
                           key={`${item.id}-${index}`}
