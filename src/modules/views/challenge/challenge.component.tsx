@@ -1,8 +1,5 @@
 import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
-
-import useKeyboardHandler from './test'
-
 import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 
 import { IChallengeData } from '@/interfaces/challenge'
@@ -22,14 +19,13 @@ interface IChallengeComponent {}
 
 //component
 export const ChallengeComponent: FC<Readonly<IChallengeComponent>> = () => {
-  // useKeyboardHandler()
-  //test top
   const searchParams = useSearchParams()
   const challenge_id = Number(searchParams.get('id'))
   const { challengeByIdMutate, status, challenge } = useChallengeById()
   const { isModalActive } = useCommonStore()
   const [note, setNote] = useState('')
   const { completeChallengePartMutate, statusCompleteChallenge } = useCompleteChallenge()
+
   const disableInteraction = useMemo(
     () =>
       challenge?.current_subtask?.is_completed ||
@@ -37,7 +33,7 @@ export const ChallengeComponent: FC<Readonly<IChallengeComponent>> = () => {
       statusCompleteChallenge === 'success',
     [challenge, statusCompleteChallenge],
   )
-  console.log(challenge)
+
   const isButtonDisabled = useMemo(
     () => disableInteraction || (challenge?.track_diary && note.length < 50),
     [disableInteraction, challenge, note],
@@ -71,6 +67,14 @@ export const ChallengeComponent: FC<Readonly<IChallengeComponent>> = () => {
     }
   }, [statusCompleteChallenge])
 
+  // Handle scroll into view when the textarea is focused
+  const handleFocus = (e: React.FocusEvent<HTMLTextAreaElement>) => {
+    const target = e.target as HTMLTextAreaElement
+    setTimeout(() => {
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }, 100)
+  }
+
   if (status === 'pending' && !challenge) {
     return <div>Loading...</div>
   }
@@ -78,7 +82,7 @@ export const ChallengeComponent: FC<Readonly<IChallengeComponent>> = () => {
   if (!challenge) {
     return <div>Oшибка</div>
   }
-  //return
+
   return (
     <section className={`${styles.challenge} container`}>
       <PageHeaderComponent title='Челендж' />
@@ -136,6 +140,7 @@ export const ChallengeComponent: FC<Readonly<IChallengeComponent>> = () => {
                   const cleanedValue = e.target.value.replace(/ {3,}/g, '  ') // Заменяем более двух пробелов на два
                   setNote(cleanedValue) // Обновляем состояние очищенным значением
                 }}
+                onFocus={handleFocus}
                 disabled={disableInteraction}
               ></textarea>
               <p className={`text-4-grey`}>*50+ символів</p>
