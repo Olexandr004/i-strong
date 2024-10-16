@@ -19,7 +19,7 @@ interface IRootLayout {
 //component
 export const RootLayoutComponent: FC<Readonly<IRootLayout>> = ({ entry, home }) => {
   const token = useUserStore((state) => state.user?.access_token)
-  const [loadingState, setLoadingState] = useState<'loading' | 'loaded'>('loading') // состояние загрузки
+  const [isProfileLoaded, setProfileLoaded] = useState(false) // состояние загрузки профиля
 
   const {
     data: UserProfile,
@@ -34,10 +34,10 @@ export const RootLayoutComponent: FC<Readonly<IRootLayout>> = ({ entry, home }) 
       if (token) {
         await userProfileRefetch()
       }
-      setLoadingState('loaded')
+      setProfileLoaded(true) // Устанавливаем, что профиль загружен
     }
 
-    loadUserProfile() // всегда вызываем загрузку, независимо от наличия токена
+    loadUserProfile() // вызываем загрузку при каждом изменении токена
   }, [token, userProfileRefetch])
 
   const isPageWithFooter = () => {
@@ -49,8 +49,8 @@ export const RootLayoutComponent: FC<Readonly<IRootLayout>> = ({ entry, home }) 
     )
   }
 
-  // Отображаем экран загрузки до тех пор, пока не будет завершена загрузка профиля
-  if (loadingState === 'loading' || isFetching) {
+  // Отображаем экран загрузки, если профиль еще не загружен
+  if (!isProfileLoaded || isFetching) {
     return <LoadingComponent />
   }
 
