@@ -1,0 +1,33 @@
+.layout {
+  transition: opacity 0.5s ease;
+  position: relative;
+}
+.layout.loading {
+  opacity: 0;
+  pointer-events: none;
+}
+.layout__main.with_footer {
+  padding-bottom: 14rem;
+}
+.layout__footer {
+  position: fixed;
+  z-index: 100;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+.layout__toaster {
+  position: absolute;
+  z-index: 100;
+  max-width: 50%;
+  top: 3.6rem;
+  right: 0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.layout__main {
+  transition: opacity 0.5s ease;
+}
+
+/*# sourceMappingURL=root-layout.module.css.map */
