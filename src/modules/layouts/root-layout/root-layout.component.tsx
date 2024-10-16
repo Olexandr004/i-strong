@@ -20,6 +20,7 @@ interface IRootLayout {
 export const RootLayoutComponent: FC<Readonly<IRootLayout>> = ({ entry, home }) => {
   const token = useUserStore((state) => state.user?.access_token)
   const [isProfileLoaded, setProfileLoaded] = useState(false) // состояние загрузки профиля
+  const [isInitializing, setIsInitializing] = useState(true) // состояние инициализации
 
   const {
     data: UserProfile,
@@ -30,14 +31,15 @@ export const RootLayoutComponent: FC<Readonly<IRootLayout>> = ({ entry, home }) 
   const pathName = usePathname()
 
   useEffect(() => {
-    const loadUserProfile = async () => {
+    const initializeApp = async () => {
       if (token) {
         await userProfileRefetch()
       }
       setProfileLoaded(true) // Устанавливаем, что профиль загружен
+      setIsInitializing(false) // Инициализация завершена
     }
 
-    loadUserProfile() // вызываем загрузку при каждом изменении токена
+    initializeApp() // Вызываем инициализацию приложения при изменении токена
   }, [token, userProfileRefetch])
 
   const isPageWithFooter = () => {
@@ -49,12 +51,12 @@ export const RootLayoutComponent: FC<Readonly<IRootLayout>> = ({ entry, home }) 
     )
   }
 
-  // Отображаем экран загрузки, если профиль еще не загружен
-  if (!isProfileLoaded || isFetching) {
+  // Проверяем, если приложение еще инициализируется или идет процесс загрузки профиля
+  if (isInitializing || isFetching) {
     return <LoadingComponent />
   }
 
-  // После завершения загрузки, проверяем профиль и отображаем соответствующий контент
+  // После завершения инициализации и загрузки профиля отображаем контент
   return (
     <body className={styles.layout}>
       {UserProfile && token ? (

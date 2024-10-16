@@ -4,22 +4,19 @@ import { FC, ReactNode, useEffect, useState } from 'react'
 import '@/styles/globals.scss'
 import 'swiper/css'
 import { useRouter } from 'next/navigation'
-
-// metadata
-export const viewport: Viewport = initialViewport
-
 import { QueryClientProvider } from '@tanstack/react-query'
 import { mainFont } from '@/fonts'
 import { initialMetadata, initialViewport } from '@/metadata'
 import { RootLayoutComponent } from '@/modules/layouts'
 import { useTanStackClient } from '@/packages/tanstack-client'
-import { useCommonStore } from '@/shared/stores' // Проверьте правильность импорта
+import { useCommonStore, useUserStore } from '@/shared/stores' // Проверьте правильность импорта
 import useKeyboard from '@/utils/native-app/keyboard'
 import {
   scheduleNotifications,
   notifications,
   getNotificationState,
 } from '@/utils/native-app/notifications'
+import { LoadingComponent } from '@/modules/layouts/loading'
 
 // interface
 interface IRootLayout {
@@ -36,6 +33,22 @@ const RootLayout: FC<Readonly<IRootLayout>> = ({ home, entry }) => {
   const successfulText = useCommonStore((state) => state.successfulText)
   const { queryClient } = useTanStackClient()
   const [isOnline, setIsOnline] = useState(true)
+  const token = useUserStore((state) => state.user?.access_token)
+  const [isInitialized, setIsInitialized] = useState(false) // Новое состояние инициализации
+
+  useEffect(() => {
+    const initializeApp = async () => {
+      if (token) {
+        // Если токен доступен, считаем, что инициализация прошла успешно
+        setIsInitialized(true)
+      } else {
+        // Иначе редиректим на авторизацию или обрабатываем инициализацию
+        router.push('/login')
+      }
+    }
+
+    initializeApp()
+  }, [token, router])
 
   useEffect(() => {
     const handleClick = () => {
@@ -129,6 +142,11 @@ const RootLayout: FC<Readonly<IRootLayout>> = ({ home, entry }) => {
         })
     }
   }, [])
+
+  // Отображаем загрузочный экран до завершения инициализации
+  if (!isInitialized) {
+    return <LoadingComponent />
+  }
 
   return (
     <html lang='uk' className={mainFont.className}>
