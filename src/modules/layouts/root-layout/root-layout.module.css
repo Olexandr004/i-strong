@@ -1,10 +1,5 @@
 .layout {
-  transition: opacity 0.5s ease;
   position: relative;
-}
-.layout.loading {
-  opacity: 0;
-  pointer-events: none;
 }
 .layout__main.with_footer {
   padding-bottom: 14rem;
@@ -24,10 +19,6 @@
   right: 0;
   display: flex;
   justify-content: flex-end;
-}
-
-.layout__main {
-  transition: opacity 0.5s ease;
 }
 
 /*# sourceMappingURL=root-layout.module.css.map */

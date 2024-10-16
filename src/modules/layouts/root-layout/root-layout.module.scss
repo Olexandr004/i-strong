@@ -1,11 +1,5 @@
 .layout {
-  transition: opacity 0.5s ease; // Плавный переход
   position: relative;
-
-  &.loading {
-    opacity: 0; // Скрываем весь контент при загрузке
-    pointer-events: none; // Блокируем события мыши
-  }
 
   &__main {
     &.with_footer {
@@ -30,8 +24,4 @@
     display: flex;
     justify-content: flex-end;
   }
-}
-
-.layout__main {
-  transition: opacity 0.5s ease; // Плавный переход для основного контента
 }

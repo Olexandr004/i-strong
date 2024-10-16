@@ -1,11 +1,14 @@
 'use client'
 
 import { usePathname } from 'next/navigation'
-import { FC, ReactNode, useEffect, useState } from 'react'
+
+import { FC, ReactNode, useEffect } from 'react'
+
 import { useGetUserProfile } from '@/api/setting-user.api'
 import { LoadingComponent } from '@/modules/layouts/loading'
 import { FooterComponent, ToasterComponent } from '@/modules/layouts/root-layout/elements'
 import { useUserStore } from '@/shared/stores'
+
 import styles from './root-layout.module.scss'
 
 //interface
@@ -17,7 +20,6 @@ interface IRootLayout {
 //component
 export const RootLayoutComponent: FC<Readonly<IRootLayout>> = ({ entry, home }) => {
   const token = useUserStore((state) => state.user?.access_token)
-  const [isLoading, setIsLoading] = useState(true)
 
   const {
     data: UserProfile,
@@ -25,13 +27,13 @@ export const RootLayoutComponent: FC<Readonly<IRootLayout>> = ({ entry, home }) 
     isFetching,
   } = useGetUserProfile(token ?? '')
 
+  console.log(UserProfile)
+
   const pathName = usePathname()
 
   useEffect(() => {
     if (token) {
-      userProfileRefetch().then(() => setIsLoading(false)) // Установите состояние загрузки в false после получения данных
-    } else {
-      setIsLoading(false) // Если токен отсутствует, тоже установите состояние в false
+      userProfileRefetch()
     }
   }, [token])
 
@@ -46,10 +48,8 @@ export const RootLayoutComponent: FC<Readonly<IRootLayout>> = ({ entry, home }) 
 
   //return
   return (
-    <body className={`${styles.layout} ${isLoading ? styles.loading : ''}`}>
-      {isFetching ? (
-        <LoadingComponent /> // Показывать компонент загрузки, пока идет запрос
-      ) : (
+    <body className={styles.layout}>
+      {!isFetching ? (
         <>
           {UserProfile && token ? (
             <>
@@ -69,6 +69,8 @@ export const RootLayoutComponent: FC<Readonly<IRootLayout>> = ({ entry, home }) 
             <main>{entry}</main>
           )}
         </>
+      ) : (
+        <LoadingComponent />
       )}
 
       <div className={styles.layout__toaster}>
