@@ -25,3 +25,16 @@
     justify-content: flex-end;
   }
 }
+
+.entry {
+  opacity: 0; /* Скрываем */
+  visibility: hidden; /* Не отображаем в потоке документа */
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease; /* Плавный переход */
+}
+
+.entry.show {
+  opacity: 1; /* Показываем */
+  visibility: visible; /* Отображаем в потоке документа */
+}

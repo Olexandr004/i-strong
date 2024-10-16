@@ -1,41 +1,49 @@
-'use client'
-
-import { usePathname } from 'next/navigation'
-
-import { FC, ReactNode, useEffect } from 'react'
-
+import { usePathname, useRouter } from 'next/navigation'
+import { FC, ReactNode, useEffect, useState } from 'react'
 import { useGetUserProfile } from '@/api/setting-user.api'
 import { LoadingComponent } from '@/modules/layouts/loading'
 import { FooterComponent, ToasterComponent } from '@/modules/layouts/root-layout/elements'
 import { useUserStore } from '@/shared/stores'
-
 import styles from './root-layout.module.scss'
 
-//interface
 interface IRootLayout {
   entry: ReactNode
   home: ReactNode
 }
 
-//component
 export const RootLayoutComponent: FC<Readonly<IRootLayout>> = ({ entry, home }) => {
   const token = useUserStore((state) => state.user?.access_token)
-
+  const router = useRouter()
   const {
     data: UserProfile,
     refetch: userProfileRefetch,
     isFetching,
   } = useGetUserProfile(token ?? '')
-
-  console.log(UserProfile)
-
   const pathName = usePathname()
 
+  // Состояние для контроля видимости экрана авторизации
+  const [showEntry, setShowEntry] = useState<boolean>(false)
+
   useEffect(() => {
-    if (token) {
-      userProfileRefetch()
+    const fetchData = async () => {
+      if (token) {
+        await userProfileRefetch()
+      }
     }
-  }, [token])
+
+    fetchData()
+  }, [token, userProfileRefetch])
+
+  useEffect(() => {
+    if (!isFetching) {
+      if (UserProfile) {
+        setShowEntry(false) // Пользователь аутентифицирован, не показываем entry
+      } else {
+        setShowEntry(true) // Пользователь не аутентифицирован, показываем entry
+        router.push('/') // Замените '/' на путь к вашему экрану авторизации
+      }
+    }
+  }, [isFetching, UserProfile, router])
 
   const isPageWithFooter = () => {
     return (
@@ -46,10 +54,11 @@ export const RootLayoutComponent: FC<Readonly<IRootLayout>> = ({ entry, home }) 
     )
   }
 
-  //return
   return (
     <body className={styles.layout}>
-      {!isFetching ? (
+      {isFetching ? (
+        <LoadingComponent />
+      ) : (
         <>
           {UserProfile && token ? (
             <>
@@ -58,7 +67,6 @@ export const RootLayoutComponent: FC<Readonly<IRootLayout>> = ({ entry, home }) 
               >
                 {home}
               </main>
-
               {isPageWithFooter() && (
                 <div className={styles.layout__footer}>
                   <FooterComponent />
@@ -66,17 +74,16 @@ export const RootLayoutComponent: FC<Readonly<IRootLayout>> = ({ entry, home }) 
               )}
             </>
           ) : (
-            <main>{entry}</main>
+            // Показываем entry только если showEntry = true
+            <main className={`${styles.entry} ${showEntry ? styles.show : ''}`}>{entry}</main>
           )}
         </>
-      ) : (
-        <LoadingComponent />
       )}
-
       <div className={styles.layout__toaster}>
         <ToasterComponent />
       </div>
     </body>
   )
 }
+
 export default RootLayoutComponent
