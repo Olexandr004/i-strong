@@ -1,14 +1,11 @@
 'use client'
 
 import { usePathname } from 'next/navigation'
-
-import { FC, ReactNode, useEffect } from 'react'
-
+import { FC, ReactNode, useEffect, useState } from 'react'
 import { useGetUserProfile } from '@/api/setting-user.api'
 import { LoadingComponent } from '@/modules/layouts/loading'
 import { FooterComponent, ToasterComponent } from '@/modules/layouts/root-layout/elements'
 import { useUserStore } from '@/shared/stores'
-
 import styles from './root-layout.module.scss'
 
 //interface
@@ -27,15 +24,21 @@ export const RootLayoutComponent: FC<Readonly<IRootLayout>> = ({ entry, home }) 
     isFetching,
   } = useGetUserProfile(token ?? '')
 
-  console.log(UserProfile)
-
   const pathName = usePathname()
+  const [isUserChecked, setIsUserChecked] = useState(false)
+  const [isReady, setIsReady] = useState(false) // Новый флаг для отслеживания готовности
 
   useEffect(() => {
-    if (token) {
-      userProfileRefetch()
+    const checkUserProfile = async () => {
+      if (token) {
+        await userProfileRefetch()
+      }
+      setIsUserChecked(true)
+      setIsReady(true) // Устанавливаем состояние готовности
     }
-  }, [token])
+
+    checkUserProfile()
+  }, [token, userProfileRefetch])
 
   const isPageWithFooter = () => {
     return (
@@ -49,7 +52,9 @@ export const RootLayoutComponent: FC<Readonly<IRootLayout>> = ({ entry, home }) 
   //return
   return (
     <body className={styles.layout}>
-      {!isFetching ? (
+      {isFetching || !isReady ? ( // Используем isReady для показа Loading
+        <LoadingComponent />
+      ) : (
         <>
           {UserProfile && token ? (
             <>
@@ -58,7 +63,6 @@ export const RootLayoutComponent: FC<Readonly<IRootLayout>> = ({ entry, home }) 
               >
                 {home}
               </main>
-
               {isPageWithFooter() && (
                 <div className={styles.layout__footer}>
                   <FooterComponent />
@@ -66,17 +70,16 @@ export const RootLayoutComponent: FC<Readonly<IRootLayout>> = ({ entry, home }) 
               )}
             </>
           ) : (
-            <main>{entry}</main>
+            // Добавляем класс show к entry, если пользователь не авторизован
+            <main className={`${styles.entry} ${isUserChecked ? styles.show : ''}`}>{entry}</main>
           )}
         </>
-      ) : (
-        <LoadingComponent />
       )}
-
       <div className={styles.layout__toaster}>
         <ToasterComponent />
       </div>
     </body>
   )
 }
+
 export default RootLayoutComponent
