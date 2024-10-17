@@ -1,0 +1,54 @@
+.photoTutorial {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+.photoTutorial__container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.photoTutorial__button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  margin: 0 20px;
+  transition: color 0.3s;
+}
+.photoTutorial__button:hover {
+  color: #0070f3;
+}
+.photoTutorial__slide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.photoTutorial__image {
+  border-radius: 10px;
+  max-width: 100%;
+  height: auto;
+}
+.photoTutorial__dots {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+.photoTutorial__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #ccc;
+  border: none;
+  margin: 0 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.photoTutorial__dot.active {
+  background-color: #ffc75a;
+}
+.photoTutorial__dot:hover {
+  background-color: #cfcfcf;
+}
+
+/*# sourceMappingURL=photo-tutorial.module.css.map */

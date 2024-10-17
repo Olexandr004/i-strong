@@ -1,16 +1,14 @@
 'use client'
 import { useMutation } from '@tanstack/react-query'
-
+import { useRouter } from 'next/navigation' // Импортируем useRouter для навигации
 import 'moment/locale/uk'
 import moment from 'moment'
-
 import { FC, useEffect, useState } from 'react'
-
 import { postMood } from '@/api/mood-tracker'
 import { useGetUserProfile } from '@/api/setting-user.api'
 import { MOODS } from '@/shared/constants/moods'
 import { useUserStore } from '@/shared/stores'
-
+import { ButtonComponent } from '@/shared/components'
 import styles from './mood-tracker.module.scss'
 
 //interface
@@ -21,6 +19,7 @@ export const MoodTrackerComponent: FC<Readonly<IMoodTracker>> = () => {
   const token = useUserStore((state) => state.user?.access_token)
   const handleChangeUserStore = useUserStore((state) => state.handleChangeUserStore)
   const user = useUserStore((state) => state.user)
+  const router = useRouter() // Инициализируем useRouter для навигации
 
   const [selectedMood, setSelectedMood] = useState(user?.mood?.mood ?? 'happy')
 
@@ -42,6 +41,11 @@ export const MoodTrackerComponent: FC<Readonly<IMoodTracker>> = () => {
       setSelectedMood(user?.mood?.mood ?? 'happy')
     }
   }, [user])
+
+  // Функция для навигации на страницу /statistics
+  const goToStatistics = () => {
+    router.push('/statistic')
+  }
 
   //return
   return (
@@ -78,8 +82,16 @@ export const MoodTrackerComponent: FC<Readonly<IMoodTracker>> = () => {
             {MOODS.find((item) => item.slug === selectedMood)?.icon}
           </div>
         </div>
+
+        {/* Добавляем кнопку "Статистика" */}
+        <div className={styles.mood_tracker__statistics}>
+          <ButtonComponent onClick={goToStatistics} size='small' variant='filled'>
+            Статистика
+          </ButtonComponent>
+        </div>
       </div>
     </section>
   )
 }
+
 export default MoodTrackerComponent

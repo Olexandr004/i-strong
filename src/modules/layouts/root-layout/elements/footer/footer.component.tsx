@@ -3,7 +3,7 @@ import { usePathname } from 'next/navigation'
 
 import { FC } from 'react'
 
-import { IconAccount, IconDiary, IconHome, IconSos, IconTutorial } from '@/shared/icons'
+import { IconDiary, IconHome, IconSos, IconTutorial, IconChest } from '@/shared/icons'
 
 import styles from './footer.module.scss'
 
@@ -14,7 +14,7 @@ const LINKS = [
   { icon: <IconHome />, link: '/' },
   { icon: <IconTutorial />, link: '/tutorials' },
   { icon: <IconDiary />, link: '/diary' },
-  { icon: <IconAccount />, link: '/profile' },
+  { icon: <IconChest />, link: '/chest' },
 ]
 
 //component

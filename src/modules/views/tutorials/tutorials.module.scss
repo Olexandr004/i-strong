@@ -2,15 +2,82 @@
   padding-top: 6.8rem;
   display: grid;
   gap: 3.2rem;
+  max-width: 100%;
+  margin: 0 auto;
+
+  &__back_btn {
+    position: absolute;
+    top: 37px;
+    left: 20px;
+    width: 22px;
+    height: 20px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__title {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 2.8rem;
+    line-height: 3.4rem;
+    color: #1e1e1e;
+    text-align: left;
+  }
 
   &__content {
     display: grid;
     gap: 2.4rem;
   }
+  &__buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  &__button {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 8px;
+    gap: 8px;
+    width: 264px;
+    height: 60px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+    border-radius: 1.6rem;
+
+    order: 0;
+    align-self: stretch;
+    flex-grow: 0;
+
+    /* Text/3 */
+    font-style: normal;
+    font-weight: 700;
+    font-size: 1.6rem;
+    line-height: 2rem;
+    color: #1e1e1e;
+
+    &:nth-child(1) {
+      background: #c0ebf1;
+    }
+    &:nth-child(2) {
+      background: #fff1b6;
+    }
+    &:nth-child(3) {
+      background: #c8ebcf;
+    }
+  }
 
   &__box_title {
-    display: grid;
-    gap: 0.9rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed #ffc75a;
     font-size: 1.6rem;
     font-weight: 700;
     transition: gap var(--transition);
@@ -22,7 +89,6 @@
 
   &__box_btn {
     display: block;
-    margin: 0 auto;
 
     & svg {
       width: 2rem;

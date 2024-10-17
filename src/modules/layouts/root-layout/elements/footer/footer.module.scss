@@ -29,13 +29,13 @@
     &.size {
       & svg {
         width: 2.4rem;
-        height: 2rem;
+        height: 2.5rem;
       }
     }
 
     & svg {
-      width: 2rem;
-      height: 2rem;
+      width: 3rem;
+      height: 2.5rem;
       color: var(--icon-color);
       transition: transform var(--transition);
     }

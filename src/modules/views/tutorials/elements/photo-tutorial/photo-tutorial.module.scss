@@ -1,29 +1,61 @@
-.photo_tutorial {
-  :global {
-    --swiper-pagination-color: var(--accent-color-yellow);
-    .swiper-pagination-bullets {
-      bottom: 0;
+.photoTutorial {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+
+  &__container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    margin: 0 20px;
+    transition: color 0.3s;
+
+    &:hover {
+      color: #0070f3; // Пример стиля при наведении
     }
   }
 
-  &__swiper {
-    height: 22.5rem;
-    overflow-y: visible;
-  }
-
-  &__swiper_wrapper {
-    height: 21rem;
+  &__slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   &__image {
-    margin: 0 auto;
-    height: 21rem;
-    overflow: hidden;
-    width: fit-content;
+    border-radius: 10px;
+    max-width: 100%;
+    height: auto;
+  }
 
-    & img {
-      height: 21rem !important;
-      border-radius: 8px;
+  &__dots {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+  }
+
+  &__dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #ccc;
+    border: none;
+    margin: 0 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &.active {
+      background-color: #ffc75a; // Цвет активной точки
+    }
+
+    &:hover {
+      background-color: #cfcfcf; // Цвет точки при наведении
     }
   }
 }

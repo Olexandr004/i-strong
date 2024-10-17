@@ -6,6 +6,7 @@ import { useGetUserProfile } from '@/api/setting-user.api'
 import { LoadingComponent } from '@/modules/layouts/loading'
 import { FooterComponent, ToasterComponent } from '@/modules/layouts/root-layout/elements'
 import { useUserStore } from '@/shared/stores'
+import { AvatarPreviewComponent } from '@/modules/views/profile/elements'
 import styles from './root-layout.module.scss'
 
 //interface
@@ -43,7 +44,7 @@ export const RootLayoutComponent: FC<Readonly<IRootLayout>> = ({ entry, home }) 
   const isPageWithFooter = () => {
     return (
       pathName === '/' ||
-      pathName === '/profile' ||
+      pathName === '/chest' ||
       pathName === '/tutorials' ||
       pathName === '/diary'
     )
@@ -61,6 +62,8 @@ export const RootLayoutComponent: FC<Readonly<IRootLayout>> = ({ entry, home }) 
               <main
                 className={`${styles.layout__main} ${isPageWithFooter() && styles.with_footer}`}
               >
+                {/* Вставляем компонент аватарки перед контентом */}
+                {isPageWithFooter() && <AvatarPreviewComponent />}
                 {home}
               </main>
               {isPageWithFooter() && (

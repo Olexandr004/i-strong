@@ -1,86 +1,82 @@
-export const steps = [
+// types.ts
+export interface Technique {
+  id: number
+  title: string
+  type: 'photo' | 'video'
+  array?: string[] // Массив слайдов для техник с типом 'photo'
+}
+
+export interface Category {
+  id: number
+  title: string
+  techniques: Technique[]
+}
+
+export const categories: Category[] = [
   {
     id: 1,
-    title: 'Дихання "4-7-8"',
-    type: 'photo',
-    array: [
+    title: 'Стрес',
+    techniques: [
       {
-        image: 'image/Breath-1.png',
+        id: 1,
+        title: 'Дихальні вправи з рухом',
+        type: 'photo',
+        array: ['/image/img.png', '/image/Breath-1.png', '/image/img.png'],
       },
       {
-        image: 'image/Breath-2.png',
+        id: 2,
+        title: 'Дихання 4-7-8',
+        type: 'photo',
+        array: [
+          // Массив слайдов для техники "Дихання 4-7-8"
+          '/image/Breath-1.png', // Предположим, что путь к изображениям корректен
+          '/image/img.png',
+        ],
       },
       {
-        image: 'image/Breath-3.png',
+        id: 3,
+        title: 'Прогулянка',
+        type: 'video',
       },
       {
-        image: 'image/Breath-4.png',
-      },
-      {
-        image: 'image/Breath-5.png',
+        id: 4,
+        title: 'Йога',
+        type: 'video',
       },
     ],
   },
   {
     id: 2,
-    title: 'Прогулянка на свіжому повітрі',
-    type: 'photo',
-    array: [
+    title: 'Панічні атаки',
+    techniques: [
       {
-        image: 'image/Group 14.png',
+        id: 5,
+        title: 'Дихання з затримкою',
+        type: 'photo',
+        array: ['/image/slide1.jpg', '/image/slide2.jpg'],
       },
       {
-        image: 'image/Group 15.png',
-      },
-      {
-        image: 'image/Group 16.png',
-      },
-      {
-        image: 'image/Group 17.png',
-      },
-      {
-        image: 'image/Group 18.png',
-      },
-      {
-        image: 'image/Group 19.png',
+        id: 6,
+        title: 'Релаксація мязів',
+        type: 'video',
       },
     ],
   },
   {
     id: 3,
-    title: 'Йога',
-    type: 'photo',
-    array: [
+    title: 'Шоковий стан',
+    techniques: [
       {
-        image: 'image/Group 20.png',
+        id: 7,
+        title: 'Заземлення',
+        type: 'photo',
+        array: ['/image/slide1.jpg', '/image/slide2.jpg'],
       },
       {
-        image: 'image/Group 21.png',
-      },
-      {
-        image: 'image/Group 22.png',
-      },
-      {
-        image: 'image/Group 23.png',
-      },
-    ],
-  },
-  {
-    id: 4,
-    title: 'Дихальні вправи з рухом',
-    type: 'photo',
-    array: [
-      {
-        image: 'image/Group 24.png',
-      },
-      {
-        image: 'image/Group 25.png',
-      },
-      {
-        image: 'image/Group 26.png',
-      },
-      {
-        image: 'image/Group 27.png',
+        id: 8,
+        title: 'Контроль дихання',
+        type: 'photo',
+        array: ['/image/slide1.jpg', '/image/slide2.jpg'],
       },
     ],
   },

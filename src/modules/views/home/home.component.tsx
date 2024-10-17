@@ -26,7 +26,8 @@ export const HomeComponent: FC<Readonly<IHome>> = () => {
   //return
   return (
     <div className={`${styles.home} container`}>
-      <h1 className={`${styles.home__title} title`}>Головна</h1>
+      <h1 className={`${styles.home__title} title`}>IStrong</h1>
+      <MoodTrackerComponent />
       {/* <MyComponent /> */}
       <SectionSwiperComponent
         title={'Щоденні челенджі'}
@@ -34,8 +35,6 @@ export const HomeComponent: FC<Readonly<IHome>> = () => {
         type={'Challenge'}
         status={status}
       />
-
-      <MoodTrackerComponent />
 
       {/* <SectionSwiperComponent
         title={'Інструкції та інструменти'}
