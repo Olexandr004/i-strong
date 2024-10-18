@@ -1,0 +1,73 @@
+.profile {
+  padding-top: 6.8rem;
+  display: grid;
+  align-content: start;
+  grid-gap: 6.8rem;
+}
+.profile__top {
+  display: grid;
+  align-content: start;
+  grid-gap: 3.2rem;
+}
+.profile__navigation {
+  display: grid;
+  gap: 1.2rem;
+}
+.profile__navigatation_link {
+  padding: 1.1rem 3.2rem;
+  display: flex;
+  align-items: center;
+  gap: 2.4rem;
+  color: var(--font-color-primary);
+  font-size: 1.6rem;
+  font-weight: 700;
+  border-radius: 2.4rem;
+  box-shadow: var(--box-shadow);
+  transition: background-color var(--transition);
+}
+.profile__navigatation_link svg {
+  width: 2rem;
+  height: 2rem;
+}
+.profile__navigatation_link:active {
+  background-color: var(--button-active);
+}
+.profile__photo {
+  position: relative;
+  width: 9rem;
+  height: 9rem;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.profile__user {
+  display: flex;
+  align-items: center;
+  gap: 3.6rem;
+}
+.profile__info {
+  height: 100%;
+  display: grid;
+  align-content: space-between;
+  font-size: 1.2rem;
+  color: var(--font-color-grey);
+  font-weight: 500;
+}
+.profile__name {
+  margin-bottom: 0.8rem;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--font-color-primary);
+}
+.profile_privacy {
+  text-align: center;
+}
+
+.profile__back_btn {
+  position: absolute;
+  top: 3.7rem;
+  left: 3rem;
+  width: 22px;
+  height: 20px;
+}
+
+/*# sourceMappingURL=profile.module.css.map */

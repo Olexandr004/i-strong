@@ -1,64 +1,27 @@
 'use client'
 import { categories } from './data'
 import PhotoTutorialComponent from './elements/photo-tutorial/photo-tutorial.component'
-import { FC, useState, useEffect } from 'react'
+import { FC } from 'react'
 import { IconArrow, IconNextArrow } from '@/shared/icons'
 import { ModalGettingToInstructionsComponent } from '@/shared/components'
 import { ImageCapybaraTeacher } from '@/shared/images'
 import styles from './tutorials.module.scss'
+import { useTutorialsStore } from '@/shared/stores'
 
 // interface
 interface ITutorials {}
 
 // component
 export const TutorialsComponent: FC<Readonly<ITutorials>> = () => {
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(null)
-  const [expandedTechnique, setExpandedTechnique] = useState<number | null>(null)
-  const [selectedTechnique, setSelectedTechnique] = useState<number | null>(null)
-
-  // Функция для обновления localStorage
-  const updateLocalStorage = (category: number | null, technique: number | null) => {
-    if (category !== null) {
-      localStorage.setItem('selectedCategory', category.toString())
-    } else {
-      localStorage.removeItem('selectedCategory')
-    }
-
-    if (technique !== null) {
-      localStorage.setItem('selectedTechnique', technique.toString())
-    } else {
-      localStorage.removeItem('selectedTechnique')
-    }
-  }
-
-  // Восстанавливаем состояние из localStorage при монтировании компонента
-  useEffect(() => {
-    const savedCategory = localStorage.getItem('selectedCategory')
-    const savedTechnique = localStorage.getItem('selectedTechnique')
-
-    if (savedCategory) {
-      const categoryId = Number(savedCategory)
-      setSelectedCategory(categoryId)
-
-      // Восстанавливаем технику, если она сохранена и категория совпадает
-      if (savedTechnique) {
-        const techniqueId = Number(savedTechnique)
-        const selectedCategoryData = categories.find((category) => category.id === categoryId)
-        const techniqueExists = selectedCategoryData?.techniques.some(
-          (technique) => technique.id === techniqueId,
-        )
-
-        if (techniqueExists) {
-          setSelectedTechnique(techniqueId)
-        }
-      }
-    }
-  }, [])
-
-  // Обновляем localStorage при изменении категории или техники
-  useEffect(() => {
-    updateLocalStorage(selectedCategory, selectedTechnique)
-  }, [selectedCategory, selectedTechnique])
+  // Используем состояние из Zustand-хранилища
+  const {
+    selectedCategory,
+    selectedTechnique,
+    expandedTechnique,
+    setSelectedCategory,
+    setSelectedTechnique,
+    setExpandedTechnique,
+  } = useTutorialsStore()
 
   // Получаем заголовок в зависимости от состояния
   const getTitle = () => {

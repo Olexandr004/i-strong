@@ -1,0 +1,111 @@
+.mood_tracker {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 2.4rem;
+  padding-bottom: 4.8rem;
+}
+.mood_tracker__statistics button {
+  max-width: 13.2rem;
+  margin: 0 auto;
+}
+.mood_tracker__btn {
+  padding: 0.4rem 0.8rem;
+  margin: 0 auto;
+  width: 3.2rem;
+  height: 3.2rem;
+  background: #ffc75a;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 100px;
+  flex: none;
+  order: 2;
+  flex-grow: 0;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 1.6rem;
+  line-height: 2rem;
+  text-align: center;
+  color: #000000;
+}
+.mood_tracker__title {
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+.mood_tracker__box {
+  height: 12rem;
+  padding: 1.2rem;
+  display: grid;
+  align-content: space-between;
+  border-radius: 1.2rem;
+  background-color: #ffffff;
+}
+.mood_tracker__box2 {
+  display: flex;
+  align-items: center;
+}
+.mood_tracker__top {
+  display: flex;
+  flex-direction: column;
+  font-size: 1rem;
+  color: var(--font-color-primary);
+  font-weight: 500;
+  margin-left: -2.5rem;
+}
+.mood_tracker__top span:first-of-type {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 1.2rem;
+  line-height: 1.5rem;
+  color: #7d7d7d;
+}
+.mood_tracker__top span:last-of-type {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 1.6rem;
+  line-height: 2rem;
+  color: #1e1e1e;
+}
+.mood_tracker__time {
+  font-weight: 700;
+  font-size: 1.6rem;
+}
+.mood_tracker__bottom {
+  display: grid;
+  grid-template-columns: 0.6fr 0.4fr;
+  grid-gap: 1.8rem;
+}
+.mood_tracker__emotions {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.6rem;
+  opacity: 0.7;
+}
+.mood_tracker__emotions svg {
+  width: 3.2rem;
+  height: 3.2rem;
+  cursor: pointer;
+}
+.mood_tracker__options {
+  height: 6.8rem;
+  padding: 0.8rem;
+  display: grid;
+  align-content: space-between;
+  color: var(--font-color-grey);
+  border-radius: 0.8rem;
+  background-color: var(--bg-color-primary);
+}
+.mood_tracker__selected_emotion {
+  padding: 8px;
+  margin: 0 auto;
+  width: 55px;
+  height: 55px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+  display: flex;
+  justify-content: flex-end;
+}
+.mood_tracker__selected_emotion svg {
+  width: 4rem;
+  height: 4rem;
+}
+
+/*# sourceMappingURL=mood-tracker.module.css.map */

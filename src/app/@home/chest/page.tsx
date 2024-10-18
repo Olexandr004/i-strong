@@ -1,9 +1,10 @@
 'use client'
 import { NextPage } from 'next'
+import { ChestComponent } from '@/modules/views'
 
 // page
 const ChestPage: NextPage = () => {
-  return <div>hello world</div>
+  return <ChestComponent></ChestComponent>
 }
 
 export default ChestPage

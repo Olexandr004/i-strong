@@ -1,3 +1,4 @@
+'use client'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -8,7 +9,7 @@ import ky from 'ky'
 import { ChallengeType } from '@/interfaces/challenge'
 import { AvatarComponent } from '@/modules/views/profile/elements'
 import { ButtonComponent, CoinsDisplayComponent } from '@/shared/components'
-import { IconAnalytic, IconChallenge, IconSetting, IconShop, IconWishList } from '@/shared/icons'
+import { IconChallenge, IconSetting, IconShop, IconArrow } from '@/shared/icons' // Импортируем IconArrow
 import { ImageAvatar } from '@/shared/images'
 import { useCommonStore, useUserStore } from '@/shared/stores'
 
@@ -46,7 +47,7 @@ const fetchUserAvatar = async (token: string) => {
 
 //component
 export const ProfileComponent: FC<Readonly<IProfile>> = () => {
-  const router = useRouter()
+  const router = useRouter() // Используем useRouter для навигации
   const handleChangeUserStore = useUserStore((state) => state.handleChangeUserStore)
   const { activeChallengeTypeButton, isAvatarModalActive, handleChangeCommonStore } =
     useCommonStore((state) => ({
@@ -82,10 +83,19 @@ export const ProfileComponent: FC<Readonly<IProfile>> = () => {
     loadAvatar()
   }, [user?.access_token]) // Загружаем аватар при монтировании компонента
 
+  // Функция для возврата на предыдущую страницу
+  const handleGoBack = () => {
+    router.back() // Возвращаемся на предыдущую страницу
+  }
+
   //return
   return (
     <section className={`${styles.profile} container`}>
       <div className={styles.profile__top}>
+        {/* Добавляем IconArrow для возврата */}
+        <button className={styles.profile__back_btn} onClick={handleGoBack}>
+          <IconArrow />
+        </button>
         <h1 className={`title`}>Мій кабінет</h1>
 
         <div className={styles.profile__user}>
@@ -125,4 +135,5 @@ export const ProfileComponent: FC<Readonly<IProfile>> = () => {
     </section>
   )
 }
+
 export default ProfileComponent

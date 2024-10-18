@@ -47,40 +47,45 @@ export const MoodTrackerComponent: FC<Readonly<IMoodTracker>> = () => {
     router.push('/statistic')
   }
 
+  const selectedMoodData = MOODS.find((item) => item.slug === selectedMood)
   //return
   return (
     <section className={`${styles.mood_tracker}`}>
       <h2 className={styles.mood_tracker__title}>Трекер настрою</h2>
 
       <div className={styles.mood_tracker__box}>
-        <div className={styles.mood_tracker__top}>
-          <span>Останнє оновлення:</span>
+        <div className={styles.mood_tracker__box2}>
+          <div className={styles.mood_tracker__bottom}>
+            {/*<div className={styles.mood_tracker__options}>*/}
 
-          <span className={styles.mood_tracker__time}>
-            {moment(user?.mood?.date).format('dddd HH:mm')}
-          </span>
-        </div>
+            {/*  <ul className={styles.mood_tracker__emotions}>*/}
+            {/*    {MOODS.filter((item) => item.slug !== selectedMood).map((item) => (*/}
+            {/*      <button*/}
+            {/*        className={`${styles.mood_tracker__emotion} ${item.slug === selectedMood && styles.active}`}*/}
+            {/*        onClick={() => postCurrentMood({ mood: item.slug })}*/}
+            {/*        key={item.slug}*/}
+            {/*      >*/}
+            {/*        {item.icon}*/}
+            {/*      </button>*/}
+            {/*    ))}*/}
+            {/*  </ul>*/}
+            {/*</div>*/}
 
-        <div className={styles.mood_tracker__bottom}>
-          <div className={styles.mood_tracker__options}>
-            <p>Натисни щоб змінити</p>
-
-            <ul className={styles.mood_tracker__emotions}>
-              {MOODS.filter((item) => item.slug !== selectedMood).map((item) => (
-                <button
-                  className={`${styles.mood_tracker__emotion} ${item.slug === selectedMood && styles.active}`}
-                  onClick={() => postCurrentMood({ mood: item.slug })}
-                  key={item.slug}
-                >
-                  {item.icon}
-                </button>
-              ))}
-            </ul>
+            <div
+              className={styles.mood_tracker__selected_emotion}
+              style={{ backgroundColor: selectedMoodData?.color }}
+            >
+              {MOODS.find((item) => item.slug === selectedMood)?.icon}
+            </div>
           </div>
+          <div className={styles.mood_tracker__top}>
+            <span>Останнє оновлення:</span>
 
-          <div className={styles.mood_tracker__selected_emotion}>
-            {MOODS.find((item) => item.slug === selectedMood)?.icon}
+            <span className={styles.mood_tracker__time}>
+              {moment(user?.mood?.date).format('dddd HH:mm')}
+            </span>
           </div>
+          <button className={styles.mood_tracker__btn}>+</button>
         </div>
 
         {/* Добавляем кнопку "Статистика" */}

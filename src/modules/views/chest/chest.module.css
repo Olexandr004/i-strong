@@ -1,0 +1,46 @@
+.container__chest {
+  padding: 9rem 3rem;
+}
+.container__chest h1 {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 34px;
+  color: #1e1e1e;
+  margin-bottom: 15px;
+}
+.container__chest .box__chest {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.container__chest .box__chest button {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 8px;
+  gap: 8px;
+  width: 100%;
+  height: 60px;
+  background: #c0ebf1;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
+  border-radius: 16px;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 20px;
+  color: #1e1e1e;
+}
+.container__chest .box__chest button:last-of-type {
+  background: #fff1b6;
+}
+.container__chest .backBtn__chest {
+  position: absolute;
+  top: 37px;
+  left: 30px;
+  width: 22px;
+  height: 20px;
+}
+
+/*# sourceMappingURL=chest.module.css.map */

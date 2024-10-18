@@ -38,8 +38,10 @@ export const PageHeaderComponent: FC<Readonly<IPageHeader>> = ({ title, gapSize 
   const handleBackClick = () => {
     if (['/settings/reset-password'].includes(pathname) && searchParams.size >= 1) {
       router.push('/settings')
-    } else if (['/statistic', '/challenges'].includes(pathname) && searchParams.size >= 1) {
+    } else if (['/challenges'].includes(pathname) && searchParams.size >= 1) {
       router.push('/profile')
+    } else if (['/statistic'].includes(pathname) && searchParams.size >= 1) {
+      router.push('/')
     } else if (
       ['/store', '/favorite', '/challenges', '/settings', '/settings/reset-password'].includes(
         pathname,
