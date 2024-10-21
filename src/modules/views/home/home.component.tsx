@@ -8,6 +8,7 @@ import { useBackButtonExit } from '@/shared/hooks/useBackButtonExit'
 import { useCurrentChallengeDetails } from '@/shared/hooks/useChallengeMutations'
 
 import MoodTrackerComponent from '../../../shared/components/templates/mood-tracker/mood-tracker.component'
+import { AvatarPreviewComponent } from '@/modules/views/profile/elements'
 
 import styles from './home.module.scss'
 
@@ -26,6 +27,7 @@ export const HomeComponent: FC<Readonly<IHome>> = () => {
   //return
   return (
     <div className={`${styles.home} container`}>
+      <AvatarPreviewComponent></AvatarPreviewComponent>
       <h1 className={`${styles.home__title} title`}>IStrong</h1>
       <MoodTrackerComponent />
       {/* <MyComponent /> */}

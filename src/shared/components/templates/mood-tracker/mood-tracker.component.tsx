@@ -1,9 +1,8 @@
-'use client'
 import { useMutation } from '@tanstack/react-query'
-import { useRouter } from 'next/navigation' // Импортируем useRouter для навигации
+import { useRouter } from 'next/navigation'
 import 'moment/locale/uk'
 import moment from 'moment'
-import { FC, useEffect, useState } from 'react'
+import { FC } from 'react'
 import { postMood } from '@/api/mood-tracker'
 import { useGetUserProfile } from '@/api/setting-user.api'
 import { MOODS } from '@/shared/constants/moods'
@@ -11,24 +10,21 @@ import { useUserStore } from '@/shared/stores'
 import { ButtonComponent } from '@/shared/components'
 import styles from './mood-tracker.module.scss'
 
-//interface
-interface IMoodTracker {}
-
-//component
-export const MoodTrackerComponent: FC<Readonly<IMoodTracker>> = () => {
+// компонент
+export const MoodTrackerComponent: FC<Readonly<{}>> = () => {
   const token = useUserStore((state) => state.user?.access_token)
   const handleChangeUserStore = useUserStore((state) => state.handleChangeUserStore)
   const user = useUserStore((state) => state.user)
-  const router = useRouter() // Инициализируем useRouter для навигации
+  const router = useRouter()
 
-  const [selectedMood, setSelectedMood] = useState(user?.mood?.mood ?? 'happy')
+  const selectedMood = user?.mood?.mood ?? 'happy'
 
   const { data: UserProfile, refetch: userProfileRefetch } = useGetUserProfile(token ?? '')
 
   const { mutate: postCurrentMood } = useMutation({
     mutationFn: (form: any) => postMood(token ?? '', form),
 
-    onSuccess: (data: any, variables) => {
+    onSuccess: (data: any) => {
       console.log(data)
       userProfileRefetch().then((data) => {
         handleChangeUserStore({ user: data.data })
@@ -36,18 +32,18 @@ export const MoodTrackerComponent: FC<Readonly<IMoodTracker>> = () => {
     },
   })
 
-  useEffect(() => {
-    if (user) {
-      setSelectedMood(user?.mood?.mood ?? 'happy')
-    }
-  }, [user])
-
   // Функция для навигации на страницу /statistics
   const goToStatistics = () => {
     router.push('/statistic')
   }
 
+  // Функция для навигации на страницу /select-mood
+  const goToSelectMood = () => {
+    router.push('/select-mood')
+  }
+
   const selectedMoodData = MOODS.find((item) => item.slug === selectedMood)
+
   //return
   return (
     <section className={`${styles.mood_tracker}`}>
@@ -56,39 +52,24 @@ export const MoodTrackerComponent: FC<Readonly<IMoodTracker>> = () => {
       <div className={styles.mood_tracker__box}>
         <div className={styles.mood_tracker__box2}>
           <div className={styles.mood_tracker__bottom}>
-            {/*<div className={styles.mood_tracker__options}>*/}
-
-            {/*  <ul className={styles.mood_tracker__emotions}>*/}
-            {/*    {MOODS.filter((item) => item.slug !== selectedMood).map((item) => (*/}
-            {/*      <button*/}
-            {/*        className={`${styles.mood_tracker__emotion} ${item.slug === selectedMood && styles.active}`}*/}
-            {/*        onClick={() => postCurrentMood({ mood: item.slug })}*/}
-            {/*        key={item.slug}*/}
-            {/*      >*/}
-            {/*        {item.icon}*/}
-            {/*      </button>*/}
-            {/*    ))}*/}
-            {/*  </ul>*/}
-            {/*</div>*/}
-
             <div
               className={styles.mood_tracker__selected_emotion}
               style={{ backgroundColor: selectedMoodData?.color }}
             >
-              {MOODS.find((item) => item.slug === selectedMood)?.icon}
+              {selectedMoodData?.icon}
             </div>
           </div>
           <div className={styles.mood_tracker__top}>
             <span>Останнє оновлення:</span>
-
             <span className={styles.mood_tracker__time}>
               {moment(user?.mood?.date).format('dddd HH:mm')}
             </span>
           </div>
-          <button className={styles.mood_tracker__btn}>+</button>
+          <button className={styles.mood_tracker__btn} onClick={goToSelectMood}>
+            +
+          </button>
         </div>
 
-        {/* Добавляем кнопку "Статистика" */}
         <div className={styles.mood_tracker__statistics}>
           <ButtonComponent onClick={goToStatistics} size='small' variant='filled'>
             Статистика
