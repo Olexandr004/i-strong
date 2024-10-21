@@ -10,25 +10,29 @@ import { useUserStore } from '@/shared/stores'
 import { ButtonComponent } from '@/shared/components'
 import styles from './mood-tracker.module.scss'
 
+interface IMoodTrackerComponent {}
+
 // компонент
-export const MoodTrackerComponent: FC<Readonly<{}>> = () => {
+export const MoodTrackerComponent: FC<Readonly<IMoodTrackerComponent>> = () => {
   const token = useUserStore((state) => state.user?.access_token)
   const handleChangeUserStore = useUserStore((state) => state.handleChangeUserStore)
   const user = useUserStore((state) => state.user)
   const router = useRouter()
 
   const selectedMood = user?.mood?.mood ?? 'happy'
-
   const { data: UserProfile, refetch: userProfileRefetch } = useGetUserProfile(token ?? '')
 
   const { mutate: postCurrentMood } = useMutation({
     mutationFn: (form: any) => postMood(token ?? '', form),
-
     onSuccess: (data: any) => {
       console.log(data)
       userProfileRefetch().then((data) => {
         handleChangeUserStore({ user: data.data })
       })
+    },
+    onError: (error) => {
+      console.error('Error posting mood:', error)
+      // Здесь можно добавить логику для отображения ошибки
     },
   })
 
@@ -48,7 +52,6 @@ export const MoodTrackerComponent: FC<Readonly<{}>> = () => {
   return (
     <section className={`${styles.mood_tracker}`}>
       <h2 className={styles.mood_tracker__title}>Трекер настрою</h2>
-
       <div className={styles.mood_tracker__box}>
         <div className={styles.mood_tracker__box2}>
           <div className={styles.mood_tracker__bottom}>
@@ -69,7 +72,6 @@ export const MoodTrackerComponent: FC<Readonly<{}>> = () => {
             +
           </button>
         </div>
-
         <div className={styles.mood_tracker__statistics}>
           <ButtonComponent onClick={goToStatistics} size='small' variant='filled'>
             Статистика

@@ -8,6 +8,8 @@ import { useUserStore } from '@/shared/stores'
 import styles from './select-mood.module.scss'
 import { IconArrow } from '@/shared/icons'
 
+interface ISelectMoodComponent {}
+
 // Список дополнительных эмоций
 const ADDITIONAL_MOODS = [
   'Сором',
@@ -31,7 +33,7 @@ const ADDITIONAL_MOODS = [
 ]
 
 // компонент
-export const SelectMoodComponent: FC<Readonly<{}>> = () => {
+export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
   const token = useUserStore((state) => state.user?.access_token)
   const handleChangeUserStore = useUserStore((state) => state.handleChangeUserStore)
   const user = useUserStore((state) => state.user)
@@ -48,21 +50,21 @@ export const SelectMoodComponent: FC<Readonly<{}>> = () => {
       // Обновляем состояние в Zustand
       handleChangeUserStore({
         user: {
-          id: user?.id ?? 0, // Предоставьте значение по умолчанию
-          name: user?.name ?? '', // Предоставьте значение по умолчанию
-          phone_number: user?.phone_number ?? '', // Предоставьте значение по умолчанию
-          access_token: user?.access_token ?? '', // Предоставьте значение по умолчанию
-          coins: user?.coins ?? 0, // Предоставьте значение по умолчанию
-          avatar: user?.avatar ?? null, // Предоставьте значение по умолчанию
+          id: user?.id ?? 0, // Provide a default value of 0
+          name: user?.name ?? '', // Provide a default value of ''
+          phone_number: user?.phone_number ?? '', // Provide a default value of ''
+          access_token: user?.access_token ?? '', // Provide a default value of ''
+          coins: user?.coins ?? 0, // Provide a default value of 0
+          avatar: user?.avatar ?? null, // Provide a default value of null
           mood: {
             mood: selectedMood!,
             date: new Date().toISOString(),
           },
-          has_dairy_password: user?.has_dairy_password ?? false, // Предоставьте значение по умолчанию
+          has_dairy_password: user?.has_dairy_password ?? false, // Provide a default value of false
           activity: {
             challenges_visited: user?.activity?.challenges_visited ?? false,
             diary_visited: user?.activity?.diary_visited ?? false,
-            id: user?.activity?.id ?? 0, // Предоставьте значение по умолчанию
+            id: user?.activity?.id ?? 0, // Provide a default value of 0
             instructions_visited: user?.activity?.instructions_visited ?? false,
             mood_stats_visited: user?.activity?.mood_stats_visited ?? false,
             shop_visited: user?.activity?.shop_visited ?? false,
@@ -83,7 +85,7 @@ export const SelectMoodComponent: FC<Readonly<{}>> = () => {
     )
   }
 
-  //return
+  // return
   return (
     <section className={`${styles.select_mood} ${selectedMood && styles.active}`}>
       <div className={styles.select_mood__head}>
