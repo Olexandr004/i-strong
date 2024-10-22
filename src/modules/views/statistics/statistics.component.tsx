@@ -1,12 +1,9 @@
 'use client'
 
 import { useSearchParams } from 'next/navigation'
-
 import 'moment/locale/uk'
 import moment from 'moment'
-
 import { FC, useEffect, useState } from 'react'
-
 import { useGetStatistics } from '@/api/mood-tracker'
 import { EmotionsChartComponent } from '@/modules/views/statistics/elements'
 import { ModalGettingToInstructionsComponent, PageHeaderComponent } from '@/shared/components'
@@ -16,17 +13,16 @@ import { useQuerySearchParams } from '@/shared/hooks/useQuerySearchParams'
 import { IconCalendar } from '@/shared/icons'
 import { ImageCapybaraBook } from '@/shared/images'
 import { useCommonStore, useUserStore } from '@/shared/stores'
-
 import styles from './statistics.module.scss'
 
 //interface
 interface IStatistics {}
 
 interface IEmotions {
-  sad: number
-  happy: number
-  normal: number
-  angry: number
+  'Не дуже': number
+  Чудово: number
+  Нормально: number
+  Зле: number
 }
 
 //component
@@ -55,6 +51,14 @@ export const StatisticsComponent: FC<Readonly<IStatistics>> = () => {
       ? removeMilliseconds(searchParams.get('end_date')?.toString())
       : removeMilliseconds(moment().endOf('day').toString()),
   })
+
+  // Логирование полученных данных
+  useEffect(() => {
+    if (statInfo) {
+      console.log('Received statistics:', statInfo)
+    }
+  }, [statInfo])
+
   const getDateRange = () => {
     if (searchParams.get('start_date') && searchParams.get('end_date')) {
       if (
@@ -78,15 +82,27 @@ export const StatisticsComponent: FC<Readonly<IStatistics>> = () => {
   }
 
   const handleChangeSelectedPeriod = (value: string) => {
-    if (value !== 'custom') {
+    const validStartOfValues: Array<
+      'year' | 'month' | 'week' | 'day' | 'hour' | 'minute' | 'second'
+    > = ['year', 'month', 'week', 'day', 'hour', 'minute', 'second']
+
+    // Проверяем, если выбранный период не "custom" и входит в допустимые значения
+    if (
+      value !== 'custom' &&
+      validStartOfValues.includes(
+        value as 'year' | 'month' | 'week' | 'day' | 'hour' | 'minute' | 'second',
+      )
+    ) {
       setQuery({
-        // @ts-ignore
-        start_date: moment().startOf(value).toISOString(),
-        // @ts-ignore
-        end_date: moment().endOf(value).toISOString(),
+        start_date: moment()
+          .startOf(value as 'year' | 'month' | 'week' | 'day' | 'hour' | 'minute' | 'second')
+          .toISOString(),
+        end_date: moment()
+          .endOf(value as 'year' | 'month' | 'week' | 'day' | 'hour' | 'minute' | 'second')
+          .toISOString(),
       })
 
-      setCustomPeriod(0)
+      setCustomPeriod(0) // Сбрасываем пользовательский период
     }
 
     setSelectedPeriod(value)
@@ -157,4 +173,5 @@ export const StatisticsComponent: FC<Readonly<IStatistics>> = () => {
     </section>
   )
 }
+
 export default StatisticsComponent

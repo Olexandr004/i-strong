@@ -41,6 +41,8 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
 
   const [selectedMood, setSelectedMood] = useState<string>()
   const [selectedAdditionalMoods, setSelectedAdditionalMoods] = useState<string[]>([])
+  const [description, setDescription] = useState<string>('')
+  const [validationImage, setValidationImage] = useState<string | null>(null) // состояние для изображения
 
   const { mutate: postCurrentMood } = useMutation({
     mutationFn: (form: any) => postMood(token ?? '', form),
@@ -50,33 +52,50 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
       // Обновляем состояние в Zustand
       handleChangeUserStore({
         user: {
-          id: user?.id ?? 0, // Provide a default value of 0
-          name: user?.name ?? '', // Provide a default value of ''
-          phone_number: user?.phone_number ?? '', // Provide a default value of ''
-          access_token: user?.access_token ?? '', // Provide a default value of ''
-          coins: user?.coins ?? 0, // Provide a default value of 0
-          avatar: user?.avatar ?? null, // Provide a default value of null
+          id: user?.id ?? 0,
+          name: user?.name ?? '',
+          phone_number: user?.phone_number ?? '',
+          access_token: user?.access_token ?? '',
+          coins: user?.coins ?? 0,
+          avatar: user?.avatar ?? null,
           mood: {
             mood: selectedMood!,
             date: new Date().toISOString(),
           },
-          has_dairy_password: user?.has_dairy_password ?? false, // Provide a default value of false
+          has_dairy_password: user?.has_dairy_password ?? false,
           activity: {
             challenges_visited: user?.activity?.challenges_visited ?? false,
             diary_visited: user?.activity?.diary_visited ?? false,
-            id: user?.activity?.id ?? 0, // Provide a default value of 0
+            id: user?.activity?.id ?? 0,
             instructions_visited: user?.activity?.instructions_visited ?? false,
             mood_stats_visited: user?.activity?.mood_stats_visited ?? false,
             shop_visited: user?.activity?.shop_visited ?? false,
           },
         },
       })
+
+      // Устанавливаем изображение в зависимости от выбранной эмоции
+      if (data.validation_image) {
+        setValidationImage(data.validation_image)
+      } else {
+        setValidationImage(null)
+      }
+    },
+
+    onError: (error) => {
+      console.error('Ошибка при сохранении настроения:', error)
+      // Обработка ошибок
     },
   })
 
   const handleSubmitMood = () => {
-    postCurrentMood({ mood: selectedMood, additionalMoods: selectedAdditionalMoods })
-    router.push('/')
+    if (!selectedMood) return // Не отправлять запрос, если настроение не выбрано
+
+    postCurrentMood({
+      mood: selectedMood,
+      description: description,
+      emotions: selectedAdditionalMoods, // Эмоции, если они есть
+    })
   }
 
   const toggleAdditionalMood = (mood: string) => {
@@ -97,7 +116,7 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
       <div className={styles.select_mood__emotions}>
         {MOODS.map((item) => (
           <button
-            className={`${styles.select_mood__emotion} ${selectedMood && styles.activated} ${item.slug === selectedMood && styles.active}`}
+            className={`${styles.select_mood__emotion} ${item.slug === selectedMood ? styles.active : styles.activated}`}
             onClick={() => setSelectedMood(item.slug)}
             key={item.slug}
             style={{ backgroundColor: item.color }}
@@ -108,13 +127,20 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
         ))}
       </div>
 
+      {/* Показываем изображение, если оно есть */}
+      {validationImage && (
+        <div className={styles.validationImage}>
+          <img src={validationImage} alt='Эмоция' />
+        </div>
+      )}
+
       <div style={{ padding: '0 2rem' }}>
         <h2>Я відчуваю:</h2>
         <div className={styles.additional_moods}>
           {ADDITIONAL_MOODS.map((mood) => (
             <button
               key={mood}
-              className={`${styles.additional_mood} ${selectedAdditionalMoods.includes(mood) ? styles.active : ''}`}
+              className={`${styles.additional_mood} ${selectedAdditionalMoods.includes(mood) ? styles.active : ''} ${selectedMood ? styles.activated : ''}`}
               onClick={() => toggleAdditionalMood(mood)}
             >
               <span>{mood}</span>
@@ -124,8 +150,14 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
       </div>
 
       <div className={styles.footer}>
-        <label htmlFor='Why-do-I-feel-this-way?'>Чому я так почуваюсь?</label>
-        <textarea name='Why-do-I-feel-this-way?' id='Why-do-I-feel-this-way?'></textarea>
+        <label htmlFor='description'>Чому я так почуваюсь?</label>
+        <textarea
+          name='description'
+          id='description'
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          maxLength={1000} // Ограничение на 1000 символов
+        />
       </div>
 
       <div className={styles.select_mood__buttons}>

@@ -1,6 +1,6 @@
 export interface IEmotions {
-  sad: number
-  happy: number
-  normal: number
-  angry: number
+  'Не дуже': number
+  Чудово: number
+  Нормально: number
+  Зле: number
 }

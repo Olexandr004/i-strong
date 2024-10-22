@@ -157,3 +157,26 @@
     height: 2rem;
   }
 }
+
+.validationImage {
+  height: auto; // Высота автоматически
+  animation: fadeInOut 3s ease; // Применение анимации
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0; // Изображение изначально невидимо
+    transform: translateY(-20px); // Небольшое смещение вверх
+  }
+  20% {
+    opacity: 1; // Полная видимость
+    transform: translateY(0); // На своем месте
+  }
+  80% {
+    opacity: 1; // По-прежнему видно
+  }
+  100% {
+    opacity: 0; // Исчезает
+    transform: translateY(20px); // Небольшое смещение вниз
+  }
+}

@@ -9,10 +9,10 @@ import { IconMoodBlue, IconMoodGreen, IconMoodRed, IconMoodYellow } from '@/shar
 import styles from './emotions-chart.module.scss'
 
 const MOODS = [
-  { icon: <IconMoodRed />, color: '#e79999', key: 'angry' },
-  { icon: <IconMoodBlue />, color: '#c0ebf1', key: 'sad' },
-  { icon: <IconMoodGreen />, color: '#C0D6A6', key: 'normal' },
-  { icon: <IconMoodYellow />, color: '#F9E692', key: 'happy' },
+  { icon: <IconMoodRed />, color: '#e79999', key: 'Зле' },
+  { icon: <IconMoodBlue />, color: '#c0ebf1', key: 'Не дуже' },
+  { icon: <IconMoodGreen />, color: '#C0D6A6', key: 'Нормально' },
+  { icon: <IconMoodYellow />, color: '#F9E692', key: 'Чудово' },
 ]
 
 //interface
@@ -25,14 +25,14 @@ interface IEmotionsChart {
 export const EmotionsChartComponent: FC<Readonly<IEmotionsChart>> = ({ emotions }) => {
   const getPercent = (key: string) => {
     switch (key) {
-      case 'sad':
-        return emotions.sad
-      case 'happy':
-        return emotions.happy
-      case 'normal':
-        return emotions.normal
-      case 'angry':
-        return emotions.angry
+      case 'Не дуже':
+        return emotions['Не дуже']
+      case 'Чудово':
+        return emotions['Чудово']
+      case 'Нормально':
+        return emotions['Нормально']
+      case 'Зле':
+        return emotions['Зле']
       default:
         return 1
     }
