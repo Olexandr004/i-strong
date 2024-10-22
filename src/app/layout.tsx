@@ -66,14 +66,14 @@ const RootLayout: FC<Readonly<IRootLayout>> = ({ home, entry }) => {
         // Запланировать уведомления для трекера настроения
         if (moodTrackerEnabled) {
           await scheduleNotifications(
-            notifications.filter((notification) => [2, 3, 4].includes(notification.id)),
+            notifications.filter((notification) => [2, 3].includes(notification.id)),
           )
         }
 
         // Запланировать уведомления для челленджей
         if (challengeNotificationsEnabled) {
           await scheduleNotifications(
-            notifications.filter((notification) => [1, 5, 6].includes(notification.id)),
+            notifications.filter((notification) => [1].includes(notification.id)),
           )
         }
       } catch (error) {

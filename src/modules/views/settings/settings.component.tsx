@@ -101,10 +101,10 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
         )
         if (newState) {
           await scheduleNotifications(
-            notifications.filter((notification) => [2, 3, 6].includes(notification.id)),
+            notifications.filter((notification) => [2, 3].includes(notification.id)),
           )
         } else {
-          await cancelNotifications([2, 3, 6])
+          await cancelNotifications([2, 3])
         }
       } catch (error) {
         console.error('Error updating notification preferences:', error)
@@ -123,10 +123,10 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
         await updateNotificationPreferences(user.access_token, moodTrackerEnabled, newState)
         if (newState) {
           await scheduleNotifications(
-            notifications.filter((notification) => [1, 4, 5].includes(notification.id)),
+            notifications.filter((notification) => [1].includes(notification.id)),
           )
         } else {
-          await cancelNotifications([1, 4, 5])
+          await cancelNotifications([1])
         }
       } catch (error) {
         console.error('Error updating notification preferences:', error)

@@ -52,30 +52,6 @@ export const notifications: NotificationConfig[] = [
     schedule: { at: adjustNotificationTime(18, 0), every: 'day', repeats: true }, // 18:00
     smallIcon: 'ic_stat_icon1',
   },
-  {
-    id: 4,
-    title: 'IStrong',
-    body: 'Тестове повідомлення челенджа на 13:00. 🔥',
-    url: `${BASE_URL}/challenges?path=new`,
-    schedule: { at: adjustNotificationTime(13, 0), every: 'day', repeats: true }, // 13:00
-    smallIcon: 'ic_stat_icon1',
-  },
-  {
-    id: 5,
-    title: 'IStrong',
-    body: 'Тестове повідомлення челенджа на 14:00. 🔥',
-    url: `${BASE_URL}/challenges?path=new`,
-    schedule: { at: adjustNotificationTime(14, 0), every: 'day', repeats: true }, // 14:00
-    smallIcon: 'ic_stat_icon1',
-  },
-  {
-    id: 6,
-    title: 'IStrong',
-    body: 'Тестове повідомлення про настрій на 17:00. 😊',
-    url: `${BASE_URL}/diary`,
-    schedule: { at: adjustNotificationTime(17, 0), every: 'day', repeats: true }, // 17:00
-    smallIcon: 'ic_stat_icon1',
-  },
 ]
 
 // Функция для сохранения состояния уведомлений
@@ -132,9 +108,9 @@ export const toggleNotifications = async (type: 'moodTracker' | 'challenge') => 
   // Выбираем уведомления в зависимости от типа
   const enabledNotifications = notifications.filter((notification) => {
     if (type === 'moodTracker') {
-      return notification.id === 2 || notification.id === 3 || notification.id === 6 // Уведомления для moodTracker
+      return notification.id === 2 || notification.id === 3 // Уведомления для moodTracker
     } else {
-      return notification.id === 1 || notification.id === 4 || notification.id === 5 // Уведомления для challenge
+      return notification.id === 1 // Уведомления для challenge
     }
   })
 
