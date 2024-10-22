@@ -1,50 +1,245 @@
 'use client'
-import { categories } from './data'
-import PhotoTutorialComponent from './elements/photo-tutorial/photo-tutorial.component'
-import { FC } from 'react'
-import { IconArrow, IconNextArrow } from '@/shared/icons'
+
+import { FC, useEffect, useState } from 'react'
+import { IconArrow, IconNextArrow, IconFavorite } from '@/shared/icons'
 import { ModalGettingToInstructionsComponent } from '@/shared/components'
 import { ImageCapybaraTeacher } from '@/shared/images'
+import { useUserStore } from '@/shared/stores'
+import { useTutorialsStore } from '@/shared/stores' // Импортируйте ваше хранилище
+import { PhotoTutorialComponent } from '@/modules/views/tutorials/elements'
 import styles from './tutorials.module.scss'
-import { useTutorialsStore } from '@/shared/stores'
 
-// interface
-interface ITutorials {}
+interface IFavoriteTechnique {
+  technique: {
+    id: number
+    // add any other properties you expect to have here
+  }
+}
 
-// component
-export const TutorialsComponent: FC<Readonly<ITutorials>> = () => {
-  // Используем состояние из Zustand-хранилища
+interface IFavoriteData {
+  favorite_techniques: IFavoriteTechnique[]
+}
+
+interface ICategory {
+  id: number
+  name: string
+}
+
+interface ITechnique {
+  id: number
+  name: string
+  description?: string
+  images?: { image: string }[]
+}
+
+interface ITutorialsComponent {}
+
+export const TutorialsComponent: FC<Readonly<ITutorialsComponent>> = () => {
+  const [categories, setCategories] = useState<ICategory[]>([])
+  const [techniques, setTechniques] = useState<ITechnique[]>([])
+  const [selectedTechniqueData, setSelectedTechniqueData] = useState<ITechnique | null>(null)
+  const [loading, setLoading] = useState<boolean>(true)
+  const [isFavorite, setIsFavorite] = useState<boolean>(false)
+
+  const token = useUserStore((state) => state.user?.access_token)
+
+  // Используем Zustand хранилище
   const {
     selectedCategory,
-    selectedTechnique,
-    expandedTechnique,
     setSelectedCategory,
+    selectedTechnique,
     setSelectedTechnique,
+    expandedTechnique,
     setExpandedTechnique,
   } = useTutorialsStore()
 
-  // Получаем заголовок в зависимости от состояния
-  const getTitle = () => {
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch('https://istrongapp.com/api/techniques/categories/', {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+
+        if (response.ok) {
+          const data = await response.json()
+          setCategories(data.categories)
+        } else {
+          console.error('Ошибка получения категорий:', response.status)
+        }
+      } catch (error) {
+        console.error('Ошибка при запросе категорий:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchCategories()
+  }, [token])
+
+  useEffect(() => {
+    if (selectedCategory) {
+      const fetchTechniques = async () => {
+        try {
+          const response = await fetch(
+            `https://istrongapp.com/api/techniques/category/${selectedCategory}/`,
+            {
+              method: 'GET',
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            },
+          )
+
+          if (response.ok) {
+            const data = await response.json()
+            setTechniques(data.techniques)
+          } else {
+            console.error('Ошибка получения техник:', response.status)
+          }
+        } catch (error) {
+          console.error('Ошибка при запросе техник:', error)
+        }
+      }
+
+      fetchTechniques()
+    }
+  }, [selectedCategory, token])
+
+  useEffect(() => {
     if (selectedTechnique) {
-      const selectedCategoryData = categories.find((category) => category.id === selectedCategory)
-      const selectedTechniqueData = selectedCategoryData?.techniques.find(
-        (technique) => technique.id === selectedTechnique,
+      const fetchTechniqueData = async () => {
+        try {
+          const response = await fetch(
+            `https://istrongapp.com/api/techniques/${selectedTechnique}/`,
+            {
+              method: 'GET',
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            },
+          )
+
+          if (response.ok) {
+            const data = await response.json()
+            setSelectedTechniqueData(data.technique)
+
+            // Проверяем, добавлена ли техника в избранное
+            const isFavoriteResponse = await fetch(
+              `https://istrongapp.com/api/users/favorites/techniques/${selectedTechnique}/`,
+              {
+                method: 'GET',
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              },
+            )
+
+            if (isFavoriteResponse.ok) {
+              setIsFavorite(true)
+            } else {
+              setIsFavorite(false)
+            }
+          } else {
+            console.error('Ошибка получения техники:', response.status)
+          }
+        } catch (error) {
+          console.error('Ошибка при запросе техники:', error)
+        }
+      }
+
+      fetchTechniqueData()
+    }
+  }, [selectedTechnique, token])
+
+  const handleFavoriteToggle = async () => {
+    if (selectedTechnique === null) {
+      console.error('Нет выбранной техники для изменения избранного')
+      return
+    }
+
+    try {
+      const isFavoriteResponse = await fetch(
+        'https://istrongapp.com/api/users/favorites/techniques/',
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
       )
-      return selectedTechniqueData?.title || 'Техніки'
+
+      if (!isFavoriteResponse.ok) {
+        console.error('Ошибка при получении избранных техник:', isFavoriteResponse.status)
+        return
+      }
+
+      const data: IFavoriteData = await isFavoriteResponse.json() // Specify the type here
+      const isFavorite = data.favorite_techniques.some(
+        (technique: IFavoriteTechnique) => technique.technique.id === selectedTechnique, // Specify the type here
+      )
+
+      if (isFavorite) {
+        // If the technique is in favorites, delete it
+        const response = await fetch(
+          `https://istrongapp.com/api/users/favorites/techniques/${selectedTechnique}/`,
+          {
+            method: 'DELETE',
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        )
+
+        if (response.ok) {
+          console.log('Техника удалена из избранного')
+        } else {
+          console.error('Ошибка при удалении техники из избранного:', response.status)
+        }
+      } else {
+        // If the technique is not in favorites, add it
+        const response = await fetch('https://istrongapp.com/api/users/favorites/techniques/', {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ technique_id: selectedTechnique }), // Ensure this is correct
+        })
+
+        if (response.ok) {
+          console.log('Техника добавлена в избранное')
+        } else {
+          const errorData = await response.json() // Get error text
+          console.error('Ошибка при добавлении техники в избранное:', response.status, errorData)
+        }
+      }
+    } catch (error) {
+      console.error('Ошибка при изменении статуса избранного:', error)
+    }
+  }
+
+  const getTitle = () => {
+    if (selectedTechniqueData) {
+      return selectedTechniqueData.name || 'Техніки'
     } else if (selectedCategory) {
       const selectedCategoryData = categories.find((category) => category.id === selectedCategory)
-      return selectedCategoryData?.title || 'Техніки'
+      return selectedCategoryData?.name || 'Техніки'
     } else {
       return 'Техніки'
     }
   }
 
+  if (loading) {
+    return <p>Загрузка...</p>
+  }
+
   return (
     <section className={`${styles.tutorials} container`}>
-      {/* Заголовок изменяется в зависимости от состояния */}
       <h1 className={`${styles.tutorials__title} title`}>{getTitle()}</h1>
 
-      {/* Кнопки выбора категории */}
       {!selectedCategory && (
         <div className={styles.tutorials__buttons}>
           {categories.map((category) => (
@@ -53,82 +248,68 @@ export const TutorialsComponent: FC<Readonly<ITutorials>> = () => {
               className={styles.tutorials__button}
               onClick={() => {
                 setSelectedCategory(category.id)
-                setSelectedTechnique(null) // Сбрасываем выбранную технику при выборе новой категории
+                setSelectedTechnique(null)
               }}
             >
-              {category.title}
+              {category.name}
             </button>
           ))}
         </div>
       )}
 
-      {/* Список техник для выбранной категории */}
       {selectedCategory && !selectedTechnique && (
         <div className={styles.tutorials__content}>
-          {categories
-            .find((category) => category.id === selectedCategory)
-            ?.techniques.map((technique) => (
-              <div className={styles.tutorials__box} key={technique.id}>
-                <div
-                  className={`${styles.tutorials__box_title} ${expandedTechnique === technique.id && styles.expanded}`}
+          {techniques.map((technique) => (
+            <div className={styles.tutorials__box} key={technique.id}>
+              <div
+                className={`${styles.tutorials__box_title} ${expandedTechnique === technique.id && styles.expanded}`}
+              >
+                <p>{technique.name}</p>
+                <button
+                  onClick={() => {
+                    setExpandedTechnique(expandedTechnique === technique.id ? null : technique.id)
+                    setSelectedTechnique(technique.id)
+                  }}
+                  className={`${styles.tutorials__box_btn} ${expandedTechnique === technique.id && styles.expanded}`}
                 >
-                  <p>{technique.title}</p>
-                  <button
-                    onClick={() => {
-                      setExpandedTechnique(expandedTechnique === technique.id ? null : technique.id)
-                      setSelectedTechnique(technique.id) // Устанавливаем выбранную технику
-                    }}
-                    className={`${styles.tutorials__box_btn} ${expandedTechnique === technique.id && styles.expanded}`}
-                  >
-                    <IconNextArrow />
-                  </button>
-                </div>
+                  <IconNextArrow />
+                </button>
               </div>
-            ))}
+            </div>
+          ))}
           <button className={styles.tutorials__back_btn} onClick={() => setSelectedCategory(null)}>
             <IconArrow />
           </button>
         </div>
       )}
 
-      {/* Инструкции для выбранной техники */}
-      {selectedTechnique && (
+      {selectedTechnique && selectedTechniqueData && (
         <div className={styles.tutorials__instructions}>
-          {(() => {
-            const selectedCategoryData = categories.find(
-              (category) => category.id === selectedCategory,
-            )
-            const selectedTechniqueData = selectedCategoryData?.techniques.find(
-              (technique) => technique.id === selectedTechnique,
-            )
+          <div>
+            {selectedTechniqueData.images && selectedTechniqueData.images.length > 0 ? (
+              <PhotoTutorialComponent
+                array={selectedTechniqueData.images.map((img) => img.image)}
+              />
+            ) : (
+              <p>Изображения не найдены.</p>
+            )}
+            {selectedTechniqueData.description && <p>{selectedTechniqueData.description}</p>}
 
-            if (selectedTechniqueData) {
-              return (
-                <div>
-                  {/* Используем PhotoTutorialComponent для отображения слайдов */}
-                  {selectedTechniqueData.type === 'photo' &&
-                  selectedTechniqueData.array &&
-                  selectedTechniqueData.array.length > 0 ? (
-                    <PhotoTutorialComponent array={selectedTechniqueData.array} />
-                  ) : (
-                    <p>Изображения не найдены.</p>
-                  )}
-                  {/* Кнопка для возврата к списку техник */}
-                  <button
-                    className={styles.tutorials__back_btn}
-                    onClick={() => {
-                      setSelectedTechnique(null)
-                      setExpandedTechnique(null) // Сбрасываем состояние развернутой техники
-                    }}
-                  >
-                    <IconArrow />
-                  </button>
-                </div>
-              )
-            }
+            <button className={styles.tutorials__favorite_btn} onClick={handleFavoriteToggle}>
+              <IconFavorite fill={isFavorite ? '#BD3333' : 'none'} />
+            </button>
 
-            return null
-          })()}
+            <button
+              className={styles.tutorials__back_btn}
+              onClick={() => {
+                setSelectedTechnique(null)
+                setExpandedTechnique(null)
+                setSelectedTechniqueData(null)
+              }}
+            >
+              <IconArrow />
+            </button>
+          </div>
         </div>
       )}
 

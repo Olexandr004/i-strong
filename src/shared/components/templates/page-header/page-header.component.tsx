@@ -43,7 +43,7 @@ export const PageHeaderComponent: FC<Readonly<IPageHeader>> = ({ title, gapSize 
     } else if (['/statistic'].includes(pathname) && searchParams.size >= 1) {
       router.push('/')
     } else if (
-      ['/store', '/favorite', '/challenges', '/settings', '/settings/reset-password'].includes(
+      ['/store', '/favorite.svg', '/challenges', '/settings', '/settings/reset-password'].includes(
         pathname,
       ) &&
       searchParams.size === 0

@@ -14,7 +14,22 @@
   flex-direction: column;
   gap: 1.5rem;
 }
-.container__chest .box__chest button {
+.container__chest .box__chest ul {
+  display: flex;
+  flex-direction: column;
+}
+.container__chest .box__chest ul li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed #ffc75a;
+  font-size: 1.6rem;
+  font-weight: 700;
+  transition: gap var(--transition);
+  margin-bottom: 1rem;
+}
+.container__chest .box__chest .btnDiaryTech {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -32,7 +47,7 @@
   line-height: 20px;
   color: #1e1e1e;
 }
-.container__chest .box__chest button:last-of-type {
+.container__chest .box__chest .btnDiaryTech:last-of-type {
   background: #fff1b6;
 }
 .container__chest .backBtn__chest {
