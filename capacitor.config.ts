@@ -12,7 +12,7 @@ const config: CapacitorConfig = {
     // url: 'http://192.168.178.54:3000/', // Denis
 
     // Staging
-    url: 'https://vercel.com/api/toolbar/link/i-strong.vercel.app?via=team-dashboard-project-entity&p=1&page=/',
+    url: 'https://i-strong-xr7i.vercel.app/',
     // allowNavigation: [
     //   'i-strong-app.vercel.app', // Разрешенные домены для навигации
     //   'front.istrongapp.com',
