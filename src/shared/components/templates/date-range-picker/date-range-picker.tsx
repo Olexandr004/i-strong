@@ -69,7 +69,7 @@ const DateRangePicker: FC<IDatePicker> = ({ onChange, value }) => {
           <IconUpArrow />
         </button>
 
-        {currentDate.format('MMMM')}
+        {currentDate.format('MMMM YYYY')}
 
         <button
           className={`${styles.date_picker__nav_btn} ${styles.next}`}
