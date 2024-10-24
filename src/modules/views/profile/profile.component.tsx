@@ -85,7 +85,7 @@ export const ProfileComponent: FC<Readonly<IProfile>> = () => {
 
   // Функция для возврата на предыдущую страницу
   const handleGoBack = () => {
-    router.back() // Возвращаемся на предыдущую страницу
+    router.push('/') // Возвращаемся на предыдущую страницу
   }
 
   //return

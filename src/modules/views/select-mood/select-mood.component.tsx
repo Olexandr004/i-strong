@@ -1,6 +1,6 @@
 import { useRouter } from 'next/navigation'
 import { useMutation } from '@tanstack/react-query'
-import { FC, useState } from 'react'
+import { FC, useState, useEffect } from 'react'
 import { postMood } from '@/api/mood-tracker'
 import { ButtonComponent } from '@/shared/components'
 import { MOODS } from '@/shared/constants/moods'
@@ -10,7 +10,6 @@ import { IconArrow } from '@/shared/icons'
 
 interface ISelectMoodComponent {}
 
-// Список дополнительных эмоций
 const ADDITIONAL_MOODS = [
   'Сором',
   'Відраза',
@@ -39,17 +38,17 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
   const user = useUserStore((state) => state.user)
   const router = useRouter()
 
-  const [selectedMood, setSelectedMood] = useState<string>()
+  const [selectedMood, setSelectedMood] = useState<string>('Чудово') // Установка по умолчанию на "чудово"
   const [selectedAdditionalMoods, setSelectedAdditionalMoods] = useState<string[]>([])
   const [description, setDescription] = useState<string>('')
   const [validationImage, setValidationImage] = useState<string | null>(null) // состояние для изображения
+  const [showModal, setShowModal] = useState(false) // состояние для отображения модального окна
 
   const { mutate: postCurrentMood } = useMutation({
     mutationFn: (form: any) => postMood(token ?? '', form),
 
     onSuccess: (data: any) => {
       console.log(data)
-      // Обновляем состояние в Zustand
       handleChangeUserStore({
         user: {
           id: user?.id ?? 0,
@@ -74,27 +73,32 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
         },
       })
 
-      // Устанавливаем изображение в зависимости от выбранной эмоции
       if (data.validation_image) {
         setValidationImage(data.validation_image)
       } else {
         setValidationImage(null)
       }
+
+      // Показать модальное окно, если выбраны дополнительные эмоции
+      if (selectedAdditionalMoods.length > 0) {
+        setShowModal(true)
+      } else {
+        router.push('/') // Перейти на главную страницу, если дополнительных эмоций нет
+      }
     },
 
     onError: (error) => {
       console.error('Ошибка при сохранении настроения:', error)
-      // Обработка ошибок
     },
   })
 
   const handleSubmitMood = () => {
-    if (!selectedMood) return // Не отправлять запрос, если настроение не выбрано
+    if (!selectedMood) return
 
     postCurrentMood({
       mood: selectedMood,
       description: description,
-      emotions: selectedAdditionalMoods, // Эмоции, если они есть
+      emotions: selectedAdditionalMoods,
     })
   }
 
@@ -102,6 +106,11 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
     setSelectedAdditionalMoods((prev) =>
       prev.includes(mood) ? prev.filter((item) => item !== mood) : [...prev, mood],
     )
+  }
+
+  const handleModalClose = () => {
+    setShowModal(false)
+    router.push('/') // Перейти на главную страницу после закрытия модального окна
   }
 
   // return
@@ -116,7 +125,9 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
       <div className={styles.select_mood__emotions}>
         {MOODS.map((item) => (
           <button
-            className={`${styles.select_mood__emotion} ${item.slug === selectedMood ? styles.active : styles.activated}`}
+            className={`${styles.select_mood__emotion} ${
+              item.slug === selectedMood ? styles.active : styles.activated
+            }`}
             onClick={() => setSelectedMood(item.slug)}
             key={item.slug}
             style={{ backgroundColor: item.color }}
@@ -126,13 +137,6 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
           </button>
         ))}
       </div>
-
-      {/* Показываем изображение, если оно есть */}
-      {validationImage && (
-        <div className={styles.validationImage}>
-          <img src={validationImage} alt='Эмоция' />
-        </div>
-      )}
 
       <div style={{ padding: '0 2rem' }}>
         <h2>Я відчуваю:</h2>
@@ -165,9 +169,20 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
           Зберегти
         </ButtonComponent>
       </div>
+
       <button className={styles.backBtn} onClick={() => router.push('/')}>
         <IconArrow />
       </button>
+
+      {/* Модальное окно, если выбраны дополнительные эмоции */}
+      {validationImage ? (
+        <div className={styles.modal}>
+          <div className={styles.modalContent}>
+            <img src={validationImage} alt='Эмоция' />
+            <ButtonComponent onClick={handleModalClose}>Зрозуміло</ButtonComponent>
+          </div>
+        </div>
+      ) : null}
     </section>
   )
 }

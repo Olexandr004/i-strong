@@ -3,7 +3,6 @@
   grid-template-rows: auto 1fr;
   gap: 2.4rem;
   padding-bottom: 4.8rem;
-
   &__statistics {
     button {
       max-width: 13.2rem;
@@ -32,6 +31,7 @@
     font-size: 1.6rem;
     font-weight: 700;
     margin-top: 3.6rem;
+    margin-bottom: 3rem;
   }
 
   &__box {
@@ -41,6 +41,7 @@
     align-content: space-between;
     border-radius: 1.2rem;
     background-color: #ffffff;
+    position: relative;
   }
 
   &__box2 {
@@ -67,6 +68,28 @@
       font-weight: 700;
       font-size: 1.6rem;
       line-height: 2rem;
+      color: #1e1e1e;
+    }
+  }
+  &__top_passive {
+    display: flex;
+    flex-direction: column;
+    font-size: 1rem;
+    color: var(--font-color-primary);
+    font-weight: 500;
+    margin-left: -2.5rem;
+    span:first-of-type {
+      font-style: normal;
+      font-weight: 500;
+      font-size: 1.2rem;
+      line-height: 1.5rem;
+      color: #7d7d7d;
+    }
+    span:last-of-type {
+      font-style: normal;
+      font-weight: 700;
+      font-size: 1.4rem;
+      line-height: 1.7rem;
       color: #1e1e1e;
     }
   }
@@ -118,6 +141,123 @@
     & svg {
       width: 4rem;
       height: 4rem;
+    }
+  }
+  &__selected_emotion_passive {
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
+    height: 55px;
+    padding: 8px;
+  }
+  &__time_passive {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .mood_tracker__day {
+      font-size: 2.4rem; /* Размер для дня */
+      font-weight: bold; /* Жирный текст для дня */
+      color: #1e1e1e; /* Цвет для дня */
+    }
+    .mood_tracker__month {
+      font-style: normal;
+      font-weight: 500;
+      font-size: 1.2rem;
+      line-height: 1.5rem;
+      color: #1e1e1e;
+    }
+  }
+}
+
+.mood_tracker_passive {
+  padding-bottom: 4.8rem;
+
+  &__container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Центрирование по горизонтали */
+    gap: 2rem; /* Расстояние между картинкой и блоком */
+  }
+
+  &__image {
+    max-width: 60%;
+    height: auto;
+    display: block;
+    margin-bottom: -1.7rem;
+    position: relative;
+    left: 50%;
+    z-index: 1;
+    transform: translateX(-50%);
+  }
+
+  &__box {
+    height: 12rem;
+    padding: 1.2rem;
+    display: grid;
+    align-content: space-between;
+    border-radius: 1.2rem;
+    background-color: #ffffff;
+    position: relative;
+  }
+
+  /* Остальные стили остаются такими же */
+  &__statistics {
+    button {
+      max-width: 13.2rem;
+      margin: 0 auto;
+    }
+  }
+  &__btn {
+    padding: 0.4rem 0.8rem;
+    margin: 0 auto;
+    width: 3.2rem;
+    height: 3.2rem;
+    background: #ffc75a;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 100px;
+    flex: none;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 1.6rem;
+    line-height: 2rem;
+    text-align: center;
+    color: #000000;
+  }
+
+  &__title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-top: 3.6rem;
+    margin-bottom: 3rem;
+    text-align: center;
+  }
+
+  &__time_passive {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .mood_tracker__day {
+      font-size: 2.4rem; /* Размер для дня */
+      font-weight: bold; /* Жирный текст для дня */
+      color: #1e1e1e; /* Цвет для дня */
+    }
+    .mood_tracker__month {
+      font-style: normal;
+      font-weight: 500;
+      font-size: 1.2rem;
+      line-height: 1.5rem;
+      color: #1e1e1e;
+    }
+  }
+
+  /* Адаптивные стили для больших экранов */
+  @media (min-width: 768px) {
+    &__image {
+      width: 40%; /* Уменьшение изображения на больших экранах */
+    }
+  }
+
+  @media (min-width: 1024px) {
+    &__image {
+      width: 30%; /* Ещё меньше для больших экранов */
     }
   }
 }
