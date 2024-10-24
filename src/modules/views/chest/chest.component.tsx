@@ -76,7 +76,6 @@ const ChestComponent: React.FC = () => {
         <div className={styles.box__chest}>
           <IconArrow onClick={goBack} className={styles.backBtn__chest} />
           <h1>{selectedTechnique.name}</h1>
-          {selectedTechnique.description && <p>{selectedTechnique.description}</p>}
           {selectedTechnique.images && selectedTechnique.images.length > 0 ? (
             <PhotoTutorialComponent
               array={selectedTechnique.images.map((img: any) => img.image)} // Pass image URLs only
@@ -84,6 +83,7 @@ const ChestComponent: React.FC = () => {
           ) : (
             <p>No images found.</p>
           )}
+          {selectedTechnique.description && <p>{selectedTechnique.description}</p>}
         </div>
       )
     }
