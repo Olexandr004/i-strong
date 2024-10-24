@@ -51,7 +51,7 @@ export const SelectComponent: FC<Readonly<ISelect>> = ({
         ...periods,
         {
           value: 'custom',
-          title: duration != null ? `Дні: ${Math.floor(duration)}` : 'Період',
+          title: duration != null ? `Дні: ${Math.floor(duration) + 1}` : 'Період',
         },
       ]
 
