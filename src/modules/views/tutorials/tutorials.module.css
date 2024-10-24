@@ -5,6 +5,20 @@
   max-width: 100%;
   margin: 0 auto;
 }
+.tutorials__position_favoriteBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+}
+.tutorials__instructions p {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 118%;
+  color: #1e1e1e;
+  margin-top: 1rem;
+  align-self: baseline;
+}
 .tutorials__back_btn {
   position: absolute;
   top: 37px;

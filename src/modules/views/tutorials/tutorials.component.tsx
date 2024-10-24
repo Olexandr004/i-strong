@@ -126,22 +126,8 @@ export const TutorialsComponent: FC<Readonly<ITutorialsComponent>> = () => {
             const data = await response.json()
             setSelectedTechniqueData(data.technique)
 
-            // Проверяем, добавлена ли техника в избранное
-            const isFavoriteResponse = await fetch(
-              `https://istrongapp.com/api/users/favorites/techniques/${selectedTechnique}/`,
-              {
-                method: 'GET',
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              },
-            )
-
-            if (isFavoriteResponse.ok) {
-              setIsFavorite(true)
-            } else {
-              setIsFavorite(false)
-            }
+            // Устанавливаем состояние избранного на основе данных с сервера
+            setIsFavorite(data.technique.is_favorite)
           } else {
             console.error('Ошибка получения техники:', response.status)
           }
@@ -161,32 +147,12 @@ export const TutorialsComponent: FC<Readonly<ITutorialsComponent>> = () => {
     }
 
     try {
-      const isFavoriteResponse = await fetch(
-        'https://istrongapp.com/api/users/favorites/techniques/',
-        {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      )
-
-      if (!isFavoriteResponse.ok) {
-        console.error('Ошибка при получении избранных техник:', isFavoriteResponse.status)
-        return
-      }
-
-      const data: IFavoriteData = await isFavoriteResponse.json() // Specify the type here
-      const isFavorite = data.favorite_techniques.some(
-        (technique: IFavoriteTechnique) => technique.technique.id === selectedTechnique, // Specify the type here
-      )
-
+      // Если техника уже в избранном
       if (isFavorite) {
-        // If the technique is in favorites, delete it
         const response = await fetch(
           `https://istrongapp.com/api/users/favorites/techniques/${selectedTechnique}/`,
           {
-            method: 'DELETE',
+            method: 'DELETE', // Удаляем технику из избранного
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -194,33 +160,34 @@ export const TutorialsComponent: FC<Readonly<ITutorialsComponent>> = () => {
         )
 
         if (response.ok) {
+          setIsFavorite(false) // Обновляем состояние на false
           console.log('Техника удалена из избранного')
         } else {
           console.error('Ошибка при удалении техники из избранного:', response.status)
         }
       } else {
-        // If the technique is not in favorites, add it
+        // Если техники нет в избранном
         const response = await fetch('https://istrongapp.com/api/users/favorites/techniques/', {
-          method: 'POST',
+          method: 'POST', // Добавляем технику в избранное
           headers: {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ technique_id: selectedTechnique }), // Ensure this is correct
+          body: JSON.stringify({ technique_id: selectedTechnique, is_favorite: true }), // Передаем данные
         })
 
         if (response.ok) {
+          setIsFavorite(true) // Обновляем состояние на true
           console.log('Техника добавлена в избранное')
         } else {
-          const errorData = await response.json() // Get error text
+          const errorData = await response.json()
           console.error('Ошибка при добавлении техники в избранное:', response.status, errorData)
         }
       }
     } catch (error) {
-      console.error('Ошибка при изменении статуса избранного:', error)
+      console.error('Ошибка при изменении состояния избранного:', error)
     }
   }
-
   const getTitle = () => {
     if (selectedTechniqueData) {
       return selectedTechniqueData.name || 'Техніки'
@@ -285,7 +252,7 @@ export const TutorialsComponent: FC<Readonly<ITutorialsComponent>> = () => {
 
       {selectedTechnique && selectedTechniqueData && (
         <div className={styles.tutorials__instructions}>
-          <div>
+          <div className={styles.tutorials__position_favoriteBtn}>
             {selectedTechniqueData.images && selectedTechniqueData.images.length > 0 ? (
               <PhotoTutorialComponent
                 array={selectedTechniqueData.images.map((img) => img.image)}
