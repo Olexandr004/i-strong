@@ -258,7 +258,7 @@ export const TutorialsComponent: FC<Readonly<ITutorialsComponent>> = () => {
                 array={selectedTechniqueData.images.map((img) => img.image)}
               />
             ) : (
-              <p>Изображения не найдены.</p>
+              <p></p>
             )}
             {selectedTechniqueData.description && <p>{selectedTechniqueData.description}</p>}
 
