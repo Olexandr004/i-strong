@@ -48,17 +48,16 @@ const AvatarComponent: FC = () => {
     const previousImage = currentImage // Сохраняем текущее изображение
 
     try {
-      // Запрашиваем разрешение на доступ к галерее
+      // Запрос разрешений в зависимости от типа действия
       if (text === 'Завантажити з галереї') {
-        const status = await Camera.requestPermissions({ permissions: ['camera', 'photos'] })
+        const status = await Camera.requestPermissions({ permissions: ['photos'] })
 
-        if (status.camera !== 'granted' || status.photos !== 'granted') {
-          setError('Необхідно надати доступ до камери та галереї')
+        if (status.photos !== 'granted') {
+          setError('Необхідно надати доступ до галереї')
           return
         }
       }
 
-      // Запрашиваем разрешение на доступ к камере
       if (text === 'Зробити фото') {
         const status = await Camera.requestPermissions({ permissions: ['camera'] })
 
@@ -68,7 +67,7 @@ const AvatarComponent: FC = () => {
         }
       }
 
-      // Логика получения изображения
+      // Получение изображения
       let image
       if (text === 'Зробити фото') {
         image = await Camera.getPhoto({
@@ -89,25 +88,22 @@ const AvatarComponent: FC = () => {
       }
 
       if (image && image.base64String) {
-        newImage = `data:image/jpeg;base64,${image.base64String}` // Получаем URL для изображения
+        newImage = `data:image/jpeg;base64,${image.base64String}` // Преобразуем в URL для изображения
 
         // Валидация формата и размера
         const blob = await fetch(newImage).then((res) => res.blob())
         const validFormats = ['image/jpeg', 'image/jpg', 'image/png', 'image/heif']
 
-        // Проверка формата изображения
         if (!validFormats.includes(blob.type)) {
           throw new Error(
             'Неприпустимий формат файлу. Формати, що підтримуються: jpg, jpeg, png, heif.',
           )
         }
 
-        // Проверка размера файла
         if (blob.size > 5 * 1024 * 1024) {
           throw new Error('Завеликий розмір зображення')
         }
 
-        // Устанавливаем новое изображение
         setCurrentImage(newImage)
         setIsSaveButtonDisabled(false)
         setError(null)
@@ -117,7 +113,6 @@ const AvatarComponent: FC = () => {
     } catch (err) {
       const errorMessage = (err as Error).message || 'Виникла помилка при завантаженні зображення'
       setError(errorMessage)
-      // Восстанавливаем предыдущее изображение, если произошла ошибка
       setCurrentImage(previousImage)
       setIsSaveButtonDisabled(true)
     }
