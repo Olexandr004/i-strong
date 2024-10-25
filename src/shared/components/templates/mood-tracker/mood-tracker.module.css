@@ -6,12 +6,11 @@
   padding-bottom: 4.8rem;
 }
 .mood_tracker__statistics button {
-  max-width: 13.2rem;
+  max-width: 13.4rem;
   margin: 0 auto;
 }
 .mood_tracker__btn {
   padding: 0.4rem 0.8rem;
-  margin: 0 auto;
   width: 3.2rem;
   height: 3.2rem;
   background: #ffc75a;
@@ -45,6 +44,7 @@
 .mood_tracker__box2 {
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 .mood_tracker__top {
   display: flex;
@@ -96,7 +96,6 @@
 }
 .mood_tracker__bottom {
   display: grid;
-  grid-template-columns: 0.6fr 0.4fr;
   grid-gap: 1.8rem;
 }
 .mood_tracker__emotions {
@@ -192,7 +191,6 @@
 }
 .mood_tracker_passive__btn {
   padding: 0.4rem 0.8rem;
-  margin: 0 auto;
   width: 3.2rem;
   height: 3.2rem;
   background: #ffc75a;

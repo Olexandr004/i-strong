@@ -73,17 +73,13 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
         },
       })
 
+      // Проверяем наличие изображения в ответе
       if (data.validation_image) {
         setValidationImage(data.validation_image)
+        setShowModal(true) // Показываем модальное окно
       } else {
         setValidationImage(null)
-      }
-
-      // Показать модальное окно, если выбраны дополнительные эмоции
-      if (selectedAdditionalMoods.length > 0) {
-        setShowModal(true)
-      } else {
-        router.push('/') // Перейти на главную страницу, если дополнительных эмоций нет
+        router.push('/') // Перенаправляем на главную страницу, если изображение отсутствует
       }
     },
 

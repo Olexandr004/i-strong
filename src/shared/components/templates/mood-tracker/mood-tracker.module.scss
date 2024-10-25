@@ -5,13 +5,12 @@
   padding-bottom: 4.8rem;
   &__statistics {
     button {
-      max-width: 13.2rem;
+      max-width: 13.4rem;
       margin: 0 auto;
     }
   }
   &__btn {
     padding: 0.4rem 0.8rem;
-    margin: 0 auto;
     width: 3.2rem;
     height: 3.2rem;
     background: #ffc75a;
@@ -47,6 +46,7 @@
   &__box2 {
     display: flex;
     align-items: center;
+    justify-content: space-between;
   }
 
   &__top {
@@ -101,7 +101,6 @@
 
   &__bottom {
     display: grid;
-    grid-template-columns: 0.6fr 0.4fr;
     grid-gap: 1.8rem;
   }
 
@@ -207,7 +206,6 @@
   }
   &__btn {
     padding: 0.4rem 0.8rem;
-    margin: 0 auto;
     width: 3.2rem;
     height: 3.2rem;
     background: #ffc75a;
