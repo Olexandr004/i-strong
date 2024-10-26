@@ -17,7 +17,6 @@ interface IState {
   activeChallengeTypeButton: ChallengeType
   registerForm: Partial<ISignUp> | null
   isAgreedForm: boolean
-  ignoreNextAppStateChange: boolean // Добавляем новое свойство
 }
 
 interface IStore extends IState {
@@ -38,7 +37,6 @@ export const useCommonStore = create<IStore>()(
         activeChallengeTypeButton: 'new',
         registerForm: null,
         isAgreedForm: false,
-        ignoreNextAppStateChange: false, // Устанавливаем начальное значение
         handleChangeCommonStore: (value) => set((state) => ({ ...state, ...value })),
       }),
       { enabled: process.env.NODE_ENV !== 'production' },
