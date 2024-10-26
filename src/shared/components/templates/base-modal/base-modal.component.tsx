@@ -1,6 +1,6 @@
 import { App, AppState } from '@capacitor/app'
 import { AnimatePresence, motion } from 'framer-motion'
-import { FC, ReactNode, useEffect } from 'react'
+import { FC, ReactNode, useEffect, useState } from 'react'
 import { useCommonStore } from '@/shared/stores'
 import styles from './base-modal.module.scss'
 
@@ -13,13 +13,17 @@ interface IBaseModal {
 export const BaseModalComponent: FC<Readonly<IBaseModal>> = ({ children }) => {
   const isModalActive = useCommonStore((state) => state.isModalActive)
   const handleChangeCommonStore = useCommonStore((state) => state.handleChangeCommonStore)
+  const [ignoreNextAppStateChange, setIgnoreNextAppStateChange] = useState(false)
 
   useEffect(() => {
     // Подписываемся на события изменения состояния приложения
     const handleAppStateChange = ({ isActive }: AppState) => {
-      if (!isActive) {
-        // Если приложение сворачивается, закрываем модальное окно
+      if (!isActive && !ignoreNextAppStateChange) {
+        // Если приложение сворачивается, и мы не в режиме игнорирования, закрываем модальное окно
         handleChangeCommonStore({ isModalActive: false })
+      } else {
+        // После возвращения приложения в активное состояние, сбрасываем игнорирование
+        setIgnoreNextAppStateChange(false)
       }
     }
 
@@ -35,7 +39,13 @@ export const BaseModalComponent: FC<Readonly<IBaseModal>> = ({ children }) => {
 
     // Возвращаем функцию очистки
     return cleanup
-  }, [handleChangeCommonStore])
+  }, [handleChangeCommonStore, ignoreNextAppStateChange])
+
+  const handleCameraOpen = () => {
+    // Устанавливаем флаг игнорирования при открытии камеры
+    setIgnoreNextAppStateChange(true)
+    // Открытие камеры или действия, связанные с использованием системных функций
+  }
 
   //return
   return (
