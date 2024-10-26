@@ -1,3 +1,4 @@
+'use client'
 import { App, AppState } from '@capacitor/app'
 import { AnimatePresence, motion } from 'framer-motion'
 import { FC, ReactNode, useEffect, useState } from 'react'
@@ -21,9 +22,6 @@ export const BaseModalComponent: FC<Readonly<IBaseModal>> = ({ children }) => {
       if (!isActive && !ignoreNextAppStateChange) {
         // Если приложение сворачивается, и мы не в режиме игнорирования, закрываем модальное окно
         handleChangeCommonStore({ isModalActive: false })
-      } else {
-        // После возвращения приложения в активное состояние, сбрасываем игнорирование
-        setIgnoreNextAppStateChange(false)
       }
     }
 
@@ -41,10 +39,28 @@ export const BaseModalComponent: FC<Readonly<IBaseModal>> = ({ children }) => {
     return cleanup
   }, [handleChangeCommonStore, ignoreNextAppStateChange])
 
+  // Новый useEffect для сброса флага после возвращения в активное состояние
+  useEffect(() => {
+    const resetIgnoreFlag = ({ isActive }: AppState) => {
+      if (isActive) {
+        setIgnoreNextAppStateChange(false) // Сбрасываем флаг, если приложение активно
+      }
+    }
+
+    if (ignoreNextAppStateChange) {
+      const listener = App.addListener('appStateChange', resetIgnoreFlag)
+
+      // Возвращаем функцию для отписки от слушателя
+      return () => {
+        listener.then((appStateListener) => appStateListener.remove())
+      }
+    }
+  }, [ignoreNextAppStateChange])
+
   const handleCameraOpen = () => {
-    // Устанавливаем флаг игнорирования при открытии камеры
+    // Устанавливаем флаг игнорирования перед открытием камеры
     setIgnoreNextAppStateChange(true)
-    // Открытие камеры или действия, связанные с использованием системных функций
+    // Здесь можно добавить логику для открытия камеры
   }
 
   //return
@@ -60,6 +76,7 @@ export const BaseModalComponent: FC<Readonly<IBaseModal>> = ({ children }) => {
         >
           <div className={styles.modal__box} onClick={(e) => e.stopPropagation()}>
             {children}
+            <button onClick={handleCameraOpen}>Open Camera</button>
           </div>
         </motion.div>
       )}

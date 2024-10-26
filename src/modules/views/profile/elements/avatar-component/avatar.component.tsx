@@ -12,6 +12,7 @@ import { useCommonStore, useUserStore } from '@/shared/stores'
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera'
 import styles from './avatar.module.scss'
 
+// Определите интерфейсы ответа
 interface ErrorResponse {
   error?: string
 }
@@ -21,9 +22,15 @@ interface UpdateAvatarResponse {
 }
 
 const AvatarComponent: FC = () => {
-  const { avatarImage, handleChangeCommonStore } = useCommonStore((state) => ({
+  // Используйте состояние из общего хранилища
+  const {
+    avatarImage,
+    handleChangeCommonStore,
+    isModalActive, // Новый элемент состояния
+  } = useCommonStore((state) => ({
     avatarImage: state.avatarImage,
     handleChangeCommonStore: state.handleChangeCommonStore,
+    isModalActive: state.isModalActive, // Если требуется
   }))
 
   const { user, handleChangeUserStore } = useUserStore((state) => ({
@@ -48,6 +55,9 @@ const AvatarComponent: FC = () => {
     const previousImage = currentImage // Сохраняем текущее изображение
 
     try {
+      // Устанавливаем флаг игнорирования состояния приложения для предотвращения закрытия модального окна
+      handleChangeCommonStore({ ignoreNextAppStateChange: true })
+
       // Запрашиваем разрешение на доступ к галерее
       if (text === 'Завантажити з галереї') {
         const status = await Camera.requestPermissions({ permissions: ['camera', 'photos'] })
@@ -244,22 +254,20 @@ const AvatarComponent: FC = () => {
           >
             Завантажити з галереї
           </ButtonComponent>
-        </div>
-        <div className={styles.footer}>
-          <button onClick={handleDeleteClick} className={styles.button}>
-            <IconDelete />
-            <span>Видалити</span>
-          </button>
           <ButtonComponent
             size={'regular'}
             onClick={handleSaveClick}
             disabled={isSaveButtonDisabled || isLoading}
           >
-            {isLoading ? 'Збереження...' : 'Зберегти'}
+            {isLoading ? 'Зберігається...' : 'Зберегти'}
+          </ButtonComponent>
+          <ButtonComponent variant={'outlined'} onClick={handleDeleteClick}>
+            <IconDelete />
           </ButtonComponent>
         </div>
       </div>
     </BaseModalComponent>
   )
 }
+
 export default AvatarComponent
