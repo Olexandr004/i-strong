@@ -1,52 +1,51 @@
-'use client'
 import { App, AppState } from '@capacitor/app'
 import { AnimatePresence, motion } from 'framer-motion'
 import { FC, ReactNode, useEffect, useState } from 'react'
 import { useCommonStore } from '@/shared/stores'
-import { usePathname } from 'next/navigation'
 import styles from './base-modal.module.scss'
 
+//interface
 interface IBaseModal {
   children: ReactNode
 }
 
+//component
 export const BaseModalComponent: FC<Readonly<IBaseModal>> = ({ children }) => {
   const isModalActive = useCommonStore((state) => state.isModalActive)
   const handleChangeCommonStore = useCommonStore((state) => state.handleChangeCommonStore)
-  const pathname = usePathname() // Получаем текущий путь
-  const [prevPathname, setPrevPathname] = useState(pathname) // Состояние для хранения предыдущего пути
+  const [ignoreNextAppStateChange, setIgnoreNextAppStateChange] = useState(false)
 
-  // Обработка изменений состояния приложения
   useEffect(() => {
+    // Подписываемся на события изменения состояния приложения
     const handleAppStateChange = ({ isActive }: AppState) => {
-      if (!isActive) {
-        handleChangeCommonStore({ isModalActive: false })
+      // Убираем логику закрытия модального окна
+      if (isActive) {
+        // После возвращения приложения в активное состояние, сбрасываем игнорирование
+        setIgnoreNextAppStateChange(false)
       }
     }
 
+    // Создаем слушатель
     const appStateListenerPromise = App.addListener('appStateChange', handleAppStateChange)
 
-    return () => {
+    // Функция очистки
+    const cleanup = () => {
       appStateListenerPromise.then((appStateListener) => {
-        appStateListener.remove()
+        appStateListener.remove() // Удаляем слушатель изменения состояния приложения
       })
     }
-  }, [handleChangeCommonStore])
 
-  // Закрытие модального окна при смене страницы
-  useEffect(() => {
-    if (prevPathname !== pathname) {
-      console.log('Pathname changed, closing modal...') // Лог при смене пути
-      handleChangeCommonStore({ isModalActive: false }) // Закрываем модалку
-    }
-    setPrevPathname(pathname) // Обновляем предыдущее значение пути
-  }, [pathname]) // Убираем prevPathname из зависимостей
+    // Возвращаем функцию очистки
+    return cleanup
+  }, [handleChangeCommonStore, ignoreNextAppStateChange])
 
-  // Отладка состояния модального окна
-  useEffect(() => {
-    console.log('Modal active state:', isModalActive)
-  }, [isModalActive])
+  const handleCameraOpen = () => {
+    // Устанавливаем флаг игнорирования при открытии камеры
+    setIgnoreNextAppStateChange(true)
+    // Открытие камеры или действия, связанные с использованием системных функций
+  }
 
+  //return
   return (
     <AnimatePresence mode={'wait'}>
       {isModalActive && (
