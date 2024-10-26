@@ -8,13 +8,13 @@ import { FooterComponent, ToasterComponent } from '@/modules/layouts/root-layout
 import { useUserStore } from '@/shared/stores'
 import styles from './root-layout.module.scss'
 
-//interface
+// interface
 interface IRootLayout {
   entry: ReactNode
   home: ReactNode
 }
 
-//component
+// component
 export const RootLayoutComponent: FC<Readonly<IRootLayout>> = ({ entry, home }) => {
   const token = useUserStore((state) => state.user?.access_token)
 
@@ -26,15 +26,18 @@ export const RootLayoutComponent: FC<Readonly<IRootLayout>> = ({ entry, home }) 
 
   const pathName = usePathname()
   const [isUserChecked, setIsUserChecked] = useState(false)
-  const [isReady, setIsReady] = useState(false) // Новый флаг для отслеживания готовности
 
   useEffect(() => {
     const checkUserProfile = async () => {
       if (token) {
         await userProfileRefetch()
       }
-      setIsUserChecked(true)
-      setIsReady(true) // Устанавливаем состояние готовности
+      // Добавляем задержку перед тем, как установить состояние проверки
+      const timer = setTimeout(() => {
+        setIsUserChecked(true)
+      }, 100) // Задержка 100 мс, можно изменить по необходимости
+
+      return () => clearTimeout(timer)
     }
 
     checkUserProfile()
@@ -49,31 +52,32 @@ export const RootLayoutComponent: FC<Readonly<IRootLayout>> = ({ entry, home }) 
     )
   }
 
-  //return
+  // return
   return (
     <body className={styles.layout}>
-      {isFetching || !isReady ? ( // Используем isReady для показа Loading
+      {isFetching ? (
         <LoadingComponent />
       ) : (
         <>
-          {UserProfile && token ? (
-            <>
-              <main
-                className={`${styles.layout__main} ${isPageWithFooter() && styles.with_footer}`}
-              >
-                {/* Вставляем компонент аватарки перед контентом */}
-                {isPageWithFooter()}
-                {home}
-              </main>
-              {isPageWithFooter() && (
-                <div className={styles.layout__footer}>
-                  <FooterComponent />
-                </div>
-              )}
-            </>
+          {isUserChecked ? (
+            UserProfile && token ? (
+              <>
+                <main
+                  className={`${styles.layout__main} ${isPageWithFooter() && styles.with_footer}`}
+                >
+                  {home}
+                </main>
+                {isPageWithFooter() && (
+                  <div className={styles.layout__footer}>
+                    <FooterComponent />
+                  </div>
+                )}
+              </>
+            ) : (
+              <main className={`${styles.entry} ${isUserChecked ? styles.show : ''}`}>{entry}</main>
+            )
           ) : (
-            // Добавляем класс show к entry, если пользователь не авторизован
-            <main className={`${styles.entry} ${isUserChecked ? styles.show : ''}`}>{entry}</main>
+            <LoadingComponent />
           )}
         </>
       )}
