@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { IconArrow, IconNextArrow } from '@/shared/icons'
 import { useChestStore, useUserStore } from '@/shared/stores'
 import styles from './chest.module.scss'
-import { PhotoTutorialComponent } from '@/modules/views/tutorials/elements/' // Ensure the import path is correct
+import { PhotoTutorialComponent } from '@/modules/views/tutorials/elements/' // Убедитесь, что путь импорта правильный
 
 const ChestComponent: React.FC = () => {
   const { view, setView } = useChestStore()
@@ -10,13 +10,19 @@ const ChestComponent: React.FC = () => {
   const [selectedTechnique, setSelectedTechnique] = useState<any | null>(null)
   const token = useUserStore((state) => state.user?.access_token)
 
-  // Update goBack to check if the user is viewing a technique
+  // Установите начальное состояние при монтировании компонента
+  useEffect(() => {
+    setView('main') // Устанавливаем вид на 'main' при загрузке компонента
+    setSelectedTechnique(null) // Сбрасываем выбранную технику
+  }, [])
+
+  // Функция для возврата назад
   const goBack = () => {
     if (selectedTechnique) {
-      setSelectedTechnique(null) // Reset selected technique
-      setView('techniques') // Go back to techniques view
+      setSelectedTechnique(null) // Сбрасываем выбранную технику
+      setView('techniques') // Возвращаемся к списку техник
     } else {
-      setView('main') // Default to main if no technique is selected
+      setView('main') // Возвращаемся на главный экран
     }
   }
 
@@ -33,10 +39,10 @@ const ChestComponent: React.FC = () => {
         const data = await response.json()
         setFavoriteTechniques(data.favorite_techniques.map((item: any) => item.technique) || [])
       } else {
-        console.error('Error fetching favorite techniques:', response.status)
+        console.error('Ошибка при получении избранных техник:', response.status)
       }
     } catch (error) {
-      console.error('Error fetching favorite techniques:', error)
+      console.error('Ошибка при получении избранных техник:', error)
     }
   }
 
@@ -51,23 +57,23 @@ const ChestComponent: React.FC = () => {
 
       if (response.ok) {
         const data = await response.json()
-        setSelectedTechnique(data.technique) // Save technique data
+        setSelectedTechnique(data.technique) // Сохраняем данные техники
       } else {
-        console.error('Error fetching technique by ID:', response.status)
+        console.error('Ошибка при получении техники по ID:', response.status)
       }
     } catch (error) {
-      console.error('Error fetching technique by ID:', error)
+      console.error('Ошибка при получении техники по ID:', error)
     }
   }
 
   useEffect(() => {
     if (view === 'techniques') {
-      fetchFavoriteTechniques()
+      fetchFavoriteTechniques() // Загружаем избранные техники при переключении на 'techniques'
     }
   }, [view])
 
   const handleTechniqueSelect = (technique: any) => {
-    fetchTechniqueById(technique.id) // Fetch technique by ID
+    fetchTechniqueById(technique.id) // Загружаем технику по ID
   }
 
   const renderContent = () => {
@@ -78,7 +84,7 @@ const ChestComponent: React.FC = () => {
           <h1>{selectedTechnique.name}</h1>
           {selectedTechnique.images && selectedTechnique.images.length > 0 ? (
             <PhotoTutorialComponent
-              array={selectedTechnique.images.map((img: any) => img.image)} // Pass image URLs only
+              array={selectedTechnique.images.map((img: any) => img.image)} // Передаем только URL изображений
             />
           ) : (
             <p>No images found.</p>

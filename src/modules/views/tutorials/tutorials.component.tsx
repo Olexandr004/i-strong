@@ -5,7 +5,6 @@ import { IconArrow, IconNextArrow, IconFavorite } from '@/shared/icons'
 import { ModalGettingToInstructionsComponent } from '@/shared/components'
 import { ImageCapybaraTeacher } from '@/shared/images'
 import { useUserStore } from '@/shared/stores'
-import { useTutorialsStore } from '@/shared/stores' // Импортируйте ваше хранилище
 import { PhotoTutorialComponent } from '@/modules/views/tutorials/elements'
 import styles from './tutorials.module.scss'
 
@@ -41,17 +40,11 @@ export const TutorialsComponent: FC<Readonly<ITutorialsComponent>> = () => {
   const [loading, setLoading] = useState<boolean>(true)
   const [isFavorite, setIsFavorite] = useState<boolean>(false)
 
-  const token = useUserStore((state) => state.user?.access_token)
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null)
+  const [selectedTechnique, setSelectedTechnique] = useState<number | null>(null)
+  const [expandedTechnique, setExpandedTechnique] = useState<number | null>(null)
 
-  // Используем Zustand хранилище
-  const {
-    selectedCategory,
-    setSelectedCategory,
-    selectedTechnique,
-    setSelectedTechnique,
-    expandedTechnique,
-    setExpandedTechnique,
-  } = useTutorialsStore()
+  const token = useUserStore((state) => state.user?.access_token)
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -188,6 +181,7 @@ export const TutorialsComponent: FC<Readonly<ITutorialsComponent>> = () => {
       console.error('Ошибка при изменении состояния избранного:', error)
     }
   }
+
   const getTitle = () => {
     if (selectedTechniqueData) {
       return selectedTechniqueData.name || 'Техніки'

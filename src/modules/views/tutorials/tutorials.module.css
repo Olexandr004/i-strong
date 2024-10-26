@@ -50,7 +50,6 @@
   flex-direction: column;
   gap: 10px;
   max-width: 100%;
-  margin: 0 auto;
 }
 .tutorials__button {
   display: flex;
@@ -59,10 +58,10 @@
   align-items: center;
   padding: 8px;
   gap: 8px;
-  width: 264px;
   height: 60px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
   border-radius: 1.6rem;
+  background: #fff1b6;
   order: 0;
   align-self: stretch;
   flex-grow: 0;
@@ -72,15 +71,6 @@
   font-size: 1.6rem;
   line-height: 2rem;
   color: #1e1e1e;
-}
-.tutorials__button:nth-child(1) {
-  background: #c0ebf1;
-}
-.tutorials__button:nth-child(2) {
-  background: #fff1b6;
-}
-.tutorials__button:nth-child(3) {
-  background: #c8ebcf;
 }
 .tutorials__box_title {
   display: flex;
