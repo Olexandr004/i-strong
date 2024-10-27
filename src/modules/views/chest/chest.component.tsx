@@ -103,9 +103,9 @@ const ChestComponent: React.FC = () => {
             {favoriteTechniques.length > 0 ? (
               <ul>
                 {favoriteTechniques.map((technique) => (
-                  <li key={technique.id}>
+                  <li key={technique.id} onClick={() => handleTechniqueSelect(technique)}>
                     {technique.name}
-                    <IconNextArrow onClick={() => handleTechniqueSelect(technique)} />
+                    <IconNextArrow />
                   </li>
                 ))}
               </ul>

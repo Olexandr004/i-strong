@@ -221,16 +221,17 @@ export const TutorialsComponent: FC<Readonly<ITutorialsComponent>> = () => {
       {selectedCategory && !selectedTechnique && (
         <div className={styles.tutorials__content}>
           {techniques.map((technique) => (
-            <div className={styles.tutorials__box} key={technique.id}>
-              <div
-                className={`${styles.tutorials__box_title} ${expandedTechnique === technique.id && styles.expanded}`}
-              >
+            <div
+              key={technique.id}
+              className={`${styles.tutorials__box} ${expandedTechnique === technique.id && styles.expanded}`}
+              onClick={() => {
+                setExpandedTechnique(expandedTechnique === technique.id ? null : technique.id)
+                setSelectedTechnique(technique.id)
+              }}
+            >
+              <div className={styles.tutorials__box_title}>
                 <p>{technique.name}</p>
                 <button
-                  onClick={() => {
-                    setExpandedTechnique(expandedTechnique === technique.id ? null : technique.id)
-                    setSelectedTechnique(technique.id)
-                  }}
                   className={`${styles.tutorials__box_btn} ${expandedTechnique === technique.id && styles.expanded}`}
                 >
                   <IconNextArrow />
@@ -247,6 +248,9 @@ export const TutorialsComponent: FC<Readonly<ITutorialsComponent>> = () => {
       {selectedTechnique && selectedTechniqueData && (
         <div className={styles.tutorials__instructions}>
           <div className={styles.tutorials__position_favoriteBtn}>
+            <button className={styles.tutorials__favorite_btn} onClick={handleFavoriteToggle}>
+              <IconFavorite fill={isFavorite ? '#BD3333' : 'none'} />
+            </button>
             {selectedTechniqueData.images && selectedTechniqueData.images.length > 0 ? (
               <PhotoTutorialComponent
                 array={selectedTechniqueData.images.map((img) => img.image)}
@@ -255,10 +259,6 @@ export const TutorialsComponent: FC<Readonly<ITutorialsComponent>> = () => {
               <p></p>
             )}
             {selectedTechniqueData.description && <p>{selectedTechniqueData.description}</p>}
-
-            <button className={styles.tutorials__favorite_btn} onClick={handleFavoriteToggle}>
-              <IconFavorite fill={isFavorite ? '#BD3333' : 'none'} />
-            </button>
 
             <button
               className={styles.tutorials__back_btn}

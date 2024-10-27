@@ -1,6 +1,6 @@
 import { useRouter } from 'next/navigation'
 import { useMutation } from '@tanstack/react-query'
-import { FC, useState, useEffect } from 'react'
+import { FC, useState, useEffect, useRef } from 'react'
 import { postMood } from '@/api/mood-tracker'
 import { ButtonComponent } from '@/shared/components'
 import { MOODS } from '@/shared/constants/moods'
@@ -43,6 +43,8 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
   const [description, setDescription] = useState<string>('')
   const [validationImage, setValidationImage] = useState<string | null>(null) // состояние для изображения
   const [showModal, setShowModal] = useState(false) // состояние для отображения модального окна
+
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null) // Ссылка на textarea
 
   const { mutate: postCurrentMood } = useMutation({
     mutationFn: (form: any) => postMood(token ?? '', form),
@@ -109,6 +111,16 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
     router.push('/') // Перейти на главную страницу после закрытия модального окна
   }
 
+  const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setDescription(e.target.value)
+
+    // Изменение высоты
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto' // Сброс высоты перед установкой новой
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px` // Установка новой высоты
+    }
+  }
+
   // return
   return (
     <section className={`${styles.select_mood} ${selectedMood && styles.active}`}>
@@ -154,9 +166,11 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
         <textarea
           name='description'
           id='description'
+          ref={textareaRef} // Присваиваем ссылку на textarea
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          onChange={handleTextareaChange} // Используем обработчик
           maxLength={1000} // Ограничение на 1000 символов
+          style={{ overflow: 'hidden', resize: 'none', minHeight: '54px' }} // Скроем прокрутку
         />
       </div>
 
