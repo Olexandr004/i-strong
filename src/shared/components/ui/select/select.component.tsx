@@ -45,15 +45,16 @@ export const SelectComponent: FC<Readonly<ISelect>> = ({
     { value: 'month', title: 'Місяць' },
   ]
 
-  const periodsWithCustom = !duration
-    ? periods
-    : [
-        ...periods,
-        {
-          value: 'custom',
-          title: duration != null ? `Дні: ${Math.floor(duration) + 1}` : 'Період',
-        },
-      ]
+  const periodsWithCustom =
+    duration == null
+      ? periods
+      : [
+          ...periods,
+          {
+            value: 'custom',
+            title: duration <= 1 ? '1 день' : `Дні: ${duration + 1}`,
+          },
+        ]
 
   //return
   return (

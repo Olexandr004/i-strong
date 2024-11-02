@@ -85,7 +85,7 @@ export const MoodTrackerComponent: FC<Readonly<IMoodTrackerComponent>> = () => {
             <div className={styles.mood_tracker__box2}>
               <div className={styles.mood_tracker__bottom}>
                 <div className={styles.mood_tracker__selected_emotion_passive}>
-                  <span className={styles.mood_tracker__time_passive}>
+                  <span className={styles.mood_tracker_passive__time_passive}>
                     <span className={styles.mood_tracker__day}>{moment().format('DD')}</span>
                     <span className={styles.mood_tracker__month}>{currentMonthGenitive}</span>
                   </span>
