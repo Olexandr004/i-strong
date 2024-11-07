@@ -1,15 +1,9 @@
 'use client'
 import { useRouter } from 'next/navigation'
-import { DiaryNoteCardComponent, DiaryPinCodeComponent } from './elements'
+import { DiaryNoteCardComponent } from './elements'
 import moment from 'moment/moment'
 import { FC, useEffect, useState } from 'react'
-import {
-  useCheckPinCode,
-  useGetDiaryRecords,
-  useGetRecordsByDate,
-  useGetTrackerRecords,
-} from '@/api/diary.api'
-import { IPinCodeData } from '@/interfaces/user'
+import { useGetDiaryRecords, useGetRecordsByDate, useGetTrackerRecords } from '@/api/diary.api'
 import { NotesComponent } from '@/modules/views/diary/elements/notes'
 import { TrackerComponent } from '@/modules/views/diary/elements/trackers'
 import {
@@ -77,12 +71,6 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
     diaryRecordsRefetch()
   }
 
-  const { mutateCheckPinCode, passShow } = useCheckPinCode()
-
-  const handlePinVerification = (pinCodeData: IPinCodeData) => {
-    mutateCheckPinCode(pinCodeData)
-  }
-
   useEffect(() => {
     if (diaryRecords) {
       const currentMonth = moment().month() + 1 // момент возвращает индекс, добавляем 1
@@ -92,10 +80,6 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
       setExtendedBlock({ year: currentYear, month: currentMonth })
     }
   }, [diaryRecords])
-
-  if (passShow) {
-    return <DiaryPinCodeComponent onVerify={handlePinVerification} />
-  }
 
   //return
   return (

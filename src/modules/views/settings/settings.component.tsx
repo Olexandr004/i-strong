@@ -158,11 +158,6 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
               <span>Пароль для входу</span>
               <span className={styles.settings_card__field_value}>********</span>
             </div>
-
-            <div className={styles.settings_card__field}>
-              <span>Пароль для щоденника</span>
-              <span className={styles.settings_card__field_value}>********</span>
-            </div>
           </div>
         </div>
 
