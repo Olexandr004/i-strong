@@ -14,18 +14,19 @@ import {
 import { IconButtonComponent } from '@/shared/components/ui/icon-button'
 import { IconUpArrow } from '@/shared/icons'
 import { ImageCapybaraBook } from '@/shared/images'
-import { useUserStore } from '@/shared/stores'
+import { useUserStore, useTabStore } from '@/shared/stores'
 import styles from './diary.module.scss'
 
 //interface
 interface IDiary {}
 
-//component
 export const DiaryComponent: FC<Readonly<IDiary>> = () => {
   const router = useRouter()
   const token = useUserStore((state) => state.user?.access_token)
 
-  const [activeTab, setActiveTab] = useState('main')
+  // используем состояние из Zustand
+  const { activeTab, setActiveTab } = useTabStore()
+
   const [extendedBlock, setExtendedBlock] = useState<{ year: null | number; month: null | number }>(
     {
       year: null,
@@ -44,7 +45,6 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
   }
 
   const { data: diaryRecords, refetch: diaryRecordsRefetch } = useGetDiaryRecords(token ?? '')
-  console.log('🚀 ~ diaryRecords:', diaryRecords)
 
   const {
     data: diaryRecordsByDate,
@@ -56,7 +56,7 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
     extendedBlock.month?.toString() ?? '',
   )
 
-  const { data: trackerRecords } = useGetTrackerRecords() // Получаем данные трекера
+  const { data: trackerRecords } = useGetTrackerRecords()
 
   const handleRequestRecordsByDate = (year: number, month: number) => {
     if (extendedBlock.year === year && extendedBlock.month === month) {
@@ -76,12 +76,15 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
       const currentMonth = moment().month() + 1 // момент возвращает индекс, добавляем 1
       const currentYear = moment().year()
 
-      // Здесь, возможно, необходимо установить `extendedBlock` в значения из `diaryRecords`
       setExtendedBlock({ year: currentYear, month: currentMonth })
     }
   }, [diaryRecords])
 
-  //return
+  useEffect(() => {
+    // сохраняем вкладку в Zustand, когда компонент монтируется
+    setActiveTab(activeTab)
+  }, [setActiveTab, activeTab])
+
   return (
     <section className={`${styles.diary} container`}>
       <h1 className={`title`}>Щоденник</h1>
@@ -163,7 +166,6 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
       )}
       {activeTab === 'notes' && <NotesComponent />}
       {activeTab === 'tracker' && <TrackerComponent />}
-      {/* Новая вкладка для трекера */}
       <ModalGettingToInstructionsComponent
         title='Щоденник - це надійне місце для усіх твоїх спогадів та емоцій. Роби записи кожного дня щоб отримувати'
         coin={true}
