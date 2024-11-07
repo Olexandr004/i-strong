@@ -3,9 +3,15 @@ import { useRouter } from 'next/navigation'
 import { DiaryNoteCardComponent, DiaryPinCodeComponent } from './elements'
 import moment from 'moment/moment'
 import { FC, useEffect, useState } from 'react'
-import { useCheckPinCode, useGetDiaryRecords, useGetRecordsByDate } from '@/api/diary.api'
+import {
+  useCheckPinCode,
+  useGetDiaryRecords,
+  useGetRecordsByDate,
+  useGetTrackerRecords,
+} from '@/api/diary.api'
 import { IPinCodeData } from '@/interfaces/user'
 import { NotesComponent } from '@/modules/views/diary/elements/notes'
+import { TrackerComponent } from '@/modules/views/diary/elements/trackers'
 import {
   ButtonBarComponent,
   ButtonComponent,
@@ -34,8 +40,9 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
   )
 
   const tabs = [
-    { id: 'main', text: 'Основні', isActive: activeTab === 'main' },
-    { id: 'notes', text: 'Нотатки', isActive: activeTab === 'notes' },
+    { id: 'main', text: 'Нотатки', isActive: activeTab === 'main' },
+    { id: 'tracker', text: 'Трекер', isActive: activeTab === 'tracker' },
+    { id: 'notes', text: 'Челенджі', isActive: activeTab === 'notes' },
   ]
 
   const handleCreateNewRecord = () => {
@@ -54,6 +61,8 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
     extendedBlock.year?.toString() ?? '',
     extendedBlock.month?.toString() ?? '',
   )
+
+  const { data: trackerRecords } = useGetTrackerRecords() // Получаем данные трекера
 
   const handleRequestRecordsByDate = (year: number, month: number) => {
     if (extendedBlock.year === year && extendedBlock.month === month) {
@@ -92,10 +101,8 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
   return (
     <section className={`${styles.diary} container`}>
       <h1 className={`title`}>Щоденник</h1>
-
       <ButtonBarComponent buttons={tabs} onButtonClick={setActiveTab} />
-
-      {activeTab == 'main' && (
+      {activeTab === 'main' && (
         <>
           {!diaryRecords?.has_note_today ? (
             <ButtonComponent variant={'outlined'} onClick={handleCreateNewRecord}>
@@ -108,7 +115,7 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
           )}
         </>
       )}
-      {activeTab === 'main' ? (
+      {activeTab === 'main' && (
         <div className={styles.diary__records}>
           {diaryRecords?.notes?.map((year, index) => (
             <div className={styles.diary__records} key={`${year.year}-${index}`}>
@@ -169,10 +176,10 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
             </div>
           ))}
         </div>
-      ) : (
-        <NotesComponent />
       )}
-
+      {activeTab === 'notes' && <NotesComponent />}
+      {activeTab === 'tracker' && <TrackerComponent />}
+      {/* Новая вкладка для трекера */}
       <ModalGettingToInstructionsComponent
         title='Щоденник - це надійне місце для усіх твоїх спогадів та емоцій. Роби записи кожного дня щоб отримувати'
         coin={true}

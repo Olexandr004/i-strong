@@ -1,0 +1,51 @@
+@charset "UTF-8";
+.diary_card {
+  display: grid;
+  gap: 0.8rem;
+  padding: 1.2rem 0;
+  border-bottom: 1px solid var(--border-primary);
+}
+.diary_card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--accent-color-yellow);
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+.diary_card__header svg {
+  color: var(--font-color-grey);
+}
+.diary_card__main {
+  display: grid;
+  gap: 0.4rem;
+}
+.diary_card__title {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  white-space: normal;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+.diary_card__text {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  white-space: normal;
+  text-overflow: ellipsis;
+  max-height: 2.8rem; /* Подберите это значение в зависимости от вашего line-height */
+  line-height: 1.4rem;
+  color: var(--font-color-grey);
+  font-size: 1.2rem;
+  font-weight: 500;
+  line-height: 1.4rem;
+}
+
+.gray_text {
+  color: gray;
+}
+
+/*# sourceMappingURL=diary-note-card.module.css.map */

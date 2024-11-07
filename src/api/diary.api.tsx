@@ -7,6 +7,29 @@ import { ISignIn } from '@/interfaces/entry'
 import { IPinCodeData } from '@/interfaces/user'
 import { useUserStore } from '@/shared/stores'
 
+export const useGetTrackerRecords = () => {
+  const { user } = useUserStore()
+  const token = user?.access_token || ''
+
+  const queryFn = async () => {
+    const response = await fetch(`https://istrongapp.com/api/users/diary/tracker/`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    if (!response.ok) {
+      throw new Error('Network response was not ok')
+    }
+    return response.json() // Верните данные напрямую
+  }
+
+  return useQuery({
+    queryKey: ['getTrackerRecords'],
+    queryFn,
+    enabled: !!token, // Запрос выполняется только при наличии токена
+  })
+}
 export const postDiaryRecord = (form: ISignIn, token: string) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   return useRequest(`users/diary/main/`, {
