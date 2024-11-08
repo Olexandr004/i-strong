@@ -130,7 +130,7 @@ export const TrackerRecordComponent: FC<Readonly<ITrackerRecord>> = () => {
 
       {status !== 'pending' && singleTracker ? (
         <div className={styles.tracker_record__editor_box}>
-          <p>Мій стан:</p>
+          <h4>Мій стан:</h4>
           <Controller
             control={control}
             name={'emotions'}

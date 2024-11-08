@@ -34,21 +34,23 @@
     display: grid;
     word-wrap: break-word;
     word-break: break-word;
-    p {
+    h4 {
       font-style: normal;
       font-weight: 700;
       font-size: 16px;
       line-height: 20px;
       color: #000000;
-      &:last-of-type {
-        font-style: normal;
-        font-weight: 500;
-        font-size: 12px;
-        line-height: 15px;
-        color: #1e1e1e;
-        margin-top: 5px;
-        margin-bottom: 30px;
-      }
+    }
+    p:first-of-type {
+      font-style: normal;
+      font-weight: 500;
+      line-height: 15px;
+      color: #1e1e1e;
+      margin-top: 5px;
+      margin-bottom: 30px;
+    }
+    p {
+      font-size: 16px;
     }
   }
 
