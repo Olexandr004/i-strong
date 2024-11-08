@@ -52,14 +52,16 @@
 }
 
 .filled {
-  fill: red; /* Красный цвет для активного состояния */
+  fill: #BD3333; /* Красный цвет для активного состояния */
   stroke: none; /* Убираем обводку, если она есть */
+  margin-right: 5px;
 }
 
 .outline {
   fill: none; /* Нет заливки */
   stroke: gray; /* Серый цвет обводки */
   stroke-width: 2px; /* Устанавливаем ширину обводки */
+  margin-right: 5px;
 }
 
 /*# sourceMappingURL=diary-note-card.module.css.map */
