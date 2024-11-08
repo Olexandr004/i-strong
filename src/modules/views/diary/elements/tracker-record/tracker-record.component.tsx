@@ -93,7 +93,7 @@ export const TrackerRecordComponent: FC<Readonly<ITrackerRecord>> = () => {
 
   const handleSave = () => {
     const title = watch('title')
-    const formattedHtml = JSON.stringify(editor?.getHTML())
+    const formattedHtml = editor?.getHTML()
 
     updateTracker({
       note: formattedHtml,

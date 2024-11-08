@@ -27,6 +27,17 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
   // используем состояние из Zustand
   const { activeTab, setActiveTab } = useTabStore()
 
+  useEffect(() => {
+    const savedTab = localStorage.getItem('activeTab')
+    if (savedTab) {
+      setActiveTab(savedTab)
+    }
+  }, [])
+
+  useEffect(() => {
+    localStorage.setItem('activeTab', activeTab)
+  }, [activeTab])
+
   const [extendedBlock, setExtendedBlock] = useState<{ year: null | number; month: null | number }>(
     {
       year: null,
