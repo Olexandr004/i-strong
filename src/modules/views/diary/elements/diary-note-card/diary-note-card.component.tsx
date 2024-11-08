@@ -19,12 +19,14 @@ interface IDiaryNoteCard {
   }
   diaryRecordsRefetch?: () => void
   type?: 'main' | 'challenges' | 'tracker'
+  showActions?: boolean
 }
 
 export const DiaryNoteCardComponent: FC<Readonly<IDiaryNoteCard>> = ({
   item,
   diaryRecordsRefetch,
   type,
+  showActions = true,
 }) => {
   const router = useRouter()
   const token = useUserStore((state) => state.user?.access_token)
@@ -118,20 +120,22 @@ export const DiaryNoteCardComponent: FC<Readonly<IDiaryNoteCard>> = ({
           {formattedDate} {type === 'tracker' && `- ${formattedTime}`}
         </span>
 
-        <div>
-          <IconButtonComponent
-            onClick={toggleFavorite}
-            name={is_favorite ? 'remove favorite' : 'add favorite'}
-          >
-            <IconFavorite className={is_favorite ? styles.filled : styles.outline} />
-          </IconButtonComponent>
-
-          {type !== 'challenges' && type !== 'tracker' && (
-            <IconButtonComponent onClick={handleDeleteRecord} name={'delete record'}>
-              <IconTrashBin />
+        {showActions && (
+          <div>
+            <IconButtonComponent
+              onClick={toggleFavorite}
+              name={is_favorite ? 'remove favorite' : 'add favorite'}
+            >
+              <IconFavorite className={is_favorite ? styles.filled : styles.outline} />
             </IconButtonComponent>
-          )}
-        </div>
+
+            {type !== 'challenges' && type !== 'tracker' && (
+              <IconButtonComponent onClick={handleDeleteRecord} name={'delete record'}>
+                <IconTrashBin />
+              </IconButtonComponent>
+            )}
+          </div>
+        )}
       </div>
 
       <div className={styles.diary_card__main}>

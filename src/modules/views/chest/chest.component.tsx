@@ -2,27 +2,27 @@ import React, { useEffect, useState } from 'react'
 import { IconArrow, IconNextArrow } from '@/shared/icons'
 import { useChestStore, useUserStore } from '@/shared/stores'
 import styles from './chest.module.scss'
-import { PhotoTutorialComponent } from '@/modules/views/tutorials/elements/' // Убедитесь, что путь импорта правильный
+import { PhotoTutorialComponent } from '@/modules/views/tutorials/elements/'
+import { DiaryNoteCardComponent } from '@/modules/views/diary/elements'
 
 const ChestComponent: React.FC = () => {
   const { view, setView } = useChestStore()
   const [favoriteTechniques, setFavoriteTechniques] = useState<any[]>([])
   const [selectedTechnique, setSelectedTechnique] = useState<any | null>(null)
+  const [favoriteDiaryEntries, setFavoriteDiaryEntries] = useState<any[]>([])
   const token = useUserStore((state) => state.user?.access_token)
 
-  // Установите начальное состояние при монтировании компонента
   useEffect(() => {
-    setView('main') // Устанавливаем вид на 'main' при загрузке компонента
-    setSelectedTechnique(null) // Сбрасываем выбранную технику
+    setView('main')
+    setSelectedTechnique(null)
   }, [])
 
-  // Функция для возврата назад
   const goBack = () => {
     if (selectedTechnique) {
-      setSelectedTechnique(null) // Сбрасываем выбранную технику
-      setView('techniques') // Возвращаемся к списку техник
+      setSelectedTechnique(null)
+      setView('techniques')
     } else {
-      setView('main') // Возвращаемся на главный экран
+      setView('main')
     }
   }
 
@@ -57,7 +57,7 @@ const ChestComponent: React.FC = () => {
 
       if (response.ok) {
         const data = await response.json()
-        setSelectedTechnique(data.technique) // Сохраняем данные техники
+        setSelectedTechnique(data.technique)
       } else {
         console.error('Ошибка при получении техники по ID:', response.status)
       }
@@ -66,15 +66,40 @@ const ChestComponent: React.FC = () => {
     }
   }
 
+  const fetchFavoriteDiaryEntries = async () => {
+    try {
+      const response = await fetch('https://istrongapp.com/api/users/favorites/diary/', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setFavoriteDiaryEntries(data.favorite_notes || [])
+      } else {
+        console.error('Ошибка при получении избранных записей дневника:', response.status)
+      }
+    } catch (error) {
+      console.error('Ошибка при получении избранных записей дневника:', error)
+    }
+  }
+
   useEffect(() => {
     if (view === 'techniques') {
-      fetchFavoriteTechniques() // Загружаем избранные техники при переключении на 'techniques'
+      fetchFavoriteTechniques()
+    } else if (view === 'diary') {
+      fetchFavoriteDiaryEntries()
     }
   }, [view])
 
   const handleTechniqueSelect = (technique: any) => {
-    fetchTechniqueById(technique.id) // Загружаем технику по ID
+    fetchTechniqueById(technique.id)
   }
+
+  // Функция для удаления тегов <p> из текста
+  const stripHtmlTags = (text: string) => text.replace(/<[^>]+>/g, '')
 
   const renderContent = () => {
     if (selectedTechnique) {
@@ -83,11 +108,9 @@ const ChestComponent: React.FC = () => {
           <IconArrow onClick={goBack} className={styles.backBtn__chest} />
           <h1>{selectedTechnique.name}</h1>
           {selectedTechnique.images && selectedTechnique.images.length > 0 ? (
-            <PhotoTutorialComponent
-              array={selectedTechnique.images.map((img: any) => img.image)} // Передаем только URL изображений
-            />
+            <PhotoTutorialComponent array={selectedTechnique.images.map((img: any) => img.image)} />
           ) : (
-            <p>No images found.</p>
+            <p></p>
           )}
           {selectedTechnique.description && <p>{selectedTechnique.description}</p>}
         </div>
@@ -116,9 +139,24 @@ const ChestComponent: React.FC = () => {
         )
       case 'diary':
         return (
-          <div className={styles.box__chest}>
+          <div>
             <IconArrow onClick={goBack} className={styles.backBtn__chest} />
             <h1>Щоденник</h1>
+            {favoriteDiaryEntries.map((entry) => (
+              <DiaryNoteCardComponent
+                key={entry.id}
+                item={{
+                  ...entry,
+                  note: stripHtmlTags(entry.note || ''),
+                  description:
+                    entry.type === 'challenges' || entry.type === 'tracker'
+                      ? 'Запис не знайдено'
+                      : stripHtmlTags(entry.description || ''),
+                }}
+                type={entry.type}
+                showActions={false}
+              />
+            ))}
           </div>
         )
       default:
