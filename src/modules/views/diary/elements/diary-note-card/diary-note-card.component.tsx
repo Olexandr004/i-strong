@@ -56,12 +56,12 @@ export const DiaryNoteCardComponent: FC<Readonly<IDiaryNoteCard>> = ({
     postDeleteNote(item.id.toString())
   }
 
-  const modifiedNote = item.note.slice(1, -1)
+  const modifiedNote = item.note.slice(1, -1) || 'Тут ще немає тексту'
   const createdAt = moment(item.created_at) // используем moment для работы с датой и временем
   const formattedDate = createdAt.format('DD.MM.YYYY')
   const formattedTime = createdAt.format('HH:mm') // форматируем время
 
-  //return
+  // return
   return (
     <article className={styles.diary_card} onClick={handleOpenExistingRecord}>
       <div className={styles.diary_card__header}>
@@ -96,7 +96,7 @@ export const DiaryNoteCardComponent: FC<Readonly<IDiaryNoteCard>> = ({
         ) : (
           <>
             <p className={styles.diary_card__title}>{item?.title}</p>
-            <p className={styles.diary_card__text}>{modifiedNote}</p>
+            <p className={styles.diary_card__text}>{modifiedNote || 'Тут ще немає тексту'}</p>
           </>
         )}
       </div>

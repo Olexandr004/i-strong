@@ -139,6 +139,7 @@
 }
 .mood_tracker__selected_emotion_passive {
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
 }
 .mood_tracker__time_passive {
   display: flex;
