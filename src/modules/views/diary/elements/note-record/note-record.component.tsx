@@ -49,7 +49,7 @@ export const NoteRecordComponent: FC<Readonly<INoteRecord>> = () => {
     content: '',
     extensions: [
       Placeholder.configure({
-        placeholder: 'Як ти?',
+        placeholder: 'Тут ще немає тексту',
       }),
       Color.configure({ types: [TextStyle.name, ListItem.name] }),
       TextStyle.configure(),

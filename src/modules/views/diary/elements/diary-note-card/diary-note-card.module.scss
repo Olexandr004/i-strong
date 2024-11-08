@@ -15,6 +15,9 @@
 
     & svg {
       color: var(--font-color-grey);
+      &:first-of-type {
+        width: 3rem;
+      }
     }
   }
 
@@ -53,4 +56,15 @@
 
 .gray_text {
   color: gray;
+}
+
+.filled {
+  fill: red; /* Красный цвет для активного состояния */
+  stroke: none; /* Убираем обводку, если она есть */
+}
+
+.outline {
+  fill: none; /* Нет заливки */
+  stroke: gray; /* Серый цвет обводки */
+  stroke-width: 2px; /* Устанавливаем ширину обводки */
 }

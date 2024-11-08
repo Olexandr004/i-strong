@@ -43,7 +43,11 @@ export const NotesComponent: FC<Readonly<INotes>> = () => {
           <div className={styles.notes__cards}>
             <div className={styles.diary__visible_cards}>
               {challenge.notes.slice(0, 2).map((item: any) => (
-                <DiaryNoteCardComponent key={`${item.id}-${index}`} item={item} type={'note'} />
+                <DiaryNoteCardComponent
+                  key={`${item.id}-${index}`}
+                  item={item}
+                  type={'challenges'}
+                />
               ))}
             </div>
 
@@ -58,7 +62,7 @@ export const NotesComponent: FC<Readonly<INotes>> = () => {
                       <DiaryNoteCardComponent
                         key={`${index}--${item.id}`}
                         item={item}
-                        type={'note'}
+                        type={'challenges'}
                       />
                     ))}
                 </div>

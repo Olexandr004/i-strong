@@ -1,27 +1,26 @@
 import { useRouter } from 'next/navigation'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import moment from 'moment'
-import { FC } from 'react'
-import { postDeleteRecord } from '@/api/diary.api'
+import { FC, useState, useEffect } from 'react'
+import { postDeleteRecord, postAddToFavorites, deleteFromFavorites } from '@/api/diary.api'
 import { IconButtonComponent } from '@/shared/components/ui/icon-button'
-import { IconTrashBin } from '@/shared/icons'
+import { IconTrashBin, IconFavorite } from '@/shared/icons'
 import { useUserStore } from '@/shared/stores'
 import styles from './diary-note-card.module.scss'
 
-// interface
 interface IDiaryNoteCard {
   item: {
     created_at: string
     id: number
     note: string
     title: string
-    emotions?: string[] // предполагается, что эмоции передаются в виде массива строк
+    emotions?: string[]
+    is_favorite?: boolean // добавлен новый флаг
   }
   diaryRecordsRefetch?: () => void
-  type?: 'diary' | 'note' | 'tracker' // добавлен новый тип 'tracker'
+  type?: 'main' | 'challenges' | 'tracker'
 }
 
-// component
 export const DiaryNoteCardComponent: FC<Readonly<IDiaryNoteCard>> = ({
   item,
   diaryRecordsRefetch,
@@ -29,25 +28,68 @@ export const DiaryNoteCardComponent: FC<Readonly<IDiaryNoteCard>> = ({
 }) => {
   const router = useRouter()
   const token = useUserStore((state) => state.user?.access_token)
+  const queryClient = useQueryClient()
 
+  // Локальное состояние для отслеживания избранности
+  const [is_favorite, setIsFavorite] = useState<boolean>(item.is_favorite ?? false)
+
+  // Мутация для удаления записи
   const { mutate: postDeleteNote } = useMutation({
     mutationFn: (note_id: string) => postDeleteRecord(note_id, token ?? ''),
-    onSuccess: (data: any) => {
+    onSuccess: () => {
       diaryRecordsRefetch ? diaryRecordsRefetch() : null
     },
   })
 
+  // Мутация для добавления в избранное
+
+  const { mutate: addToFavorites } = useMutation({
+    mutationFn: () => postAddToFavorites(item.id, type ?? 'main', token ?? ''),
+    onSuccess: () => {
+      // Типизируем корректно, чтобы избежать ошибок с фильтрами
+      queryClient.invalidateQueries({
+        queryKey: ['favorites'], // Используем объект с queryKey
+      })
+      setIsFavorite(true) // Обновляем локальное состояние после успешной операции
+    },
+    onError: (error) => {
+      console.error('Error adding to favorites:', error)
+      setIsFavorite(item.is_favorite ?? false) // В случае ошибки, восстанавливаем исходное состояние
+    },
+  })
+
+  // Мутация для удаления из избранного
+  const { mutateAsync: removeFromFavorites, status } = useMutation({
+    mutationFn: () => deleteFromFavorites(item.id, type ?? 'main', token ?? ''),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['favorites'], // Используем объект с queryKey
+      })
+      setIsFavorite(false) // Обновляем локальное состояние после успешной операции
+    },
+    onError: (error) => {
+      console.error('Error removing from favorites:', error)
+      setIsFavorite(item.is_favorite ?? false) // В случае ошибки, восстанавливаем исходное состояние
+    },
+  })
+
+  // Используйте статус мутации для проверки загрузки:
+  const isRemovingFavorite = status === 'pending'
+
+  // Синхронизация состояния избранности с сервером
+  useEffect(() => {
+    setIsFavorite(item.is_favorite ?? false)
+  }, [item.is_favorite])
+
   const handleOpenExistingRecord = () => {
-    console.log('Opening record for type:', type) // добавлено логирование
     switch (type) {
-      case 'note':
+      case 'challenges':
         router.push(`/diary/note-record?record_id=${item.id.toString()}`)
         break
       case 'tracker':
-        console.log('Navigating to tracker record with ID:', item.id) // добавлено логирование
-        router.push(`/diary/tracker-record?record_id=${item.id.toString()}`) // ссылка для tracker
+        router.push(`/diary/tracker-record?record_id=${item.id.toString()}`)
         break
-      default: // 'diary'
+      default:
         router.push(`/diary/record?record_id=${item.id.toString()}`)
     }
   }
@@ -56,12 +98,19 @@ export const DiaryNoteCardComponent: FC<Readonly<IDiaryNoteCard>> = ({
     postDeleteNote(item.id.toString())
   }
 
-  const modifiedNote = item.note.slice(1, -1) || 'Тут ще немає тексту'
-  const createdAt = moment(item.created_at) // используем moment для работы с датой и временем
-  const formattedDate = createdAt.format('DD.MM.YYYY')
-  const formattedTime = createdAt.format('HH:mm') // форматируем время
+  const toggleFavorite = () => {
+    if (is_favorite) {
+      removeFromFavorites()
+    } else {
+      addToFavorites()
+    }
+  }
 
-  // return
+  const modifiedNote = item.note.slice(1, -1) || 'Тут ще немає тексту'
+  const createdAt = moment(item.created_at)
+  const formattedDate = createdAt.format('DD.MM.YYYY')
+  const formattedTime = createdAt.format('HH:mm')
+
   return (
     <article className={styles.diary_card} onClick={handleOpenExistingRecord}>
       <div className={styles.diary_card__header}>
@@ -69,11 +118,20 @@ export const DiaryNoteCardComponent: FC<Readonly<IDiaryNoteCard>> = ({
           {formattedDate} {type === 'tracker' && `- ${formattedTime}`}
         </span>
 
-        {type !== 'note' && type !== 'tracker' && (
-          <IconButtonComponent onClick={handleDeleteRecord} name={'delete record'}>
-            <IconTrashBin />
+        <div>
+          <IconButtonComponent
+            onClick={toggleFavorite}
+            name={is_favorite ? 'remove favorite' : 'add favorite'}
+          >
+            <IconFavorite className={is_favorite ? styles.filled : styles.outline} />
           </IconButtonComponent>
-        )}
+
+          {type !== 'challenges' && type !== 'tracker' && (
+            <IconButtonComponent onClick={handleDeleteRecord} name={'delete record'}>
+              <IconTrashBin />
+            </IconButtonComponent>
+          )}
+        </div>
       </div>
 
       <div className={styles.diary_card__main}>

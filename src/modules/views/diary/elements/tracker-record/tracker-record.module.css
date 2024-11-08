@@ -38,23 +38,21 @@
   line-height: 20px;
   color: #000000;
 }
-.tracker_record__editor_box p:first-of-type {
+.tracker_record__editor_box p {
   font-style: normal;
   font-weight: 500;
-  line-height: 15px;
+  line-height: 16px;
   color: #1e1e1e;
-  margin-top: 5px;
-  margin-bottom: 30px;
-}
-.tracker_record__editor_box p {
   font-size: 16px;
 }
 .tracker_record__title_input {
   font-style: normal;
   font-weight: 500;
-  font-size: 12px;
+  font-size: 12px !important;
   line-height: 15px;
   color: #1e1e1e;
+  margin-top: 5px;
+  margin-bottom: 30px;
 }
 .tracker_record__title_input::placeholder {
   color: var(--font-color-grey);

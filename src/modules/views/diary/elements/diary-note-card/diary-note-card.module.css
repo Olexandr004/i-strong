@@ -16,6 +16,9 @@
 .diary_card__header svg {
   color: var(--font-color-grey);
 }
+.diary_card__header svg:first-of-type {
+  width: 3rem;
+}
 .diary_card__main {
   display: grid;
   gap: 0.4rem;
@@ -46,6 +49,17 @@
 
 .gray_text {
   color: gray;
+}
+
+.filled {
+  fill: red; /* Красный цвет для активного состояния */
+  stroke: none; /* Убираем обводку, если она есть */
+}
+
+.outline {
+  fill: none; /* Нет заливки */
+  stroke: gray; /* Серый цвет обводки */
+  stroke-width: 2px; /* Устанавливаем ширину обводки */
 }
 
 /*# sourceMappingURL=diary-note-card.module.css.map */

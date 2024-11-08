@@ -161,3 +161,48 @@ export const useCheckPinCode = () => {
   })
   return { mutateCheckPinCode, status, passShow, isPinVerified, setIsPinVerified }
 }
+
+export const postAddToFavorites = async (
+  noteId: number,
+  type: 'main' | 'tracker' | 'challenges',
+  token: string,
+) => {
+  console.log('Adding to favorites:', { noteId, type, token }) // Логирование данных
+  const response = await fetch('https://istrongapp.com/api/users/favorites/diary/', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ note_id: noteId, type }),
+  })
+
+  if (!response.ok) {
+    const errorData = await response.json() // Получаем тело ответа при ошибке
+    console.error('Error response:', errorData) // Логируем ошибку
+    throw new Error(`Error: ${response.statusText}, Details: ${JSON.stringify(errorData)}`)
+  }
+
+  return response.json()
+}
+
+export const deleteFromFavorites = async (noteId: number, type: string, token: string) => {
+  console.log('Deleting from favorites:', { noteId, type, token }) // Log the data being sent
+  const response = await fetch(
+    `https://istrongapp.com/api/users/favorites/diary/${noteId}/${type}/`,
+    {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  )
+
+  if (!response.ok) {
+    const errorData = await response.json() // Get response body for error details
+    console.error('Error response:', errorData) // Log error response
+    throw new Error(`Error: ${response.statusText}, Details: ${JSON.stringify(errorData)}`)
+  }
+
+  return response.text() // Since the body is empty, return text
+}

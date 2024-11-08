@@ -47,7 +47,7 @@ export const TrackerRecordComponent: FC<Readonly<ITrackerRecord>> = () => {
     content: '',
     extensions: [
       Placeholder.configure({
-        placeholder: 'Як ти себе почуваєш?',
+        placeholder: 'Тут ще немає тексту',
       }),
       Color.configure({ types: [TextStyle.name, ListItem.name] }),
       TextStyle.configure(),

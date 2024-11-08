@@ -41,15 +41,11 @@
       line-height: 20px;
       color: #000000;
     }
-    p:first-of-type {
+    p {
       font-style: normal;
       font-weight: 500;
-      line-height: 15px;
+      line-height: 16px;
       color: #1e1e1e;
-      margin-top: 5px;
-      margin-bottom: 30px;
-    }
-    p {
       font-size: 16px;
     }
   }
@@ -57,9 +53,11 @@
   &__title_input {
     font-style: normal;
     font-weight: 500;
-    font-size: 12px;
+    font-size: 12px !important;
     line-height: 15px;
     color: #1e1e1e;
+    margin-top: 5px;
+    margin-bottom: 30px;
     &::placeholder {
       color: var(--font-color-grey);
     }

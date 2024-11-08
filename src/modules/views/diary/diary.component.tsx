@@ -48,7 +48,7 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
   const tabs = [
     { id: 'main', text: 'Нотатки', isActive: activeTab === 'main' },
     { id: 'tracker', text: 'Трекер', isActive: activeTab === 'tracker' },
-    { id: 'notes', text: 'Челенджі', isActive: activeTab === 'notes' },
+    { id: 'challenges', text: 'Челенджі', isActive: activeTab === 'challenges' },
   ]
 
   const handleCreateNewRecord = () => {
@@ -175,7 +175,7 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
           ))}
         </div>
       )}
-      {activeTab === 'notes' && <NotesComponent />}
+      {activeTab === 'challenges' && <NotesComponent />}
       {activeTab === 'tracker' && <TrackerComponent />}
       <ModalGettingToInstructionsComponent
         title='Щоденник - це надійне місце для усіх твоїх спогадів та емоцій. Роби записи кожного дня щоб отримувати'
