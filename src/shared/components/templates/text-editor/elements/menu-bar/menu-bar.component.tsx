@@ -63,17 +63,6 @@ export const MenuBarComponent: FC<Readonly<IMenuBar>> = ({ editor }) => {
           <IconTrashBin />
         </button>
       </div>
-
-      <div className={styles.menu_bar__colors}>
-        {colorsForText.map((color) => (
-          <button
-            style={{ backgroundColor: color.color }}
-            key={color.color}
-            onClick={() => editor?.chain().focus().setColor(color.color).run()}
-            className={`${editor?.isActive('textStyle', { color: color.color }) ? 'is-active' : ''} ${styles.menu_bar__color_btn}`}
-          />
-        ))}
-      </div>
     </div>
   )
 }

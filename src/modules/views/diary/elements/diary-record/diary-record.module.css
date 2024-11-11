@@ -1,0 +1,51 @@
+.diary_record {
+  position: relative;
+  width: 100%;
+  padding-top: 22rem;
+  padding-bottom: 7rem;
+}
+.diary_record__fixed_menu {
+  position: fixed;
+  z-index: 50;
+  left: 2.4rem;
+  right: 2.4rem;
+  top: 0;
+  padding-top: 4rem;
+  background: var(--bg-color-primary);
+}
+.diary_record__top {
+  padding-bottom: 1.2rem;
+  display: grid;
+  gap: 2.4rem;
+  color: var(--accent-color-yellow);
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+.diary_record__header {
+  display: grid;
+  grid-template-columns: auto 13rem;
+  justify-content: space-between;
+}
+.diary_record__editor_box {
+  display: grid;
+  gap: 2.4rem;
+  word-wrap: break-word;
+  word-break: break-word;
+  margin-top: -50px;
+}
+.diary_record__title_input {
+  width: 100%;
+  font-size: 2.8rem;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  background: inherit;
+  border: none;
+  outline: none;
+  resize: none;
+  height: auto;
+}
+.diary_record__title_input::placeholder {
+  color: var(--font-color-grey);
+}
+
+/*# sourceMappingURL=diary-record.module.css.map */

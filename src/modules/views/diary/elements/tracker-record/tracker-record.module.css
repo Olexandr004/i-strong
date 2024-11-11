@@ -30,6 +30,7 @@
   display: grid;
   word-wrap: break-word;
   word-break: break-word;
+  margin-top: -50px;
 }
 .tracker_record__editor_box h4 {
   font-style: normal;
