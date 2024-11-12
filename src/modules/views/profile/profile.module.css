@@ -2,7 +2,22 @@
   padding-top: 6.8rem;
   display: grid;
   align-content: start;
-  grid-gap: 6.8rem;
+  grid-gap: 10.8rem;
+}
+@media (min-height: 700px) {
+  .profile {
+    grid-gap: 18.8rem;
+  }
+}
+@media (min-height: 800px) {
+  .profile {
+    grid-gap: 26.8rem;
+  }
+}
+@media (min-height: 850px) {
+  .profile {
+    grid-gap: 32.8rem;
+  }
 }
 .profile__top {
   display: grid;
