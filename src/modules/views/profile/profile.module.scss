@@ -2,8 +2,11 @@
   padding-top: 6.8rem;
   display: grid;
   align-content: start;
-  grid-gap: 10.8rem;
+  grid-gap: 6.8rem;
 
+  @media (min-height: 620px) {
+    grid-gap: 10.8rem;
+  }
   @media (min-height: 700px) {
     grid-gap: 18.8rem;
   }
