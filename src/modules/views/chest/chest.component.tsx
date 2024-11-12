@@ -112,7 +112,13 @@ const ChestComponent: React.FC = () => {
           ) : (
             <p></p>
           )}
-          {selectedTechnique.description && <p>{selectedTechnique.description}</p>}
+          {selectedTechnique.description && (
+            <div>
+              {selectedTechnique.description.split('\n').map((line: string, index: number) => (
+                <p key={index}>{line}</p>
+              ))}
+            </div>
+          )}
         </div>
       )
     }

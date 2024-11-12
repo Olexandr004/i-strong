@@ -266,7 +266,13 @@ export const TutorialsComponent: FC<Readonly<ITutorialsComponent>> = () => {
             ) : (
               <p></p>
             )}
-            {selectedTechniqueData.description && <p>{selectedTechniqueData.description}</p>}
+            {selectedTechniqueData.description && (
+              <div>
+                {selectedTechniqueData.description.split('\n').map((line, index) => (
+                  <p key={index}>{line}</p>
+                ))}
+              </div>
+            )}
 
             <button
               className={styles.tutorials__back_btn}
