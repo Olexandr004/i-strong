@@ -112,13 +112,17 @@ export const TrackerComponent: FC = () => {
                     className={`${styles.notes__hidden_cards} ${expandedMonth === `${yearData.year}-${monthData.month}` && styles.extended}`}
                   >
                     <div className={styles.notes__hidden_wrapper}>
-                      {monthData.notes.slice(2).map((note) => (
-                        <DiaryNoteCardComponent
-                          key={note.id}
-                          item={{ ...note, title: '' }}
-                          type={'tracker'}
-                        />
-                      ))}
+                      {monthData.notes.map(
+                        (
+                          note, // Здесь убираем slice и показываем все записи
+                        ) => (
+                          <DiaryNoteCardComponent
+                            key={note.id}
+                            item={{ ...note, title: '' }}
+                            type={'tracker'}
+                          />
+                        ),
+                      )}
                     </div>
                   </div>
                 )}

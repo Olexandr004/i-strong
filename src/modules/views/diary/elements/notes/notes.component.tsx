@@ -33,6 +33,7 @@ export const NotesComponent: FC<Readonly<INotes>> = () => {
       setTimeout(() => allNotesByChallengeRefetch(), 0)
     }
   }
+
   //return
   return (
     <div className={styles.notes}>
@@ -42,13 +43,17 @@ export const NotesComponent: FC<Readonly<INotes>> = () => {
 
           <div className={styles.notes__cards}>
             <div className={styles.diary__visible_cards}>
-              {challenge.notes.slice(0, 2).map((item: any) => (
-                <DiaryNoteCardComponent
-                  key={`${item.id}-${index}`}
-                  item={item}
-                  type={'challenges'}
-                />
-              ))}
+              {challenge.notes.map(
+                (
+                  item: any, // Убираем slice, чтобы показывать все записи
+                ) => (
+                  <DiaryNoteCardComponent
+                    key={`${item.id}-${index}`}
+                    item={item}
+                    type={'challenges'}
+                  />
+                ),
+              )}
             </div>
 
             {!isFetching && allNotesByChallenge && (
@@ -56,15 +61,13 @@ export const NotesComponent: FC<Readonly<INotes>> = () => {
                 className={`${styles.notes__hidden_cards} ${extendedNote === challenge.challenge.id.toString() && styles.extended}`}
               >
                 <div className={styles.notes__hidden_wrapper}>
-                  {allNotesByChallenge?.notes
-                    .slice(2)
-                    .map((item: any, index) => (
-                      <DiaryNoteCardComponent
-                        key={`${index}--${item.id}`}
-                        item={item}
-                        type={'challenges'}
-                      />
-                    ))}
+                  {allNotesByChallenge?.notes.map((item: any, index) => (
+                    <DiaryNoteCardComponent
+                      key={`${index}--${item.id}`}
+                      item={item}
+                      type={'challenges'}
+                    />
+                  ))}
                 </div>
               </div>
             )}
@@ -87,4 +90,5 @@ export const NotesComponent: FC<Readonly<INotes>> = () => {
     </div>
   )
 }
+
 export default NotesComponent
