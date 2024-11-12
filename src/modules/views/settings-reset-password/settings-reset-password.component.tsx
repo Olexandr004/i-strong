@@ -27,7 +27,7 @@ export const SettingsResetPasswordComponent: FC<Readonly<IResetPassword>> = () =
   return (
     <section className={`${styles.reset_password__container} container`}>
       <div className={styles.reset_password__wrap}>
-        <PageHeaderComponent title={`Зміна пароля`} />
+        <PageHeaderComponent title={`Конфіденційність`} />
 
         {step === `new-password` && (
           <p className={`${styles.reset_password__text} text_medium`}>

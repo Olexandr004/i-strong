@@ -35,7 +35,7 @@ export const ResetPasswordComponent: FC<Readonly<IResetPassword>> = () => {
   return (
     <section className={`${styles.reset_password__container} container`}>
       <div className={styles.reset_password__wrap}>
-        <PageHeaderComponent title='Зміна пароля' />
+        <PageHeaderComponent title='Конфіденційність' />
         {step === null && (
           <p className={`${styles.reset_password__text} text_medium`}>
             Вкажи свій номер телефону і на нього прийде SMS-повідомлення для створення нового пароля
