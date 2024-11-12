@@ -6,6 +6,7 @@ import { ModalGettingToInstructionsComponent } from '@/shared/components'
 import { ImageCapybaraTeacher } from '@/shared/images'
 import { useUserStore } from '@/shared/stores'
 import { PhotoTutorialComponent } from '@/modules/views/tutorials/elements'
+import { LoadingComponent } from '@/modules/layouts/loading'
 import styles from './tutorials.module.scss'
 
 interface IFavoriteTechnique {
@@ -194,7 +195,7 @@ export const TutorialsComponent: FC<Readonly<ITutorialsComponent>> = () => {
   }
 
   if (loading) {
-    return <p>Загрузка...</p>
+    return <LoadingComponent />
   }
 
   return (
@@ -220,26 +221,38 @@ export const TutorialsComponent: FC<Readonly<ITutorialsComponent>> = () => {
 
       {selectedCategory && !selectedTechnique && (
         <div className={styles.tutorials__content}>
-          {techniques.map((technique) => (
-            <div
-              key={technique.id}
-              className={`${styles.tutorials__box} ${expandedTechnique === technique.id && styles.expanded}`}
-              onClick={() => {
-                setExpandedTechnique(expandedTechnique === technique.id ? null : technique.id)
-                setSelectedTechnique(technique.id)
-              }}
-            >
-              <div className={styles.tutorials__box_title}>
-                <p>{technique.name}</p>
-                <button
-                  className={`${styles.tutorials__box_btn} ${expandedTechnique === technique.id && styles.expanded}`}
-                >
-                  <IconNextArrow />
-                </button>
+          {loading ? (
+            // Отображаем компонент загрузки, пока данные загружаются
+            <LoadingComponent />
+          ) : (
+            techniques.map((technique) => (
+              <div
+                key={technique.id}
+                className={`${styles.tutorials__box} ${expandedTechnique === technique.id && styles.expanded}`}
+                onClick={() => {
+                  setExpandedTechnique(expandedTechnique === technique.id ? null : technique.id)
+                  setSelectedTechnique(technique.id)
+                }}
+              >
+                <div className={styles.tutorials__box_title}>
+                  <p>{technique.name}</p>
+                  <button
+                    className={`${styles.tutorials__box_btn} ${expandedTechnique === technique.id && styles.expanded}`}
+                  >
+                    <IconNextArrow />
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
-          <button className={styles.tutorials__back_btn} onClick={() => setSelectedCategory(null)}>
+            ))
+          )}
+          <button
+            className={styles.tutorials__back_btn}
+            onClick={() => {
+              setSelectedCategory(null)
+              setTechniques([]) // Сбрасываем техники
+              setLoading(true) // Включаем экран загрузки
+            }}
+          >
             <IconArrow />
           </button>
         </div>
