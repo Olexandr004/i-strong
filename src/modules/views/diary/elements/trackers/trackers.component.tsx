@@ -76,6 +76,10 @@ export const TrackerComponent: FC = () => {
     }
   }, [token])
 
+  useEffect(() => {
+    console.log(trackerData) // Проверяем структуру и количество записей
+  }, [trackerData])
+
   // Обработчик для переключения состояния месяца
   const handleExpandMonth = (year: number, month: number) => {
     const monthKey = `${year}-${month}`
@@ -98,13 +102,32 @@ export const TrackerComponent: FC = () => {
               {/* Отображаем месяц и год в одной строке */}
               <div className={styles.notes__cards}>
                 <div className={styles.diary__visible_cards}>
-                  {monthData.notes.slice(0, 2).map((note) => (
-                    <DiaryNoteCardComponent
-                      key={note.id}
-                      item={{ ...note, title: '' }}
-                      type={'tracker'}
-                    />
-                  ))}
+                  {expandedMonth === `${yearData.year}-${monthData.month}`
+                    ? monthData.notes
+                        .sort(
+                          (a, b) =>
+                            new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+                        ) // Сортировка по дате
+                        .map((note) => (
+                          <DiaryNoteCardComponent
+                            key={note.id}
+                            item={{ ...note, title: '' }}
+                            type={'tracker'}
+                          />
+                        ))
+                    : monthData.notes
+                        .sort(
+                          (a, b) =>
+                            new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+                        ) // Сортировка по дате
+                        .slice(0, 2) // Показываем только две последние записи
+                        .map((note) => (
+                          <DiaryNoteCardComponent
+                            key={note.id}
+                            item={{ ...note, title: '' }}
+                            type={'tracker'}
+                          />
+                        ))}
                 </div>
 
                 {expandedMonth === `${yearData.year}-${monthData.month}` && (
@@ -112,17 +135,16 @@ export const TrackerComponent: FC = () => {
                     className={`${styles.notes__hidden_cards} ${expandedMonth === `${yearData.year}-${monthData.month}` && styles.extended}`}
                   >
                     <div className={styles.notes__hidden_wrapper}>
-                      {monthData.notes.map(
-                        (
-                          note, // Здесь убираем slice и показываем все записи
-                        ) => (
+                      {monthData.notes.map((note) => {
+                        console.log('Showing note:', note) // Логируем каждую карточку
+                        return (
                           <DiaryNoteCardComponent
                             key={note.id}
                             item={{ ...note, title: '' }}
                             type={'tracker'}
                           />
-                        ),
-                      )}
+                        )
+                      })}
                     </div>
                   </div>
                 )}
