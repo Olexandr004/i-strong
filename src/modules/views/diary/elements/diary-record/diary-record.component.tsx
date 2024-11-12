@@ -27,10 +27,9 @@ import styles from './diary-record.module.scss'
 //interface
 interface IDiaryRecord {}
 
-//component
 export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
   const token = useUserStore((state) => state.user?.access_token)
-  const { control, watch } = useForm()
+  const { control, watch, setValue } = useForm()
   const searchParams = useSearchParams()
 
   const router = useRouter()
@@ -84,6 +83,16 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
     editor?.commands.setContent(cleanedNote)
   }, [singleDiaryRecord, editor])
 
+  // Устанавливаем заголовок, если запись загружена
+  useEffect(() => {
+    if (singleDiaryRecord) {
+      setValue(
+        'title',
+        singleDiaryRecord.title ?? moment(singleDiaryRecord.created_at).format('dddd'),
+      )
+    }
+  }, [singleDiaryRecord, setValue])
+
   const { mutate: postDiaryNote } = useMutation({
     mutationFn: (form: any) => postDiaryRecord(form, token ?? ''),
     onSuccess: () => {
@@ -113,7 +122,6 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
         })
   }
 
-  //return
   return (
     <section className={`${styles.diary_record} container`}>
       <div className={styles.diary_record__fixed_menu}>
@@ -163,4 +171,5 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
     </section>
   )
 }
+
 export default DiaryRecordComponent

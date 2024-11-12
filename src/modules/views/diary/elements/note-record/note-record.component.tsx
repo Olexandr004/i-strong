@@ -1,5 +1,6 @@
 'use client'
-
+import React, { FC, useEffect } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useMutation } from '@tanstack/react-query'
 import { Color } from '@tiptap/extension-color'
@@ -10,9 +11,6 @@ import { EditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 
 import moment from 'moment'
-
-import React, { FC, useEffect } from 'react'
-import { Controller, useForm } from 'react-hook-form'
 
 import { updateNoteRecord, useGetSingleNote } from '@/api/notes'
 import { ButtonComponent } from '@/shared/components'
@@ -30,7 +28,7 @@ interface INoteRecord {}
 //component
 export const NoteRecordComponent: FC<Readonly<INoteRecord>> = () => {
   const token = useUserStore((state) => state.user?.access_token)
-  const { control, watch } = useForm()
+  const { control, watch, setValue } = useForm() // <-- Извлекаем setValue здесь
   const searchParams = useSearchParams()
 
   const router = useRouter()
@@ -79,14 +77,17 @@ export const NoteRecordComponent: FC<Readonly<INoteRecord>> = () => {
     return cleanedText
   }
 
-  // useEffect(() => {
-  //   editor?.commands.setContent(singleNote?.note ?? '')
-  // }, [singleNote, editor])
-
   useEffect(() => {
     const cleanedNote = cleanText(singleNote?.note ?? '')
     editor?.commands.setContent(cleanedNote)
   }, [singleNote, editor])
+
+  // Используем setValue для установки заголовка в форму
+  useEffect(() => {
+    if (singleNote) {
+      setValue('title', singleNote.title || moment(singleNote.created_at).format('dddd'))
+    }
+  }, [singleNote, setValue]) // setValue теперь доступна
 
   const { mutate: updateNote } = useMutation({
     mutationFn: (form: any) =>
@@ -98,11 +99,10 @@ export const NoteRecordComponent: FC<Readonly<INoteRecord>> = () => {
 
   const handleSave = () => {
     const title = watch('title')
-
     const formattedHtml = JSON.stringify(editor?.getHTML())
     updateNote({
       note: formattedHtml,
-      title: title ? title : moment(singleNote?.created_at).format('dddd'),
+      title: title || moment(singleNote?.created_at).format('dddd'),
     })
   }
 
@@ -139,7 +139,7 @@ export const NoteRecordComponent: FC<Readonly<INoteRecord>> = () => {
                 value={value}
                 onChange={onChange}
                 className={styles.diary_record__title_input}
-                placeholder={'Що сталося сьогодні? '}
+                placeholder={'Заголовок'}
               />
             )}
             rules={{
@@ -156,4 +156,5 @@ export const NoteRecordComponent: FC<Readonly<INoteRecord>> = () => {
     </section>
   )
 }
+
 export default NoteRecordComponent
