@@ -24,7 +24,7 @@ const PROFILE_LINKS = (activeChallengeTypeButton: ChallengeType) => [
     icon: <IconChallenge />,
     link: `/challenges?path=${activeChallengeTypeButton}`,
   },
-  { title: 'Гардероб', icon: <IconShop />, link: '/store' },
+  { title: 'Капі Fashion', icon: <IconShop />, link: '/store' },
   { title: 'Налаштування', icon: <IconSetting />, link: '/settings' },
 ]
 
