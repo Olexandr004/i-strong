@@ -56,7 +56,7 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
     content: '',
     extensions: [
       Placeholder.configure({
-        placeholder: 'Тут ще немає тексту',
+        placeholder: 'Як ти?',
       }),
       Color.configure({ types: [TextStyle.name, ListItem.name] }),
       TextStyle.configure(),
@@ -86,10 +86,7 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
   // Устанавливаем заголовок, если запись загружена
   useEffect(() => {
     if (singleDiaryRecord) {
-      setValue(
-        'title',
-        singleDiaryRecord.title ?? moment(singleDiaryRecord.created_at).format('dddd'),
-      )
+      setValue('title', singleDiaryRecord.title)
     }
   }, [singleDiaryRecord, setValue])
 
@@ -154,7 +151,7 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
                 value={value}
                 onChange={onChange}
                 className={styles.diary_record__title_input}
-                placeholder={'Що сталося сьогодні? '}
+                placeholder={'Що сталося сьогодні?'}
               />
             )}
             rules={{
