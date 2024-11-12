@@ -89,7 +89,12 @@ export const TutorialsComponent: FC<Readonly<ITutorialsComponent>> = () => {
 
           if (response.ok) {
             const data = await response.json()
-            setTechniques(data.techniques)
+
+            // Добавляем тайм-аут на две секунды
+            setTimeout(() => {
+              setTechniques(data.techniques)
+              setLoading(false)
+            }, 1000)
           } else {
             console.error('Ошибка получения техник:', response.status)
           }
@@ -211,6 +216,8 @@ export const TutorialsComponent: FC<Readonly<ITutorialsComponent>> = () => {
               onClick={() => {
                 setSelectedCategory(category.id)
                 setSelectedTechnique(null)
+                setTechniques([]) // Сбрасываем техники
+                setLoading(true) // Включаем экран загрузки
               }}
             >
               {category.name}
@@ -221,38 +228,26 @@ export const TutorialsComponent: FC<Readonly<ITutorialsComponent>> = () => {
 
       {selectedCategory && !selectedTechnique && (
         <div className={styles.tutorials__content}>
-          {loading ? (
-            // Отображаем компонент загрузки, пока данные загружаются
-            <LoadingComponent />
-          ) : (
-            techniques.map((technique) => (
-              <div
-                key={technique.id}
-                className={`${styles.tutorials__box} ${expandedTechnique === technique.id && styles.expanded}`}
-                onClick={() => {
-                  setExpandedTechnique(expandedTechnique === technique.id ? null : technique.id)
-                  setSelectedTechnique(technique.id)
-                }}
-              >
-                <div className={styles.tutorials__box_title}>
-                  <p>{technique.name}</p>
-                  <button
-                    className={`${styles.tutorials__box_btn} ${expandedTechnique === technique.id && styles.expanded}`}
-                  >
-                    <IconNextArrow />
-                  </button>
-                </div>
+          {techniques.map((technique) => (
+            <div
+              key={technique.id}
+              className={`${styles.tutorials__box} ${expandedTechnique === technique.id && styles.expanded}`}
+              onClick={() => {
+                setExpandedTechnique(expandedTechnique === technique.id ? null : technique.id)
+                setSelectedTechnique(technique.id)
+              }}
+            >
+              <div className={styles.tutorials__box_title}>
+                <p>{technique.name}</p>
+                <button
+                  className={`${styles.tutorials__box_btn} ${expandedTechnique === technique.id && styles.expanded}`}
+                >
+                  <IconNextArrow />
+                </button>
               </div>
-            ))
-          )}
-          <button
-            className={styles.tutorials__back_btn}
-            onClick={() => {
-              setSelectedCategory(null)
-              setTechniques([]) // Сбрасываем техники
-              setLoading(true) // Включаем экран загрузки
-            }}
-          >
+            </div>
+          ))}
+          <button className={styles.tutorials__back_btn} onClick={() => setSelectedCategory(null)}>
             <IconArrow />
           </button>
         </div>
