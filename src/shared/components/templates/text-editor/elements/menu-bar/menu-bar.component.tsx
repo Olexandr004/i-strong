@@ -55,13 +55,6 @@ export const MenuBarComponent: FC<Readonly<IMenuBar>> = ({ editor }) => {
         >
           <IconList />
         </button>
-
-        <button
-          onClick={() => editor.chain().focus().deleteSelection().run()}
-          className={editor.isActive('clearContent') ? 'is-active' : ''}
-        >
-          <IconTrashBin />
-        </button>
       </div>
     </div>
   )
