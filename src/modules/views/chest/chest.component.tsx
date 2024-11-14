@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import { IconArrow, IconNextArrow } from '@/shared/icons'
+import { IconArrow, IconNextArrow, IconGuides } from '@/shared/icons'
 import { useChestStore, useUserStore } from '@/shared/stores'
 import styles from './chest.module.scss'
 import { PhotoTutorialComponent } from '@/modules/views/tutorials/elements/'
 import { DiaryNoteCardComponent } from '@/modules/views/diary/elements'
+import { ModalGettingToInstructionsComponent } from '@/shared/components'
 
 const ChestComponent: React.FC = () => {
   const { view, setView } = useChestStore()
   const [favoriteTechniques, setFavoriteTechniques] = useState<any[]>([])
   const [selectedTechnique, setSelectedTechnique] = useState<any | null>(null)
   const [favoriteDiaryEntries, setFavoriteDiaryEntries] = useState<any[]>([])
+  const [guideImages, setGuideImages] = useState<string[]>([]) // Состояние для изображений
+  const [isModalActive, setIsModalActive] = useState(false) // Для контроля модала
   const token = useUserStore((state) => state.user?.access_token)
 
   useEffect(() => {
@@ -101,6 +104,37 @@ const ChestComponent: React.FC = () => {
   // Функция для удаления тегов <p> из текста
   const stripHtmlTags = (text: string) => text.replace(/<[^>]+>/g, '')
 
+  // Функция для получения изображений
+  const fetchGuideImages = async () => {
+    try {
+      const response = await fetch('https://istrongapp.com/api/guides/favorites', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (!response.ok) {
+        throw new Error('Ошибка при получении изображений')
+      }
+
+      const data = await response.json()
+      if (data && data.guide && Array.isArray(data.guide.images)) {
+        const images = data.guide.images.map((item: { image: string }) => item.image)
+        setGuideImages(images) // Сохраняем только ссылки на изображения
+      } else {
+        console.error('Изображения не найдены или не являются массивом')
+      }
+    } catch (error) {
+      console.error('Ошибка при получении изображений:', error)
+    }
+  }
+
+  const handleIconGuidesClick = () => {
+    fetchGuideImages() // Загружаем изображения
+    setIsModalActive(true) // Открываем модальное окно
+  }
+
   const renderContent = () => {
     if (selectedTechnique) {
       return (
@@ -175,12 +209,30 @@ const ChestComponent: React.FC = () => {
             <button onClick={() => setView('diary')} className={styles.btnDiaryTech}>
               Щоденник
             </button>
+            {/* Добавляем IconGuides для открытия модала */}
+            <div className={styles.iconGuides} onClick={handleIconGuidesClick}>
+              <IconGuides />
+            </div>
           </div>
         )
     }
   }
 
-  return <div className={styles.container__chest}>{renderContent()}</div>
+  return (
+    <div className={styles.container__chest}>
+      {renderContent()}
+
+      {/* Модальное окно для изображений */}
+      <ModalGettingToInstructionsComponent
+        title='Скарбничка - інструкції'
+        images={guideImages}
+        buttonText='Домовились!'
+        check='favorites'
+        isModalActive={isModalActive}
+        closeModal={() => setIsModalActive(false)} // Закрытие модала
+      />
+    </div>
+  )
 }
 
 export default ChestComponent

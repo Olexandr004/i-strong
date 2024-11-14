@@ -69,4 +69,10 @@
   height: 20px;
 }
 
+.iconGuides {
+  position: absolute;
+  top: 85px;
+  right: 20px;
+}
+
 /*# sourceMappingURL=chest.module.css.map */

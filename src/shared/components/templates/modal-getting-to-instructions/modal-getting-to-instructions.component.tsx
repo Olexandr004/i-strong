@@ -7,7 +7,7 @@ interface IModalGettingToInstructionsComponent {
   title: string
   images: string[]
   buttonText: string
-  check: 'challenges' | 'shop' | 'diary' | 'instructions' | 'mood-stats'
+  check: 'challenges' | 'shop' | 'diary' | 'instructions' | 'mood-stats' | 'favorites'
   isModalActive: boolean
   closeModal: () => void
 }
@@ -48,7 +48,7 @@ export const ModalGettingToInstructionsComponent: React.FC<
             <img
               src={images[currentImageIndex]}
               alt='Guide'
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              style={{ width: '100%', height: '100%', objectFit: 'contain' }}
             />
             <div className={styles.modal__controls}>
               <button onClick={handlePrevImage} className={styles.modal__prev_button}>

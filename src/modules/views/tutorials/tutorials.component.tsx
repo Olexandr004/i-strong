@@ -287,13 +287,6 @@ export const TutorialsComponent: FC<Readonly<ITutorialsComponent>> = () => {
           </div>
         </div>
       )}
-
-      {/*<ModalGettingToInstructionsComponent*/}
-      {/*  title='Знання - сила! Вивчаючи інструкції ти зможеш дізнатись багато нового та знайти відповіді на свої запитання'*/}
-      {/*  image={ImageCapybaraTeacher}*/}
-      {/*  buttonText='Круто!'*/}
-      {/*  check='instructions'*/}
-      {/*/>*/}
     </section>
   )
 }
