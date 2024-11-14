@@ -40,6 +40,8 @@ export const ModalGettingToInstructionsComponent: React.FC<
 
   console.log('Current image URL:', images[currentImageIndex])
 
+  const showControls = images.length > 1 // Показывать элементы управления только если картинок больше одной
+
   return (
     <>
       {isModalActive && (
@@ -50,23 +52,27 @@ export const ModalGettingToInstructionsComponent: React.FC<
               alt='Guide'
               style={{ width: '100%', height: '100%', objectFit: 'contain' }}
             />
-            <div className={styles.modal__controls}>
-              <button onClick={handlePrevImage} className={styles.modal__prev_button}>
-                <IconNextArrow />
-              </button>
-              <button onClick={handleNextImage} className={styles.modal__next_button}>
-                <IconNextArrow />
-              </button>
-            </div>
-            <div className={styles.modal__dots}>
-              {images.map((_, index) => (
-                <button
-                  key={index}
-                  className={`${styles.modal__dot} ${currentImageIndex === index ? styles.active : ''}`}
-                  onClick={() => handleDotClick(index)}
-                />
-              ))}
-            </div>
+            {showControls && (
+              <div className={styles.modal__controls}>
+                <button onClick={handlePrevImage} className={styles.modal__prev_button}>
+                  <IconNextArrow />
+                </button>
+                <button onClick={handleNextImage} className={styles.modal__next_button}>
+                  <IconNextArrow />
+                </button>
+              </div>
+            )}
+            {showControls && (
+              <div className={styles.modal__dots}>
+                {images.map((_, index) => (
+                  <button
+                    key={index}
+                    className={`${styles.modal__dot} ${currentImageIndex === index ? styles.active : ''}`}
+                    onClick={() => handleDotClick(index)}
+                  />
+                ))}
+              </div>
+            )}
             <IconClose onClick={handleConfirmation} className={styles.iconclose}>
               {buttonText}
             </IconClose>
