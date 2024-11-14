@@ -10,11 +10,11 @@ import {
   ButtonBarComponent,
   ButtonComponent,
   ModalGettingToInstructionsComponent,
+  PageHeaderComponent,
 } from '@/shared/components'
 import { IconButtonComponent } from '@/shared/components/ui/icon-button'
-import { IconUpArrow } from '@/shared/icons'
-import { ImageCapybaraBook } from '@/shared/images'
-import { useUserStore, useTabStore } from '@/shared/stores'
+import { IconUpArrow, IconGuides } from '@/shared/icons'
+import { useUserStore, useTabStore, useCommonStore } from '@/shared/stores'
 import styles from './diary.module.scss'
 
 //interface
@@ -24,7 +24,6 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
   const router = useRouter()
   const token = useUserStore((state) => state.user?.access_token)
 
-  // используем состояние из Zustand
   const { activeTab, setActiveTab } = useTabStore()
 
   useEffect(() => {
@@ -56,7 +55,6 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
   }
 
   const { data: diaryRecords, refetch: diaryRecordsRefetch } = useGetDiaryRecords(token ?? '')
-
   const {
     data: diaryRecordsByDate,
     refetch: diaryRecordsByDateRefetch,
@@ -84,7 +82,7 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
 
   useEffect(() => {
     if (diaryRecords) {
-      const currentMonth = moment().month() + 1 // момент возвращает индекс, добавляем 1
+      const currentMonth = moment().month() + 1
       const currentYear = moment().year()
 
       setExtendedBlock({ year: currentYear, month: currentMonth })
@@ -92,14 +90,57 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
   }, [diaryRecords])
 
   useEffect(() => {
-    // сохраняем вкладку в Zustand, когда компонент монтируется
     setActiveTab(activeTab)
   }, [setActiveTab, activeTab])
 
+  // Добавляем состояние и функции для модального окна
+  const { isModalActive, modalContent, handleChangeCommonStore } = useCommonStore((state) => ({
+    isModalActive: state.isModalActive,
+    modalContent: state.modalContent,
+    handleChangeCommonStore: state.handleChangeCommonStore,
+  }))
+  const [guideImages, setGuideImages] = useState<string[]>([])
+
+  const fetchGuideImages = async () => {
+    try {
+      const response = await fetch('https://istrongapp.com/api/guides/diary', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (!response.ok) {
+        throw new Error('Ошибка при получении изображений')
+      }
+
+      const data = await response.json()
+      if (data && data.guide && Array.isArray(data.guide.images)) {
+        const images = data.guide.images.map((item: { image: string }) => item.image)
+        setGuideImages(images)
+      } else {
+        console.error('Images are not an array or not found:', data.guide?.images)
+      }
+    } catch (error) {
+      console.error('Error fetching guide images:', error)
+    }
+  }
+
+  const handleIconGuidesClick = () => {
+    handleChangeCommonStore({ isModalActive: true, modalContent: 'diary' })
+    fetchGuideImages()
+  }
+
   return (
     <section className={`${styles.diary} container`}>
-      <h1 className={`title`}>Щоденник</h1>
-      <ButtonBarComponent buttons={tabs} onButtonClick={setActiveTab} />
+      <h1 className={styles.title}>Щоденник</h1>
+      <div className={styles.iconGuides} onClick={handleIconGuidesClick}>
+        <IconGuides />
+      </div>
+      <div className={styles.margin_top}>
+        <ButtonBarComponent buttons={tabs} onButtonClick={setActiveTab} />
+      </div>
+
       {activeTab === 'main' && (
         <>
           {!diaryRecords?.has_note_today ? (
@@ -177,14 +218,18 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
       )}
       {activeTab === 'challenges' && <NotesComponent />}
       {activeTab === 'tracker' && <TrackerComponent />}
+
+      {/* Добавляем модальное окно */}
       <ModalGettingToInstructionsComponent
-        title='Щоденник - це надійне місце для усіх твоїх спогадів та емоцій. Роби записи кожного дня щоб отримувати'
-        coin={true}
-        image={ImageCapybaraBook}
-        buttonText='Круто!'
+        title='Щоденник - фіксуй свої думки і почуття кожного дня, це допоможе тобі слідкувати за своїм прогресом'
+        images={guideImages}
+        buttonText='Зрозуміло!'
         check='diary'
+        isModalActive={isModalActive}
+        closeModal={() => handleChangeCommonStore({ isModalActive: false })}
       />
     </section>
   )
 }
+
 export default DiaryComponent

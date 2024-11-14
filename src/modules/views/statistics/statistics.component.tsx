@@ -162,14 +162,6 @@ export const StatisticsComponent: FC<Readonly<IStatistics>> = () => {
       </div>
 
       {isModalActive && <CalendarModalComponent value={dates} onChange={handleSetDates} />}
-
-      <ModalGettingToInstructionsComponent
-        title='Тут ти можеш відслідковувати свій стан та досягнення, а відмічаючи впродовж дня свої емоції зможеш заробити'
-        coin={true}
-        image={ImageCapybaraBook}
-        buttonText='Круто!'
-        check={`mood-stats`}
-      />
     </section>
   )
 }

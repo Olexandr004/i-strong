@@ -69,12 +69,12 @@ export const StoreComponent: FC<Readonly<IStoreComponent>> = () => {
         <ScrollToTopButtonComponent scrollContainerRef={shopContainerRef} />
       </div>
 
-      <ModalGettingToInstructionsComponent
-        title='Раді вітати у найприємнішому місці застосунку! Тут ти зможеш замовити будь-який подарунок за зароблені монетки'
-        image={ImageCapybaraHeart}
-        buttonText='Супер!'
-        check={`shop`}
-      />
+      {/*<ModalGettingToInstructionsComponent*/}
+      {/*  title='Раді вітати у найприємнішому місці застосунку! Тут ти зможеш замовити будь-який подарунок за зароблені монетки'*/}
+      {/*  image={ImageCapybaraHeart}*/}
+      {/*  buttonText='Супер!'*/}
+      {/*  check={`shop`}*/}
+      {/*/>*/}
     </section>
   )
 }

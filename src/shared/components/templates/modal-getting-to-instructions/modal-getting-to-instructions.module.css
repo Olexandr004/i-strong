@@ -1,3 +1,4 @@
+@charset "UTF-8";
 .modal {
   position: fixed; /* Фиксируем модальное окно поверх всей страницы */
   top: 50%; /* Центрируем по вертикали */
@@ -38,16 +39,15 @@
   cursor: pointer;
   padding: 8px;
   gap: 8px;
-
   width: 36px;
   height: 36px;
-
   background: #cccccc;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.12);
   border-radius: 100px;
-  &:active {
-    background: #ffc75a;
-  }
+}
+.modal__prev_button:active,
+.modal__next_button:active {
+  background: #ffc75a;
 }
 
 .modal__prev_button {
@@ -94,3 +94,5 @@
 .active {
   background-color: #ffc75a; /* Цвет активной точки */
 }
+
+/*# sourceMappingURL=modal-getting-to-instructions.module.css.map */

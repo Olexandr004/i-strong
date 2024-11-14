@@ -1,0 +1,77 @@
+.statistics {
+  display: grid;
+  gap: 3.2rem;
+  padding-bottom: 19rem;
+}
+.statistics__calendar_btn {
+  position: absolute;
+  left: 15.2rem;
+  padding: 0.8rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background-color: var(--accent-color-yellow);
+  box-shadow: var(--box-shadow);
+  cursor: pointer;
+}
+.statistics__calendar_btn svg {
+  width: 2rem;
+  height: 2rem;
+  color: var(--icon-accent-color);
+}
+.statistics__settings {
+  height: 3.6rem;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 1.2rem;
+}
+.statistics__select_wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.statistics__chart {
+  display: grid;
+  gap: 1.2rem;
+  color: var(--font-color-grey);
+  font-size: 1rem;
+  font-weight: 500;
+}
+.statistics__advice {
+  display: grid;
+  gap: 0.8rem;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+.statistics__advice_title {
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+.statistics__cards {
+  display: grid;
+  grid-auto-flow: column;
+  gap: 0.8rem;
+}
+.statistics__card {
+  display: grid;
+  justify-content: center;
+  gap: 1.2rem;
+  padding: 1.8rem 1.4rem;
+  border-radius: 1.8rem;
+  background-color: var(--accent-color-green);
+  font-size: 2.8rem;
+  text-align: center;
+  font-weight: 700;
+}
+.statistics__card.yellow {
+  background-color: var(--accent-color-light-yellow);
+}
+.statistics__card_title {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+/*# sourceMappingURL=statistics.module.css.map */

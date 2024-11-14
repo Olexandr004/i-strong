@@ -1,90 +1,77 @@
-import Image, { StaticImageData } from 'next/image'
-
-import React, { useEffect } from 'react'
-
-import { useUserActivities } from '@/api/user.api'
-import { BaseModalComponent, ButtonComponent, CoinsDisplayComponent } from '@/shared/components'
-import { ImageCapybara } from '@/shared/images'
-import { useCommonStore, useUserStore } from '@/shared/stores'
-
+import React, { useState, useEffect } from 'react'
+import { BaseModalComponent, ButtonComponent } from '@/shared/components'
 import styles from './modal-getting-to-instructions.module.scss'
-
-interface UserActivity {
-  challenges_visited: boolean
-  shop_visited: boolean
-  diary_visited: boolean
-  instructions_visited: boolean
-  mood_stats_visited: boolean
-  id: number
-}
-
-type ActivityCheck = 'challenges' | 'shop' | 'diary' | 'instructions' | 'mood-stats'
-
-const shouldShowModal = (userActivity: UserActivity | undefined, check: ActivityCheck): boolean => {
-  if (!userActivity) {
-    return false
-  }
-  const activityKeyMap: { [key in ActivityCheck]: keyof UserActivity } = {
-    challenges: 'challenges_visited',
-    shop: 'shop_visited',
-    diary: 'diary_visited',
-    instructions: 'instructions_visited',
-    'mood-stats': 'mood_stats_visited',
-  }
-
-  const activityKey = activityKeyMap[check]
-
-  return !userActivity[activityKey]
-}
+import { IconNextArrow, IconClose } from '@/shared/icons'
 
 interface IModalGettingToInstructionsComponent {
   title: string
-  image?: StaticImageData
+  images: string[]
   buttonText: string
-  coin?: boolean
-  check: ActivityCheck
+  check: 'challenges' | 'shop' | 'diary' | 'instructions' | 'mood-stats'
+  isModalActive: boolean
+  closeModal: () => void
 }
 
 export const ModalGettingToInstructionsComponent: React.FC<
   IModalGettingToInstructionsComponent
-> = ({ title, image, buttonText, coin, check }) => {
-  const userActivity = useUserStore((state) => state.user?.activity)
-  const { mutateUserActivities } = useUserActivities()
+> = ({ images, buttonText, isModalActive, closeModal }) => {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
-  const handleConfirmation = () => {
-    useCommonStore.setState({ isModalActive: false })
-    mutateUserActivities(check)
+  // Проверка состояния images
+  useEffect(() => {
+    console.log('Received images array:', images)
+  }, [images])
+
+  const handleNextImage = () => {
+    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length)
   }
 
-  const showModal = shouldShowModal(userActivity, check)
-  useEffect(() => {
-    if (showModal) {
-      useCommonStore.setState({ isModalActive: true })
-    }
-  }, [showModal])
+  const handlePrevImage = () => {
+    setCurrentImageIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length)
+  }
+
+  const handleConfirmation = () => {
+    closeModal()
+  }
+
+  const handleDotClick = (index: number) => {
+    setCurrentImageIndex(index)
+  }
+
+  console.log('Current image URL:', images[currentImageIndex])
+
   return (
     <>
-      {showModal && (
-        <BaseModalComponent>
-          <div className={styles.modal}>
-            <div className={`${styles.modal__wrap} text-3`}>
-              <h2 className={`${styles.modal__wrap_text} text-3`}>{title}</h2>
-              {coin && <CoinsDisplayComponent coin={1} />}
+      {isModalActive && (
+        <div className={styles.modal}>
+          <div className={styles.modal__image}>
+            <img
+              src={images[currentImageIndex]}
+              alt='Guide'
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
+            <div className={styles.modal__controls}>
+              <button onClick={handlePrevImage} className={styles.modal__prev_button}>
+                <IconNextArrow />
+              </button>
+              <button onClick={handleNextImage} className={styles.modal__next_button}>
+                <IconNextArrow />
+              </button>
             </div>
-            <div className={styles.modal__image}>
-              <Image
-                src={image || ImageCapybara}
-                alt='Modal Image'
-                className={styles.modal__top_img}
-                sizes='90vw'
-                style={{ objectFit: 'cover', width: '100%', height: '100%' }}
-                priority
-              />
+            <div className={styles.modal__dots}>
+              {images.map((_, index) => (
+                <button
+                  key={index}
+                  className={`${styles.modal__dot} ${currentImageIndex === index ? styles.active : ''}`}
+                  onClick={() => handleDotClick(index)}
+                />
+              ))}
             </div>
-
-            <ButtonComponent onClick={handleConfirmation}>{buttonText}</ButtonComponent>
+            <IconClose onClick={handleConfirmation} className={styles.iconclose}>
+              {buttonText}
+            </IconClose>
           </div>
-        </BaseModalComponent>
+        </div>
       )}
     </>
   )

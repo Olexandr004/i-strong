@@ -1,0 +1,29 @@
+.challenge {
+  padding-bottom: 7rem;
+  display: grid;
+  gap: 3.2rem;
+  height: 100vh;
+}
+.challenge__title {
+  margin-bottom: 3.6rem;
+  padding-left: 2.4rem;
+}
+.challenge__scroll {
+  position: relative;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  height: 100%;
+  z-index: 1;
+  padding: 0 2.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3.2rem;
+}
+
+.iconGuides {
+  position: absolute;
+  top: 26px;
+  right: 20px;
+}
+
+/*# sourceMappingURL=challenges.module.css.map */
