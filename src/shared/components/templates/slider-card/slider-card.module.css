@@ -1,0 +1,63 @@
+.card {
+  animation: slideInFromLeft 0.5s ease-out forwards;
+  position: relative;
+  width: 100%;
+  height: 13.2rem;
+  border-radius: 12px;
+  padding: 1.2rem;
+  box-shadow: var(--box-shadow);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.card_title {
+  width: 100%;
+  text-align: center;
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  z-index: 1;
+}
+.card__avatar {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  transform: scaleX(-1);
+  overflow: hidden;
+  border-radius: 12px;
+}
+.card__avatar_position {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+.card_icon {
+  position: absolute;
+  top: -8px;
+  right: -2px;
+  width: 20px;
+  height: 20px;
+  box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.1490196078);
+  border-radius: 50%;
+  background-color: #f2f2f2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 7px;
+}
+
+@keyframes slideInFromLeft {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/*# sourceMappingURL=slider-card.module.css.map */

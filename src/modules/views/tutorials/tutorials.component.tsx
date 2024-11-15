@@ -3,7 +3,6 @@
 import React, { FC, useEffect, useState } from 'react'
 import { IconArrow, IconNextArrow, IconFavorite, IconGuides } from '@/shared/icons'
 import { ModalGettingToInstructionsComponent } from '@/shared/components'
-import { ImageCapybaraTeacher } from '@/shared/images'
 import { useUserStore } from '@/shared/stores'
 import { PhotoTutorialComponent } from '@/modules/views/tutorials/elements'
 import { LoadingComponent } from '@/modules/layouts/loading'
@@ -61,6 +60,7 @@ export const TutorialsComponent: FC<Readonly<ITutorialsComponent>> = () => {
 
         if (response.ok) {
           const data = await response.json()
+          console.log('Fetched categories:', data)
           setCategories(data.categories)
         } else {
           console.error('Ошибка получения категорий:', response.status)

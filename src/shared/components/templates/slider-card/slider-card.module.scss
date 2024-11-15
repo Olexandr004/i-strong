@@ -17,23 +17,22 @@
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+    z-index: 1;
   }
 
   &__avatar {
     position: absolute;
     bottom: 0;
     right: 0;
-    width: 88px;
-    height: 89px;
+    width: 100%;
+    height: 100%;
     transform: scaleX(-1);
     overflow: hidden;
     border-radius: 12px;
     &_position {
-      width: 88px;
-      height: 89px;
+      width: 100%;
+      height: 100%;
       position: absolute;
-      bottom: -4px;
-      right: 13px;
     }
   }
 

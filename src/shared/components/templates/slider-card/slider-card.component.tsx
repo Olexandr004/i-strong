@@ -22,9 +22,9 @@ type ISliderCard = {
 }
 
 const colorAvatarPairs = [
-  { color: '#FFF1B6', avatar: ImageCapybara },
-  { color: '#C0D6A6', avatar: ImageCapybaraTeacher },
-  { color: '#C0EBF1', avatar: ImageCapybaraCap },
+  { color: '#FFF1B6', avatar: '/image/back-ch-1.png' },
+  { color: '#C0D6A6', avatar: '/image/back-ch-2.png' },
+  { color: '#C0EBF1', avatar: '/image/back-ch-3.png' },
 ]
 
 const getRandomColorAndAvatar = () => {
