@@ -7,7 +7,7 @@ interface IModalGettingToInstructionsComponent {
   title: string
   images: string[]
   buttonText: string
-  check: 'challenges' | 'shop' | 'diary' | 'instructions' | 'mood-stats' | 'favorites'
+  check: 'challenges' | 'shop' | 'diary' | 'techniques' | 'mood-stats' | 'favorites'
   isModalActive: boolean
   closeModal: () => void
 }

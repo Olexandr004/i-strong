@@ -1,7 +1,7 @@
 'use client'
 
-import { FC, useEffect, useState } from 'react'
-import { IconArrow, IconNextArrow, IconFavorite } from '@/shared/icons'
+import React, { FC, useEffect, useState } from 'react'
+import { IconArrow, IconNextArrow, IconFavorite, IconGuides } from '@/shared/icons'
 import { ModalGettingToInstructionsComponent } from '@/shared/components'
 import { ImageCapybaraTeacher } from '@/shared/images'
 import { useUserStore } from '@/shared/stores'
@@ -40,6 +40,8 @@ export const TutorialsComponent: FC<Readonly<ITutorialsComponent>> = () => {
   const [selectedTechniqueData, setSelectedTechniqueData] = useState<ITechnique | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
   const [isFavorite, setIsFavorite] = useState<boolean>(false)
+  const [guideImages, setGuideImages] = useState<string[]>([])
+  const [isModalActive, setIsModalActive] = useState<boolean>(false)
 
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null)
   const [selectedTechnique, setSelectedTechnique] = useState<number | null>(null)
@@ -188,6 +190,33 @@ export const TutorialsComponent: FC<Readonly<ITutorialsComponent>> = () => {
     }
   }
 
+  const fetchGuideImages = async (guideType: string) => {
+    try {
+      const response = await fetch(`https://istrongapp.com/api/guides/${guideType}`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (!response.ok) {
+        throw new Error('Ошибка при получении изображений')
+      }
+
+      const data = await response.json()
+      console.log('Fetched guide data:', data)
+
+      if (data && data.guide && Array.isArray(data.guide.images)) {
+        const images = data.guide.images.map((item: { image: string }) => item.image)
+        setGuideImages(images) // Сохраняем только ссылки на изображения
+      } else {
+        console.error('Images are not an array or not found:', data.guide?.images)
+      }
+    } catch (error) {
+      console.error('Error fetching guide images:', error)
+    }
+  }
+
   const getTitle = () => {
     if (selectedTechniqueData) {
       return selectedTechniqueData.name || 'Техніки'
@@ -209,6 +238,15 @@ export const TutorialsComponent: FC<Readonly<ITutorialsComponent>> = () => {
 
       {!selectedCategory && (
         <div className={styles.tutorials__buttons}>
+          <button
+            className={styles.iconGuides}
+            onClick={() => {
+              fetchGuideImages('techniques') // Тип гида
+              setIsModalActive(true) // Открытие модального окна
+            }}
+          >
+            <IconGuides />
+          </button>
           {categories.map((category) => (
             <button
               key={category.id}
@@ -287,6 +325,14 @@ export const TutorialsComponent: FC<Readonly<ITutorialsComponent>> = () => {
           </div>
         </div>
       )}
+      <ModalGettingToInstructionsComponent
+        title='Челенджі - основне джерело заробітку монеток, виконуй завдання кожного дня щоб ставати краще'
+        images={guideImages} // Передаем все изображения
+        buttonText='Домовились!'
+        check='challenges'
+        isModalActive={isModalActive}
+        closeModal={() => setIsModalActive(false)}
+      />
     </section>
   )
 }
