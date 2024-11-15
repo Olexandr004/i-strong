@@ -10,12 +10,11 @@ import { ModalGettingToInstructionsComponent, PageHeaderComponent } from '@/shar
 import { CalendarModalComponent } from '@/shared/components/templates/calendar-modal'
 import { SelectComponent } from '@/shared/components/ui/select'
 import { useQuerySearchParams } from '@/shared/hooks/useQuerySearchParams'
-import { IconCalendar } from '@/shared/icons'
-import { ImageCapybaraBook } from '@/shared/images'
+import { IconCalendar, IconGuides } from '@/shared/icons'
 import { useCommonStore, useUserStore } from '@/shared/stores'
 import styles from './statistics.module.scss'
 
-//interface
+// interface
 interface IStatistics {}
 
 interface IEmotions {
@@ -25,18 +24,20 @@ interface IEmotions {
   Зле: number
 }
 
-//component
+// component
 export const StatisticsComponent: FC<Readonly<IStatistics>> = () => {
   const searchParams = useSearchParams()
   const { setQuery } = useQuerySearchParams()
 
   const handleChangeCommonStore = useCommonStore((state) => state.handleChangeCommonStore)
   const isModalActive = useCommonStore((state) => state.isModalActive)
+  const activeModal = useCommonStore((state) => state.activeModal)
   const token = useUserStore((state) => state.user?.access_token)
 
   const [dates, setDates] = useState({ first: '', second: '' })
   const [selectedPeriod, setSelectedPeriod] = useState('day')
   const [customPeriod, setCustomPeriod] = useState<null | number>(null)
+  const [modalContent, setModalContent] = useState<string[]>([]) // Состояние для данных модального окна
 
   const removeMilliseconds = (timeString: string | null | undefined) => {
     return moment(timeString).format('YYYY-MM-DDTHH:mm:ss') + 'Z'
@@ -52,12 +53,39 @@ export const StatisticsComponent: FC<Readonly<IStatistics>> = () => {
       : removeMilliseconds(moment().endOf('day').toString()),
   })
 
-  // Логирование полученных данных
-  useEffect(() => {
-    if (statInfo) {
-      console.log('Received statistics:', statInfo)
+  // Fetch для получения контента модального окна
+  const fetchGuideImages = async () => {
+    try {
+      const response = await fetch(`https://istrongapp.com/api/guides/mood-stats`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (!response.ok) {
+        throw new Error('Ошибка при получении изображений')
+      }
+
+      const data = await response.json()
+      console.log('Fetched guide data for statistics:', data)
+
+      if (data && data.guide && Array.isArray(data.guide.images)) {
+        const images = data.guide.images.map((item: { image: string }) => item.image)
+        setModalContent(images)
+      } else {
+        console.error('Images are not an array or not found:', data.guide?.images)
+      }
+    } catch (error) {
+      console.error('Error fetching guide images for statistics:', error)
     }
-  }, [statInfo])
+  }
+
+  const handleIconGuidesClick = () => {
+    console.log('IconGuides clicked in StatisticsComponent!')
+    handleChangeCommonStore({ isModalActive: true, activeModal: 'guides' })
+    fetchGuideImages() // Загружаем данные для модального окна
+  }
 
   const getDateRange = () => {
     if (searchParams.get('start_date') && searchParams.get('end_date')) {
@@ -66,7 +94,9 @@ export const StatisticsComponent: FC<Readonly<IStatistics>> = () => {
       ) {
         return `${moment(searchParams.get('start_date')).format('DD.MM.YYYY')}`
       } else
-        return `${moment(searchParams.get('start_date')).format('DD.MM.YYYY')} - ${moment(searchParams.get('end_date')).format('DD.MM.YYYY')}`
+        return `${moment(searchParams.get('start_date')).format('DD.MM.YYYY')} - ${moment(
+          searchParams.get('end_date'),
+        ).format('DD.MM.YYYY')}`
     } else return moment().format('DD.MM.YYYY')
   }
 
@@ -86,7 +116,6 @@ export const StatisticsComponent: FC<Readonly<IStatistics>> = () => {
       'year' | 'month' | 'week' | 'day' | 'hour' | 'minute' | 'second'
     > = ['year', 'month', 'week', 'day', 'hour', 'minute', 'second']
 
-    // Проверяем, если выбранный период не "custom" и входит в допустимые значения
     if (
       value !== 'custom' &&
       validStartOfValues.includes(
@@ -102,7 +131,7 @@ export const StatisticsComponent: FC<Readonly<IStatistics>> = () => {
           .toISOString(),
       })
 
-      setCustomPeriod(0) // Сбрасываем пользовательский период
+      setCustomPeriod(0)
     }
 
     setSelectedPeriod(value)
@@ -118,13 +147,12 @@ export const StatisticsComponent: FC<Readonly<IStatistics>> = () => {
     statisticsRefetch()
   }, [searchParams.get('start_date'), searchParams.get('end_date'), selectedPeriod])
 
-  //return
   return (
     <section className={`${styles.statistics} container`}>
       <PageHeaderComponent title={'Статистика'} />
 
       <div className={styles.statistics__settings}>
-        <div className={styles.statistics__select_wrapper} onClick={() => useGetStatistics}>
+        <div className={styles.statistics__select_wrapper}>
           <SelectComponent
             selectedValue={selectedPeriod}
             setSelectedValue={handleChangeSelectedPeriod}
@@ -137,11 +165,16 @@ export const StatisticsComponent: FC<Readonly<IStatistics>> = () => {
           onClick={() =>
             handleChangeCommonStore({
               isModalActive: true,
+              activeModal: 'calendar',
             })
           }
         >
           <IconCalendar />
         </button>
+
+        <div className={styles.iconGuides} onClick={handleIconGuidesClick}>
+          <IconGuides />
+        </div>
       </div>
 
       {Boolean(statInfo) && (
@@ -161,7 +194,20 @@ export const StatisticsComponent: FC<Readonly<IStatistics>> = () => {
         </p>
       </div>
 
-      {isModalActive && <CalendarModalComponent value={dates} onChange={handleSetDates} />}
+      {isModalActive && activeModal === 'guides' && (
+        <ModalGettingToInstructionsComponent
+          title='Статистика - аналізуй свої емоції'
+          images={modalContent}
+          buttonText='Зрозуміло!'
+          check='mood-stats'
+          isModalActive={isModalActive}
+          closeModal={() => handleChangeCommonStore({ isModalActive: false, activeModal: null })}
+        />
+      )}
+
+      {isModalActive && activeModal === 'calendar' && (
+        <CalendarModalComponent value={dates} onChange={handleSetDates} />
+      )}
     </section>
   )
 }

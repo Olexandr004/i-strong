@@ -74,4 +74,10 @@
   font-weight: 600;
 }
 
+.iconGuides {
+  position: absolute;
+  top: -112px;
+  right: -11px;
+}
+
 /*# sourceMappingURL=statistics.module.css.map */
