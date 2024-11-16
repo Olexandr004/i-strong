@@ -11,6 +11,8 @@ import MoodTrackerComponent from '../../../shared/components/templates/mood-trac
 import { AvatarPreviewComponent } from '@/modules/views/profile/elements'
 
 import styles from './home.module.scss'
+import Link from 'next/link'
+import { IconSos } from '@/shared/icons'
 
 //interface
 interface IHome {}
@@ -29,6 +31,12 @@ export const HomeComponent: FC<Readonly<IHome>> = () => {
     <div className={`${styles.home} container`}>
       <AvatarPreviewComponent></AvatarPreviewComponent>
       <h1 className={`${styles.home__title} title`}>IStrong</h1>
+      <div className={styles.help_block}>
+        <h2>Якщо тебе накривають емоції</h2>
+        <Link href={'/help'} className={styles.help}>
+          <IconSos />
+        </Link>
+      </div>
       <MoodTrackerComponent />
       {/* <MyComponent /> */}
       <SectionSwiperComponent

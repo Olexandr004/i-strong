@@ -1,7 +1,6 @@
 .navigation {
   position: relative;
   padding: 1.3rem 1.4rem 2.3rem;
-  display: grid;
   grid-template-columns: repeat(3, 1fr);
   justify-content: space-between;
   background-color: var(--bg-color-primary);
@@ -35,28 +34,6 @@
 .navigation__link.active svg {
   transform: scale(1.2);
   color: var(--font-color-primary);
-}
-.navigation__help {
-  position: absolute;
-  right: calc(50% - 3.4rem);
-  top: -3rem;
-  width: 6.8rem;
-  height: 6.8rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #fff;
-  background-color: var(--error-color);
-  border-radius: 50%;
-  box-shadow: 0 4px 1.2rem rgba(0, 0, 0, 0.2509803922);
-  transition: background-color var(--transition);
-}
-.navigation__help svg {
-  width: 4.6rem;
-  height: 1.6rem;
-}
-.navigation__help:active {
-  background-color: #673030;
 }
 
 /*# sourceMappingURL=footer.module.css.map */

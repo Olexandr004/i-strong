@@ -3,7 +3,7 @@ import { usePathname } from 'next/navigation'
 
 import { FC } from 'react'
 
-import { IconDiary, IconHome, IconSos, IconTutorial, IconChest } from '@/shared/icons'
+import { IconDiary, IconHome, IconCuriosities, IconTutorial, IconChest } from '@/shared/icons'
 
 import styles from './footer.module.scss'
 
@@ -13,6 +13,7 @@ interface IFooter {}
 const LINKS = [
   { icon: <IconHome />, link: '/' },
   { icon: <IconTutorial />, link: '/tutorials' },
+  { icon: <IconCuriosities />, link: '/curiosities' },
   { icon: <IconDiary />, link: '/diary' },
   { icon: <IconChest />, link: '/chest' },
 ]
@@ -27,27 +28,10 @@ export const FooterComponent: FC<Readonly<IFooter>> = () => {
   return (
     <nav className={styles.navigation}>
       <ul className={styles.navigation__list}>
-        {LINKS.slice(0, 2).map((item) => (
+        {LINKS.map((item, index) => (
           <li key={item.link}>
             <Link
-              className={`${styles.navigation__link} ${item.link === '/tutorials' && styles.size} ${pathname === item.link && styles.active}`}
-              href={item.link}
-            >
-              {item.icon}
-            </Link>
-          </li>
-        ))}
-      </ul>
-
-      <Link href={'/help'} className={styles.navigation__help}>
-        <IconSos />
-      </Link>
-
-      <ul className={styles.navigation__list}>
-        {LINKS.slice(2, 4).map((item) => (
-          <li key={item.link}>
-            <Link
-              className={`${styles.navigation__link} ${pathname === item.link && styles.active}`}
+              className={`${styles.navigation__link} ${index === 1 && styles.size} ${pathname === item.link && styles.active}`}
               href={item.link}
             >
               {item.icon}
