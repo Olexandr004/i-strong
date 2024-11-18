@@ -94,3 +94,29 @@
 .active {
   background-color: #ffc75a; /* Цвет активной точки */
 }
+
+.modal__backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Затемнение */
+  z-index: 99; /* Выше остальных элементов, но ниже модалки */
+  pointer-events: all; /* Активно перехватывает клики */
+}
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000; /* Выше подложки */
+}
+
+.modal__content {
+  position: relative;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+}

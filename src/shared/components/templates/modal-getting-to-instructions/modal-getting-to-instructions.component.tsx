@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react'
-import { BaseModalComponent, ButtonComponent } from '@/shared/components'
+import React, { useState, useEffect, useRef } from 'react'
 import styles from './modal-getting-to-instructions.module.scss'
 import { IconClose } from '@/shared/icons'
 
@@ -17,6 +16,24 @@ export const ModalGettingToInstructionsComponent: React.FC<
 > = ({ images, buttonText, isModalActive, closeModal }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [touchStartX, setTouchStartX] = useState<number | null>(null)
+  const modalRef = useRef<HTMLDivElement>(null)
+
+  // Закрытие модального окна при клике вне
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+        closeModal()
+      }
+    }
+
+    if (isModalActive) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isModalActive, closeModal])
 
   const handleDotClick = (index: number) => {
     setCurrentImageIndex(index)
@@ -47,41 +64,46 @@ export const ModalGettingToInstructionsComponent: React.FC<
     setTouchStartX(null)
   }
 
-  console.log('Current image URL:', images[currentImageIndex])
-
   return (
     <>
       {isModalActive && (
-        <div className={styles.modal}>
-          <div
-            className={styles.modal__image}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-          >
-            <img
-              src={images[currentImageIndex]}
-              alt='Guide'
-              style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-            />
-            <div className={styles.modal__dots}>
-              {images.length > 1 && (
-                <div className={styles.modal__dots}>
-                  {images.map((_, index) => (
-                    <button
-                      key={index}
-                      className={`${styles.modal__dot} ${currentImageIndex === index ? styles.active : ''}`}
-                      onClick={() => handleDotClick(index)}
-                    />
-                  ))}
-                </div>
-              )}
+        <>
+          {/* Слой-подложка */}
+          <div className={styles.modal__backdrop} />
+
+          {/* Модальное окно */}
+          <div className={styles.modal}>
+            <div
+              ref={modalRef}
+              className={styles.modal__content}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+            >
+              <div className={styles.modal__image}>
+                <img
+                  src={images[currentImageIndex]}
+                  alt='Guide'
+                  style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                />
+                {images.length > 1 && (
+                  <div className={styles.modal__dots}>
+                    {images.map((_, index) => (
+                      <button
+                        key={index}
+                        className={`${styles.modal__dot} ${currentImageIndex === index ? styles.active : ''}`}
+                        onClick={() => handleDotClick(index)}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+              <IconClose onClick={closeModal} className={styles.iconclose}>
+                {buttonText}
+              </IconClose>
             </div>
-            <IconClose onClick={closeModal} className={styles.iconclose}>
-              {buttonText}
-            </IconClose>
           </div>
-        </div>
+        </>
       )}
     </>
   )
