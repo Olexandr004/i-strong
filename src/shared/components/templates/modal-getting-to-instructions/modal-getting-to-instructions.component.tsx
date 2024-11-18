@@ -65,13 +65,17 @@ export const ModalGettingToInstructionsComponent: React.FC<
               style={{ width: '100%', height: '100%', objectFit: 'contain' }}
             />
             <div className={styles.modal__dots}>
-              {images.map((_, index) => (
-                <button
-                  key={index}
-                  className={`${styles.modal__dot} ${currentImageIndex === index ? styles.active : ''}`}
-                  onClick={() => handleDotClick(index)}
-                />
-              ))}
+              {images.length > 1 && (
+                <div className={styles.modal__dots}>
+                  {images.map((_, index) => (
+                    <button
+                      key={index}
+                      className={`${styles.modal__dot} ${currentImageIndex === index ? styles.active : ''}`}
+                      onClick={() => handleDotClick(index)}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
             <IconClose onClick={closeModal} className={styles.iconclose}>
               {buttonText}
