@@ -22,6 +22,12 @@ interface IFavoriteData {
 interface ICategory {
   id: number
   name: string
+  guide: { image: string }[] // Добавляем свойство guide
+}
+
+interface ICategory {
+  id: number
+  name: string
 }
 
 interface ITechnique {
@@ -41,6 +47,8 @@ export const TutorialsComponent: FC<Readonly<ITutorialsComponent>> = () => {
   const [isFavorite, setIsFavorite] = useState<boolean>(false)
   const [guideImages, setGuideImages] = useState<string[]>([])
   const [isModalActive, setIsModalActive] = useState<boolean>(false)
+  const [isModalTechniqueActive, setIsModalTechniqueActive] = useState<boolean>(false)
+  const [categoryImages, setCategoryImages] = useState<string[]>([])
 
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null)
   const [selectedTechnique, setSelectedTechnique] = useState<number | null>(null)
@@ -61,7 +69,24 @@ export const TutorialsComponent: FC<Readonly<ITutorialsComponent>> = () => {
         if (response.ok) {
           const data = await response.json()
           console.log('Fetched categories:', data)
-          setCategories(data.categories)
+
+          // Сохраняем изображения для каждой категории
+          const categoriesWithImages = data.categories.map((category: ICategory) => ({
+            ...category,
+            images: category.guide.map((guide: { image: string }) => guide.image),
+          }))
+
+          setCategories(categoriesWithImages)
+
+          // Если выбрана категория, сразу устанавливаем изображения
+          if (selectedCategory) {
+            const selectedCategoryData = categoriesWithImages.find(
+              (category: ICategory) => category.id === selectedCategory,
+            )
+            if (selectedCategoryData) {
+              setCategoryImages(selectedCategoryData.images)
+            }
+          }
         } else {
           console.error('Ошибка получения категорий:', response.status)
         }
@@ -73,7 +98,7 @@ export const TutorialsComponent: FC<Readonly<ITutorialsComponent>> = () => {
     }
 
     fetchCategories()
-  }, [token])
+  }, [selectedCategory, token]) // Убедитесь, что selectedCategory обновляется
 
   useEffect(() => {
     if (selectedCategory) {
@@ -266,6 +291,19 @@ export const TutorialsComponent: FC<Readonly<ITutorialsComponent>> = () => {
 
       {selectedCategory && !selectedTechnique && (
         <div className={styles.tutorials__content}>
+          {categoryImages.length > 0 && (
+            <div className={styles.tutorials__category_images}>
+              <button
+                className={styles.iconGuides2}
+                onClick={() => {
+                  setGuideImages(categoryImages) // Устанавливаем изображения в состояние
+                  setIsModalTechniqueActive(true) // Открываем модалку
+                }}
+              >
+                <IconGuides /> {/* Иконка вместо изображений */}
+              </button>
+            </div>
+          )}
           {techniques.map((technique) => (
             <div
               key={technique.id}
@@ -290,6 +328,15 @@ export const TutorialsComponent: FC<Readonly<ITutorialsComponent>> = () => {
           </button>
         </div>
       )}
+
+      <ModalGettingToInstructionsComponent
+        title='Челенджі - основне джерело заробітку монеток, виконуй завдання кожного дня щоб ставати краще'
+        images={guideImages} // Передаем изображения из состояния
+        buttonText='Домовились!'
+        check='challenges'
+        isModalActive={isModalTechniqueActive}
+        closeModal={() => setIsModalTechniqueActive(false)} // Закрытие модалки
+      />
 
       {selectedTechnique && selectedTechniqueData && (
         <div className={styles.tutorials__instructions}>
