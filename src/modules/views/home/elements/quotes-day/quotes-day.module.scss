@@ -1,24 +1,38 @@
 .quotes {
   position: relative;
-  // padding-bottom: 4.8rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+
+  &__title {
+    margin-bottom: 16px;
+    align-self: baseline;
+  }
 
   &__content {
-    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
 
     &_text {
-      position: inherit;
-      top: 5vh;
-      left: 40%;
-      width: 60%;
+      background-color: #f9f9f9;
       padding: 12px;
-      border-radius: 12px 12px 12px 0px;
+      border-radius: 12px;
       box-shadow: 0px 4px 20px 0px #00000026;
+      text-align: center;
+      max-width: 100%;
     }
   }
 
   &__img {
-    width: 40%;
-    top: 88px;
-    gap: 0px;
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    margin-top: -21px;
   }
 }
