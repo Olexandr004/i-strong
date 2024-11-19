@@ -11,6 +11,8 @@ export interface IProduct {
   images: Image[]
   description: string
   features?: Feature[]
+  is_bought: boolean
+  image: string
 }
 
 export interface IProductComponent {

@@ -1,13 +1,27 @@
 import { useRequest } from '@/api/useRequest'
 
-export const getGifts = async (token: string) => {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  return useRequest(`shop/gifts/`, {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  })
+export const getGifts = async (token: string, bought?: boolean) => {
+  const queryParams = bought !== undefined ? `?bought=${bought}` : ''
+  const url = `https://istrongapp.com/api/users/wardrobe${queryParams}`
+
+  try {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status} ${response.statusText}`)
+    }
+
+    const data = await response.json()
+    return data.outfits || []
+  } catch (error) {
+    console.error('Failed to fetch outfits:', error)
+    throw error
+  }
 }
 
 export const getGiftDetails = async (token: string, giftId: number) => {
