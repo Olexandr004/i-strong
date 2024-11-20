@@ -9,11 +9,12 @@
   background-color: var(--button-default);
   color: #1e1e1e;
   font-size: 1.5rem;
+  font-weight: 600;
   z-index: 1;
 }
 .coin svg {
-  width: 1.2rem;
-  height: 0.9rem;
+  width: 1.5rem;
+  height: 1.6rem;
 }
 
 /*# sourceMappingURL=coins-display.module.css.map */
