@@ -74,7 +74,9 @@
   position: relative;
   border-radius: 8px;
   overflow: hidden;
-  transition: transform 0.3s ease, opacity 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
 }
 .card:hover {
   transform: translateY(-4px);
@@ -85,7 +87,7 @@
   pointer-events: none;
 }
 .card_unbought::after {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;

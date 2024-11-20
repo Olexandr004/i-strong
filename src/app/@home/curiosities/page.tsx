@@ -21,17 +21,18 @@ const CuriositiesPage: NextPage = () => {
         alignItems: 'center',
         height: '100vh',
         textAlign: 'center',
-        padding: '2rem',
+        padding: '2.5rem',
       }}
     >
       <h1
         style={{
-          fontSize: '36px',
-          fontWeight: '500',
+          fontSize: '20px',
+          fontWeight: '700',
         }}
       >
         Капібарі треба трошки часу, щоб приготувати щось дуууже класне!
       </h1>
+      <img src='/image/wait-capi.png' alt='wait' />
       <ButtonComponent onClick={handleBack}>Назад</ButtonComponent>
     </div>
   )
