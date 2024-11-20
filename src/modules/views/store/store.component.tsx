@@ -13,6 +13,7 @@ import { useGiftDetails, useGifts } from '@/shared/hooks/useStoreMutations'
 import { useUserStore } from '@/shared/stores'
 
 import styles from './store.module.scss'
+
 interface IStoreComponent {}
 
 export const StoreComponent: FC<Readonly<IStoreComponent>> = () => {
@@ -25,6 +26,34 @@ export const StoreComponent: FC<Readonly<IStoreComponent>> = () => {
 
   // State for active tab
   const [activeTab, setActiveTab] = useState<'all' | 'bought'>('all')
+
+  // State for main image
+  const [mainImage, setMainImage] = useState<string | null>(null)
+
+  // Default image
+  const defaultImage = '/image/default-capi.png'
+
+  // Load saved image on mount
+  useEffect(() => {
+    const savedImage = localStorage.getItem('mainImage')
+    if (savedImage) {
+      setMainImage(savedImage)
+    } else {
+      setMainImage(defaultImage)
+    }
+  }, [])
+
+  // Save selected image to localStorage
+  const handleSetMainImage = (image: string) => {
+    // Если картинка уже установлена как главная, сбрасываем на дефолтное изображение
+    if (image === mainImage) {
+      setMainImage(defaultImage) // Устанавливаем дефолтное изображение
+      localStorage.setItem('mainImage', defaultImage) // Сохраняем дефолтное изображение в localStorage
+    } else {
+      setMainImage(image) // Устанавливаем новое изображение как главное
+      localStorage.setItem('mainImage', image) // Сохраняем новое изображение в localStorage
+    }
+  }
 
   useEffect(() => {
     if (!giftId) {
@@ -60,21 +89,22 @@ export const StoreComponent: FC<Readonly<IStoreComponent>> = () => {
           </div>
         )}
 
+        {/* Main Image Display */}
+        <div className={styles.shop__main_image}>
+          <img src={mainImage || defaultImage} alt='Main Product' />
+        </div>
+
         {/* Tabs */}
         {!giftId && (
           <div className={styles.shop__tabs}>
             <button
-              className={`${styles.shop__tab} ${
-                activeTab === 'all' ? styles.shop__tab_active : ''
-              }`}
+              className={`${styles.shop__tab} ${activeTab === 'all' ? styles.shop__tab_active : ''}`}
               onClick={() => setActiveTab('all')}
             >
               Усі
             </button>
             <button
-              className={`${styles.shop__tab} ${
-                activeTab === 'bought' ? styles.shop__tab_active : ''
-              }`}
+              className={`${styles.shop__tab} ${activeTab === 'bought' ? styles.shop__tab_active : ''}`}
               onClick={() => setActiveTab('bought')}
             >
               Придбані
@@ -86,7 +116,11 @@ export const StoreComponent: FC<Readonly<IStoreComponent>> = () => {
         {!giftId ? (
           <ul className={`${styles.shop__gallery} gallery`}>
             {filteredProducts.map((product) => (
-              <ProductCardComponent key={product.id} product={product} />
+              <ProductCardComponent
+                key={product.id}
+                product={product}
+                onSetMainImage={handleSetMainImage}
+              />
             ))}
           </ul>
         ) : (

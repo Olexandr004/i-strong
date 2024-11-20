@@ -1,5 +1,4 @@
 .shop {
-  padding-bottom: 7rem;
   height: 100vh;
 
   &__scroll {
@@ -68,4 +67,33 @@
     transform: translateX(0);
     /* End at the normal position */
   }
+}
+
+.shop__tabs {
+  display: flex;
+  justify-content: space-around;
+  margin: 0 5px;
+  gap: 10px;
+}
+
+.shop__tab {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 4px 12px;
+  gap: 8px;
+  width: 80%;
+  height: 23px;
+  background: #f2f2f2;
+  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.25);
+  border-radius: 12px;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 15px;
+  color: #1e1e1e;
+}
+.shop__tab_active {
+  background: #ffc75a;
 }

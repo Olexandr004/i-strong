@@ -1,0 +1,92 @@
+.shop {
+  height: 100vh;
+}
+.shop__scroll {
+  position: relative;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  height: 100%;
+  z-index: 1;
+  padding: 0 2.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+}
+.shop__balance {
+  display: inline-flex;
+  align-self: flex-start;
+  padding: 0.4rem 0.4rem 0.4rem 0.8rem;
+  border-radius: 12px;
+  background-color: var(--bg-color-primary);
+  box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.1490196078);
+  animation: slideInFromLeft 0.5s ease-out forwards;
+}
+.shop__balance_block {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+.shop__balance_link {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  width: 2.6rem;
+  height: 2rem;
+}
+.shop__balance_link_icon {
+  width: 1.6rem;
+  height: 1.6rem;
+  stroke: var(--font-color-grey);
+}
+.shop__balance_link_quantity {
+  position: absolute;
+  left: 1rem;
+  top: 0;
+  text-align: center;
+  border-radius: 50%;
+  width: 1.2rem;
+  height: 1.2rem;
+  background-color: var(--button-active);
+}
+
+@keyframes slideInFromLeft {
+  0% {
+    transform: translateX(-100%);
+    /* Start from the left off-screen */
+  }
+  100% {
+    transform: translateX(0);
+    /* End at the normal position */
+  }
+}
+.shop__tabs {
+  display: flex;
+  justify-content: space-around;
+  margin: 0 5px;
+  gap: 10px;
+}
+
+.shop__tab {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 4px 12px;
+  gap: 8px;
+  width: 80%;
+  height: 23px;
+  background: #f2f2f2;
+  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.25);
+  border-radius: 12px;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 15px;
+  color: #1e1e1e;
+}
+
+.shop__tab_active {
+  background: #ffc75a;
+}
+
+/*# sourceMappingURL=store.module.css.map */

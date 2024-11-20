@@ -6,82 +6,80 @@ import { useInView } from 'react-intersection-observer'
 import { IProductCard } from '@/interfaces/store-interface'
 import { IconLock } from '@/shared/icons'
 import { useUserStore } from '@/shared/stores'
+import { ButtonComponent } from '@/shared/components'
 
 import { CoinsDisplayComponent } from '../../ui/coins-display'
 
 import styles from './product-card.module.scss'
 
-const ProductCardComponent: React.FC<IProductCard> = ({ product }) => {
-  const { user, handleChangeUserStore } = useUserStore() // assuming `updateUser` is a function to update the user state
+const ProductCardComponent: React.FC<
+  IProductCard & { onSetMainImage: (image: string) => void }
+> = ({ product, onSetMainImage }) => {
+  const { user, handleChangeUserStore } = useUserStore()
 
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.5,
   })
 
-  const [isModalOpen, setIsModalOpen] = useState(false) // Состояние для модалки
-  const [isProcessing, setIsProcessing] = useState(false) // Состояние для обработки покупки
-  const [isBought, setIsBought] = useState(product.is_bought) // Локальное состояние для isBought
-  const isAffordable = (user?.coins ?? 0) >= product.price
-  const token = user?.access_token
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [isBought, setIsBought] = useState(product.is_bought)
 
-  // Открытие модалки при клике на карточку товара
-  const handleCardClick = () => {
+  const handleCardClick = async () => {
     if (!isBought) {
-      setIsModalOpen(true) // Открываем модалку, если товар не куплен
-    }
-  }
-
-  // Закрытие модалки
-  const handleCloseModal = () => {
-    console.log('Закрытие модалки') // Логируем вызов
-    setIsModalOpen(false)
-  }
-
-  // Обработка покупки
-  const handlePurchase = async () => {
-    console.log('Обработчик покупки сработал') // Логируем вызов обработчика
-    if (!user?.access_token) {
-      console.error('Отсутствует токен доступа')
+      setIsModalOpen(true)
       return
     }
 
-    setIsProcessing(true)
-
-    const outfitId = product.id // Идентификатор образа
-    const url = 'https://istrongapp.com/api/users/wardrobe/' // Используйте правильный URL для покупки
-
-    // Закрываем модалку немедленно после начала покупки
-    handleCloseModal()
-
     try {
-      const response = await fetch(url, {
+      const token = user?.access_token
+      const response = await fetch('https://istrongapp.com/api/users/wardrobe/select/', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ outfit_id: outfitId }), // Передаем данные правильно
+        body: JSON.stringify({ outfit_id: product.id }),
+      })
+
+      if (response.ok) {
+        onSetMainImage(product.image)
+      } else {
+        console.error('Failed to set main image')
+      }
+    } catch (error) {
+      console.error('Error:', error)
+    }
+  }
+
+  const handlePurchase = async () => {
+    if (!user?.access_token) return
+
+    setIsProcessing(true)
+
+    try {
+      const response = await fetch('https://istrongapp.com/api/users/wardrobe/', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${user.access_token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ outfit_id: product.id }),
       })
 
       if (response.ok) {
         const data = await response.json()
-        console.log('Образ успешно куплен:', data)
-
-        setIsBought(true) // Обновляем локальное состояние для карточки
-
+        setIsBought(true)
         handleChangeUserStore({
-          user: {
-            ...user,
-            coins: data.balans, // Обновляем количество монет
-          },
+          user: { ...user, coins: data.balans },
         })
+        setIsModalOpen(false)
       } else {
-        const errorData = await response.json()
-        console.error('Ошибка при покупке:', errorData) // Логирование ошибки от сервера
+        console.error('Error purchasing product')
       }
     } catch (error) {
-      console.error('Ошибка при выполнении запроса:', error) // Логирование ошибок сети
+      console.error('Error:', error)
     } finally {
       setIsProcessing(false)
     }
@@ -95,11 +93,10 @@ const ProductCardComponent: React.FC<IProductCard> = ({ product }) => {
         initial={{ opacity: 0, y: 50 }}
         animate={inView ? { opacity: 0.9, y: 0 } : {}}
         transition={{ duration: 0.3 }}
-        onClick={handleCardClick} // Открытие модалки при клике на карточку
+        onClick={handleCardClick}
       >
         <div className={styles.card__img_wrap}>
           <Image className={styles.card__img} src={product.image} alt={product.name} fill />
-
           {!isBought && (
             <div className={styles.card__overlay}>
               <IconLock />
@@ -117,25 +114,37 @@ const ProductCardComponent: React.FC<IProductCard> = ({ product }) => {
         </div>
       </motion.li>
 
-      {/* Модалка для подтверждения покупки */}
       {isModalOpen && (
         <div className={styles.modalOverlay}>
           <div className={styles.modal}>
-            <button className={styles.closeButton} onClick={handleCloseModal}>
-              X
-            </button>
-            <h2>Купуємо?</h2>
-            <div className={styles.card__img_wrap}>
-              <Image className={styles.card__img} src={product.image} alt={product.name} fill />
-              <div className={styles.card__overlay}>
-                <IconLock />
+            <div style={{ padding: '0 30px' }}>
+              <h2>Купуємо?</h2>
+              <div className={styles.card__img_wrap}>
+                <Image className={styles.card__img} src={product.image} alt={product.name} fill />
+                {!isBought && (
+                  <div className={styles.card__overlay}>
+                    <IconLock />
+                  </div>
+                )}
+                {!isBought && (
+                  <CoinsDisplayComponent
+                    classPosition={styles.card__img_wrap_block}
+                    coin={product.price}
+                  />
+                )}
               </div>
             </div>
             <div className={styles.modalButtons}>
-              <button onClick={handlePurchase} disabled={isProcessing}>
+              <ButtonComponent size={'regular'} onClick={handlePurchase} disabled={isProcessing}>
                 Так
-              </button>
-              <button onClick={handleCloseModal}>Ні</button>
+              </ButtonComponent>
+              <ButtonComponent
+                size={'regular'}
+                variant={'outlined'}
+                onClick={() => setIsModalOpen(false)}
+              >
+                Ні
+              </ButtonComponent>
             </div>
           </div>
         </div>
