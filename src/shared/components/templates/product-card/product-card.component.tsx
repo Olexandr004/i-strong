@@ -13,8 +13,12 @@ import { CoinsDisplayComponent } from '../../ui/coins-display'
 import styles from './product-card.module.scss'
 
 const ProductCardComponent: React.FC<
-  IProductCard & { onSetMainImage: (image: string) => void }
-> = ({ product, onSetMainImage }) => {
+  IProductCard & {
+    selectedCard: string | number | null
+    onSetMainImage: (image: string) => void
+    onCardClick: (id: string) => void
+  }
+> = ({ product, selectedCard, onSetMainImage, onCardClick }) => {
   const { user, handleChangeUserStore } = useUserStore()
 
   const [ref, inView] = useInView({
@@ -27,6 +31,15 @@ const ProductCardComponent: React.FC<
   const [isBought, setIsBought] = useState(product.is_bought)
 
   const handleCardClick = async () => {
+    // Если текущая карточка уже активная, сбрасываем её на первую карточку
+    if (selectedCard === product.id) {
+      onCardClick(product.id.toString())
+      return
+    }
+
+    // Иначе делаем текущую карточку активной
+    onCardClick(product.id.toString())
+
     if (!isBought) {
       setIsModalOpen(true)
       return
@@ -97,7 +110,12 @@ const ProductCardComponent: React.FC<
         onClick={handleCardClick}
       >
         <div className={styles.card__img_wrap}>
-          <Image className={styles.card__img} src={product.image} alt={product.name} fill />
+          <Image
+            className={`${styles.card__img} ${selectedCard === product.id && isBought ? styles.active : ''}`}
+            src={product.image}
+            alt={product.name}
+            fill
+          />
           {!isBought && (
             <div className={styles.card__overlay}>
               <IconLock />
@@ -121,7 +139,12 @@ const ProductCardComponent: React.FC<
             <div style={{ padding: '0 30px' }}>
               <h2>Купуємо?</h2>
               <div className={styles.card__img_wrap}>
-                <Image className={styles.card__img} src={product.image} alt={product.name} fill />
+                <Image
+                  className={`${styles.card__img} ${selectedCard === product.id && isBought ? styles.active : ''}`}
+                  src={product.image}
+                  alt={product.name}
+                  fill
+                />
                 {!isBought && (
                   <div className={styles.card__overlay}>
                     <IconLock />

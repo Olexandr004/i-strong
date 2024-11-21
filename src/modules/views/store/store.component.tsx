@@ -23,6 +23,7 @@ export const StoreComponent: FC<Readonly<IStoreComponent>> = () => {
   const { giftsMutate, status: statusGift, products } = useGifts()
   const { giftDetailsMutate, status, product } = useGiftDetails()
   const { user } = useUserStore()
+  const [selectedCard, setSelectedCard] = useState<number | null>(null) // Changed to number | null to represent selected product ID
 
   // State for active tab
   const [activeTab, setActiveTab] = useState<'all' | 'bought'>('all')
@@ -54,6 +55,20 @@ export const StoreComponent: FC<Readonly<IStoreComponent>> = () => {
       localStorage.setItem('mainImage', image) // Сохраняем новое изображение в localStorage
     }
   }
+
+  useEffect(() => {
+    const savedSelectedCard = localStorage.getItem('selectedCard')
+    if (savedSelectedCard) {
+      setSelectedCard(Number(savedSelectedCard))
+    }
+  }, [])
+
+  // Сохранение выбранной карточки в localStorage
+  useEffect(() => {
+    if (selectedCard !== null) {
+      localStorage.setItem('selectedCard', selectedCard.toString())
+    }
+  }, [selectedCard])
 
   useEffect(() => {
     if (!giftId) {
@@ -120,6 +135,8 @@ export const StoreComponent: FC<Readonly<IStoreComponent>> = () => {
                 key={product.id}
                 product={product}
                 onSetMainImage={handleSetMainImage}
+                selectedCard={selectedCard} // Передаем ID выбранной карточки
+                onCardClick={() => setSelectedCard(product.id)} // Устанавливаем выбранную карточку
               />
             ))}
           </ul>
