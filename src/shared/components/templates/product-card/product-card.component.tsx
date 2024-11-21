@@ -74,6 +74,7 @@ const ProductCardComponent: React.FC<
         handleChangeUserStore({
           user: { ...user, coins: data.balans },
         })
+        onSetMainImage(product.image) // Устанавливаем изображение после покупки
         setIsModalOpen(false)
       } else {
         console.error('Error purchasing product')
