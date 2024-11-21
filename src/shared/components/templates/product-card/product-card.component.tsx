@@ -5,7 +5,7 @@ import { useInView } from 'react-intersection-observer'
 
 import { IProductCard } from '@/interfaces/store-interface'
 import { IconLock } from '@/shared/icons'
-import { useUserStore } from '@/shared/stores'
+import { useUserStore, useCommonStore } from '@/shared/stores'
 import { ButtonComponent } from '@/shared/components'
 
 import { CoinsDisplayComponent } from '../../ui/coins-display'
@@ -20,6 +20,7 @@ const ProductCardComponent: React.FC<
   }
 > = ({ product, selectedCard, onSetMainImage, onCardClick }) => {
   const { user, handleChangeUserStore } = useUserStore()
+  const handleChangeCommonStore = useCommonStore((state) => state.handleChangeCommonStore)
 
   const [ref, inView] = useInView({
     triggerOnce: true,
@@ -30,6 +31,9 @@ const ProductCardComponent: React.FC<
   const [isProcessing, setIsProcessing] = useState(false)
   const [isBought, setIsBought] = useState(product.is_bought)
 
+  // Состояние для отображения ошибки
+  const [errorText, setErrorText] = useState('')
+
   const handleCardClick = async () => {
     // Если текущая карточка уже активная, сбрасываем её на первую карточку
     if (selectedCard === product.id) {
@@ -39,6 +43,21 @@ const ProductCardComponent: React.FC<
 
     // Иначе делаем текущую карточку активной
     onCardClick(product.id.toString())
+
+    // Проверяем, хватает ли монет для покупки только для не купленных товаров
+    if (!isBought && (user?.coins ?? 0) < product.price) {
+      // Если монет недостаточно, показываем ошибку через тостер
+      setErrorText('Недостатньо монеток')
+      handleChangeCommonStore({ errorText: 'Недостатньо монеток' })
+
+      // Ожидаем 1 секунду, чтобы скрыть ошибку
+      setTimeout(() => {
+        setErrorText('')
+        handleChangeCommonStore({ errorText: '' })
+      }, 1000)
+
+      return
+    }
 
     if (!isBought) {
       setIsModalOpen(true)
