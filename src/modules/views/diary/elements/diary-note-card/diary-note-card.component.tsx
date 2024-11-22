@@ -160,7 +160,7 @@ export const DiaryNoteCardComponent: FC<Readonly<IDiaryNoteCard>> = ({
       {/* Модальное окно */}
       <ModalComponent
         isOpen={isModalOpen}
-        title='Ти впевнений(-а), що хочеш видалити аккаунт?'
+        title='Ти впевнений(-а) що хочеш видалити цей запис?'
         onConfirm={handleDeleteRecord}
         onCancel={closeModal}
       />
