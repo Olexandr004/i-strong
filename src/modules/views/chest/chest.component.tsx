@@ -3,7 +3,7 @@ import { IconArrow, IconNextArrow, IconGuides } from '@/shared/icons'
 import { useChestStore, useUserStore } from '@/shared/stores'
 import styles from './chest.module.scss'
 import { PhotoTutorialComponent } from '@/modules/views/tutorials/elements/'
-import { DiaryNoteCardComponent } from '@/modules/views/diary/elements'
+import { DiaryNoteCardViewComponent } from '@/modules/views/diary/elements'
 import { ModalGettingToInstructionsComponent } from '@/shared/components'
 
 const ChestComponent: React.FC = () => {
@@ -183,7 +183,7 @@ const ChestComponent: React.FC = () => {
             <IconArrow onClick={goBack} className={styles.backBtn__chest} />
             <h1>Щоденник</h1>
             {favoriteDiaryEntries.map((entry) => (
-              <DiaryNoteCardComponent
+              <DiaryNoteCardViewComponent
                 key={entry.id}
                 item={{
                   ...entry,

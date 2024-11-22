@@ -1,0 +1,72 @@
+.diary_card {
+  display: grid;
+  gap: 0.8rem;
+  padding: 1.2rem 0;
+  border-bottom: 1px solid var(--border-primary);
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    color: var(--accent-color-yellow);
+    font-size: 1.2rem;
+    font-weight: 600;
+
+    & svg {
+      color: var(--font-color-grey);
+      &:first-of-type {
+        width: 3rem;
+      }
+    }
+  }
+
+  &__main {
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  &__title {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    white-space: normal;
+
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+
+  &__text {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    white-space: normal;
+    text-overflow: ellipsis;
+    max-height: 2.8rem; /* Подберите это значение в зависимости от вашего line-height */
+    line-height: 1.4rem;
+
+    color: var(--font-color-grey);
+    font-size: 1.2rem;
+    font-weight: 500;
+    line-height: 1.4rem;
+  }
+}
+
+.gray_text {
+  color: gray;
+}
+
+.filled {
+  fill: #bd3333; /* Красный цвет для активного состояния */
+  stroke: none; /* Убираем обводку, если она есть */
+  margin-right: 5px;
+}
+
+.outline {
+  fill: none; /* Нет заливки */
+  stroke: gray; /* Серый цвет обводки */
+  stroke-width: 2px; /* Устанавливаем ширину обводки */
+  margin-right: 5px;
+}
