@@ -87,7 +87,7 @@ export const NotesComponent: FC<Readonly<INotes>> = () => {
                 </div>
               )}
 
-              {challenge.notes.length > 2 && (
+              {challenge.notes.length > 1 && (
                 <div
                   className={`${styles.notes__arrow_btn} ${extendedNote === challenge.challenge.id.toString() && styles.extended}`}
                 >
