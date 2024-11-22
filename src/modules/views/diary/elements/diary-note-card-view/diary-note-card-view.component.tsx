@@ -74,13 +74,13 @@ export const DiaryNoteCardViewComponent: FC<Readonly<IDiaryNoteCard>> = ({
   const handleOpenExistingRecord = () => {
     switch (type) {
       case 'challenges':
-        router.push(`/diary/note-record?record_id=${item.id.toString()}`)
+        router.push(`/diary/note-record-view?record_id=${item.id.toString()}`)
         break
       case 'tracker':
-        router.push(`/diary/tracker-record?record_id=${item.id.toString()}`)
+        router.push(`/diary/tracker-record-view?record_id=${item.id.toString()}`)
         break
       default:
-        router.push(`/diary/record?record_id=${item.id.toString()}`)
+        router.push(`/diary/record-view?record_id=${item.id.toString()}`)
     }
   }
 
