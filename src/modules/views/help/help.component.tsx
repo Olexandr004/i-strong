@@ -13,6 +13,11 @@ interface IHelpComponent {}
 
 //component
 export const HelpComponent: FC<Readonly<IHelpComponent>> = () => {
+  const handleCall = () => {
+    // Для того, чтобы снова открыть номер телефона, используем window.location.href
+    window.location.href = 'tel:0800500225'
+  }
+
   return (
     <section className={`${styles.help} container`}>
       <div className={styles.help__top}>
@@ -29,10 +34,9 @@ export const HelpComponent: FC<Readonly<IHelpComponent>> = () => {
         </div>
       </div>
 
-      <Link href={'tel:0800500225'}>
-        <ButtonComponent>Подзвонити!</ButtonComponent>
-      </Link>
+      <ButtonComponent onClick={handleCall}>Подзвонити!</ButtonComponent>
     </section>
   )
 }
+
 export default HelpComponent
