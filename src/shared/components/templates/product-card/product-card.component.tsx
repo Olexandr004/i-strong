@@ -176,6 +176,9 @@ const ProductCardComponent: React.FC<
                   />
                 )}
               </div>
+              <div className={styles.card__wrap_title}>
+                <h3 className={`${styles.card__name} text-5`}>{product.name}</h3>
+              </div>
             </div>
             <div className={styles.modalButtons}>
               <ButtonComponent size={'regular'} onClick={handlePurchase} disabled={isProcessing}>
