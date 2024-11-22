@@ -41,14 +41,12 @@ const monthNames = [
   'грудень',
 ]
 
-// Компонент TrackerComponent
 export const TrackerComponent: FC = () => {
   const token = useUserStore((state) => state.user?.access_token)
   const [trackerData, setTrackerData] = useState<TrackerYear[]>([])
   const [expandedMonth, setExpandedMonth] = useState<null | string>(null)
   const [isFetching, setIsFetching] = useState(false)
 
-  // Функция для запроса данных трекера
   const fetchTrackerData = async () => {
     try {
       setIsFetching(true)
@@ -61,6 +59,7 @@ export const TrackerComponent: FC = () => {
         throw new Error('Network response was not ok')
       }
       const data = await response.json()
+      console.log('Fetched tracker data:', data) // Логируем полученные данные
       setTrackerData(data.notes || [])
     } catch (error) {
       console.error('Error fetching tracker data:', error)
@@ -69,7 +68,6 @@ export const TrackerComponent: FC = () => {
     }
   }
 
-  // Вызов данных при монтировании компонента
   useEffect(() => {
     if (token) {
       fetchTrackerData()
@@ -77,10 +75,9 @@ export const TrackerComponent: FC = () => {
   }, [token])
 
   useEffect(() => {
-    console.log(trackerData) // Проверяем структуру и количество записей
+    console.log('Tracker data in state:', trackerData) // Логируем данные после установки в state
   }, [trackerData])
 
-  // Обработчик для переключения состояния месяца
   const handleExpandMonth = (year: number, month: number) => {
     const monthKey = `${year}-${month}`
     if (expandedMonth === monthKey) {
@@ -98,8 +95,7 @@ export const TrackerComponent: FC = () => {
             <div key={monthData.month} className={styles.notes__record_block}>
               <h3>
                 {monthNames[monthData.month - 1]} {yearData.year}
-              </h3>{' '}
-              {/* Отображаем месяц и год в одной строке */}
+              </h3>
               <div className={styles.notes__cards}>
                 <div className={styles.diary__visible_cards}>
                   {expandedMonth === `${yearData.year}-${monthData.month}`
@@ -107,7 +103,7 @@ export const TrackerComponent: FC = () => {
                         .sort(
                           (a, b) =>
                             new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
-                        ) // Сортировка по дате
+                        )
                         .map((note) => (
                           <DiaryNoteCardComponent
                             key={note.id}
@@ -119,8 +115,8 @@ export const TrackerComponent: FC = () => {
                         .sort(
                           (a, b) =>
                             new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
-                        ) // Сортировка по дате
-                        .slice(0, 2) // Показываем только две последние записи
+                        )
+                        .slice(0, 2)
                         .map((note) => (
                           <DiaryNoteCardComponent
                             key={note.id}
@@ -134,18 +130,7 @@ export const TrackerComponent: FC = () => {
                   <div
                     className={`${styles.notes__hidden_cards} ${expandedMonth === `${yearData.year}-${monthData.month}` && styles.extended}`}
                   >
-                    <div className={styles.notes__hidden_wrapper}>
-                      {monthData.notes.map((note) => {
-                        console.log('Showing note:', note) // Логируем каждую карточку
-                        return (
-                          <DiaryNoteCardComponent
-                            key={note.id}
-                            item={{ ...note, title: '' }}
-                            type={'tracker'}
-                          />
-                        )
-                      })}
-                    </div>
+                    <div className={styles.notes__hidden_wrapper}></div>
                   </div>
                 )}
 
