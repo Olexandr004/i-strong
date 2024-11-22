@@ -8,7 +8,6 @@
 .tutorials__position_favoriteBtn {
   display: flex;
   flex-direction: column;
-  align-items: end;
   margin-top: -3rem;
 }
 .tutorials__instructions p {
@@ -119,6 +118,10 @@
   position: absolute;
   top: 23px;
   right: 20px;
+}
+
+.tutorials__favorite_btn {
+  align-self: end;
 }
 
 /*# sourceMappingURL=tutorials.module.css.map */
