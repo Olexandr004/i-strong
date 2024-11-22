@@ -82,6 +82,13 @@ export const StoreComponent: FC<Readonly<IStoreComponent>> = () => {
     }
   }, [giftId])
 
+  // Перезагрузка списка продуктов при смене вкладки
+  useEffect(() => {
+    if (!giftId) {
+      giftsMutate() // Перезагружаем все продукты при смене вкладки
+    }
+  }, [activeTab, giftId]) // Следим за изменением вкладки или giftId
+
   if (statusGift === 'pending' || status === 'pending') {
     return <div>Loading...</div>
   }
