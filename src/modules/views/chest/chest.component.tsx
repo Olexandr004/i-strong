@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { IconArrow, IconNextArrow, IconGuides } from '@/shared/icons'
 import { useChestStore, useUserStore } from '@/shared/stores'
+import { useRouter } from 'next/navigation'
 import styles from './chest.module.scss'
 import { PhotoTutorialComponent } from '@/modules/views/tutorials/elements/'
 import { DiaryNoteCardViewComponent } from '@/modules/views/diary/elements'
@@ -8,6 +9,7 @@ import { ModalGettingToInstructionsComponent } from '@/shared/components'
 
 const ChestComponent: React.FC = () => {
   const { view, setView } = useChestStore()
+  const router = useRouter()
   const [favoriteTechniques, setFavoriteTechniques] = useState<any[]>([])
   const [selectedTechnique, setSelectedTechnique] = useState<any | null>(null)
   const [favoriteDiaryEntries, setFavoriteDiaryEntries] = useState<any[]>([])
@@ -28,6 +30,17 @@ const ChestComponent: React.FC = () => {
       setView('main')
     }
   }
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search) // Получаем параметры из URL
+    const section = searchParams.get('section') // Извлекаем параметр section
+
+    if (section === 'diary') {
+      setView('diary')
+    } else if (section === 'techniques') {
+      setView('techniques')
+    }
+  }, [router])
 
   const fetchFavoriteTechniques = async () => {
     try {
@@ -206,7 +219,14 @@ const ChestComponent: React.FC = () => {
             <button onClick={() => setView('techniques')} className={styles.btnDiaryTech}>
               Техніки
             </button>
-            <button onClick={() => setView('diary')} className={styles.btnDiaryTech}>
+            <button
+              onClick={() => {
+                setView('diary')
+                const currentPath = window.location.pathname // Получаем текущий путь
+                router.replace(`${currentPath}?section=diary`) // Обновляем URL с параметром
+              }}
+              className={styles.btnDiaryTech}
+            >
               Щоденник
             </button>
             {/* Добавляем IconGuides для открытия модала */}
