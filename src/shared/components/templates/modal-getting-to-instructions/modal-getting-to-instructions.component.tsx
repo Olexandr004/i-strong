@@ -6,7 +6,6 @@ import { useUserStore } from '@/shared/stores'
 interface IModalGettingToInstructionsComponent {
   title: string
   images: string[]
-  buttonText: string
   check: 'challenges' | 'wardrobe' | 'diary' | 'techniques' | 'mood-stats' | 'favorites'
   isModalActive: boolean
   closeModal: () => void
@@ -14,7 +13,7 @@ interface IModalGettingToInstructionsComponent {
 
 export const ModalGettingToInstructionsComponent: React.FC<
   IModalGettingToInstructionsComponent
-> = ({ images, buttonText, check, isModalActive, closeModal }) => {
+> = ({ images, check, isModalActive, closeModal }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [touchStartX, setTouchStartX] = useState<number | null>(null)
   const modalRef = useRef<HTMLDivElement>(null)
@@ -178,12 +177,9 @@ export const ModalGettingToInstructionsComponent: React.FC<
                       </div>
                     )}
                   </div>
-                  <button className={styles.modal__button} onClick={closeModal}>
-                    {buttonText}
-                  </button>
                 </>
               ) : (
-                <div className={styles.noContent}>Нет доступных изображений</div> // Если изображений нет
+                <div className={styles.noContent}></div> // Если изображений нет
               )}
               <IconClose onClick={closeModalWithReset} className={styles.iconclose} />
             </div>

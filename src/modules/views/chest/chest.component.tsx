@@ -246,7 +246,6 @@ const ChestComponent: React.FC = () => {
       <ModalGettingToInstructionsComponent
         title='Скарбничка - інструкції'
         images={guideImages}
-        buttonText='Домовились!'
         check='favorites'
         isModalActive={isModalActive}
         closeModal={() => setIsModalActive(false)} // Закрытие модала

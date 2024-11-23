@@ -198,7 +198,6 @@ export const StatisticsComponent: FC<Readonly<IStatistics>> = () => {
         <ModalGettingToInstructionsComponent
           title='Статистика - аналізуй свої емоції'
           images={modalContent}
-          buttonText='Зрозуміло!'
           check='mood-stats'
           isModalActive={isModalActive}
           closeModal={() => handleChangeCommonStore({ isModalActive: false, activeModal: null })}

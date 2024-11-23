@@ -223,7 +223,6 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
       <ModalGettingToInstructionsComponent
         title='Щоденник - фіксуй свої думки і почуття кожного дня, це допоможе тобі слідкувати за своїм прогресом'
         images={guideImages}
-        buttonText='Зрозуміло!'
         check='diary'
         isModalActive={isModalActive}
         closeModal={() => handleChangeCommonStore({ isModalActive: false })}

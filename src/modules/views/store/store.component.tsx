@@ -202,7 +202,6 @@ export const StoreComponent: FC<Readonly<IStoreComponent>> = () => {
         <ModalGettingToInstructionsComponent
           title='Справка и инструкции'
           images={guideImages} // Передаем все изображения
-          buttonText='Закрыть'
           check='wardrobe'
           isModalActive={isModalActive}
           closeModal={() => setIsModalActive(false)}

@@ -102,7 +102,6 @@ export const ChallengesComponent: FC<Readonly<IChallengesComponent>> = () => {
       <ModalGettingToInstructionsComponent
         title='Челенджі - основне джерело заробітку монеток, виконуй завдання кожного дня щоб ставати краще'
         images={guideImages} // Передаем все изображения
-        buttonText='Домовились!'
         check='challenges'
         isModalActive={isModalActive}
         closeModal={() => handleChangeCommonStore({ isModalActive: false })}
