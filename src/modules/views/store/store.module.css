@@ -89,4 +89,10 @@
   background: #ffc75a;
 }
 
+.iconGuides {
+  position: absolute;
+  top: 26px;
+  right: 20px;
+}
+
 /*# sourceMappingURL=store.module.css.map */
