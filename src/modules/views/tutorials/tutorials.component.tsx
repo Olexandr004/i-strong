@@ -332,7 +332,7 @@ export const TutorialsComponent: FC<Readonly<ITutorialsComponent>> = () => {
       <ModalGettingToInstructionsComponent
         title='Челенджі - основне джерело заробітку монеток, виконуй завдання кожного дня щоб ставати краще'
         images={guideImages} // Передаем изображения из состояния
-        check='challenges'
+        check='techniques'
         isModalActive={isModalTechniqueActive}
         closeModal={() => setIsModalTechniqueActive(false)} // Закрытие модалки
       />
@@ -374,7 +374,7 @@ export const TutorialsComponent: FC<Readonly<ITutorialsComponent>> = () => {
       <ModalGettingToInstructionsComponent
         title='Челенджі - основне джерело заробітку монеток, виконуй завдання кожного дня щоб ставати краще'
         images={guideImages} // Передаем все изображения
-        check='challenges'
+        check='techniques'
         isModalActive={isModalActive}
         closeModal={() => setIsModalActive(false)}
       />
