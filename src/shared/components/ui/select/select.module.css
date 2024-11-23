@@ -1,0 +1,51 @@
+.select {
+  position: relative;
+  width: 14rem;
+  border-radius: 1.2rem;
+  transition: padding var(--transition);
+}
+.select.expanded {
+  padding: 0.8rem;
+  background: var(--accent-color-yellow);
+  box-shadow: var(--box-shadow);
+}
+.select__item {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: center;
+  align-items: center;
+  padding: 0.8rem 1.2rem;
+  font-size: 1.6rem;
+  font-weight: 700;
+  border-radius: 1.2rem;
+  background: var(--bg-color-primary);
+  box-shadow: var(--box-shadow);
+  cursor: pointer;
+  transition: background-color var(--transition);
+}
+.select__item.active_value {
+  background: var(--accent-color-yellow);
+}
+.select__item.active_value:active {
+  background-color: var(--button-active);
+}
+.select__item.active_value svg {
+  width: 1.6rem;
+  height: 0.8rem;
+  transition: transform var(--transition);
+}
+.select__item.active_value.expanded svg {
+  transform: rotate(180deg);
+}
+.select__dropdown {
+  overflow-y: hidden;
+  overflow-x: visible;
+  margin: 2.4rem -1rem 0;
+  padding: 0 1rem 1.3rem;
+}
+.select__list {
+  display: grid;
+  gap: 1.2rem;
+}
+
+/*# sourceMappingURL=select.module.css.map */

@@ -1,0 +1,12 @@
+:root {
+  --min-width: 320px;
+  --max-width: 1024px;
+  --gap-extra-small: 0.4rem;
+  --gap-small: 0.8rem;
+  --gap-medium-small: 1rem;
+  --gap-medium: 1.2rem;
+  --gap-large: 2.4rem;
+  --transition: 0.25s ease-in-out;
+}
+
+/*# sourceMappingURL=variables.css.map */

@@ -1,0 +1,24 @@
+:root {
+  --font-color-primary: #1e1e1e;
+  --font-color-grey: #7d7d7d;
+  --bg-color-primary: #f2f2f2;
+  --bg-color-secondary: #ffffff;
+  --icon-color: #a4a4a4;
+  --icon-accent-color: #be6717;
+  --button-default: #ffc75a;
+  --button-disabled: #bdbdbd;
+  --button-active: #ff8c22;
+  --error-color: #bd3333;
+  --border-primary: #bdbdbd;
+  --box-shadow: 2px 4px 12px 0 rgba(0, 0, 0, 0.15);
+  --accent-color-blue: #647dad;
+  --accent-color-light-blue: #c0ebf1;
+  --accent-color-red: #e79999;
+  --accent-color-green: #c0d6a6;
+  --accent-color-light-green: #c8ebcf;
+  --accent-color-yellow: #ffc75a;
+  --accent-color-light-yellow: #fff1b6;
+  --border-color: #cccccc;
+}
+
+/*# sourceMappingURL=themes.css.map */

@@ -1,0 +1,21 @@
+.toaster {
+  justify-self: right;
+  display: flex;
+  padding: 0.4rem 1.2rem;
+  align-items: center;
+  gap: 1.2rem;
+  border-radius: 1.2rem 0 0 1.2rem;
+  background: var(--bg-color-primary);
+  box-shadow: var(--box-shadow);
+  font-size: 1rem;
+  font-weight: 500;
+  pointer-events: none;
+}
+.toaster svg {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  color: #c53131;
+}
+
+/*# sourceMappingURL=toaster.module.css.map */

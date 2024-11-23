@@ -1,0 +1,18 @@
+.help {
+  display: grid;
+  gap: 8rem;
+  padding-bottom: 7rem;
+  min-height: 100vh;
+}
+.help__top {
+  display: grid;
+  gap: 2rem;
+}
+.help__top_title {
+  margin-bottom: 4.4rem;
+}
+.help__wrap {
+  padding: 0 15%;
+}
+
+/*# sourceMappingURL=help.module.css.map */

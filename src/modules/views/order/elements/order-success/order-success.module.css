@@ -1,0 +1,16 @@
+.success {
+  padding-top: 6.8rem;
+  padding-bottom: 7rem;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  gap: 2.8rem;
+  min-height: 100vh;
+}
+.success h1 {
+  margin-bottom: 2.8rem;
+}
+.success__wrap {
+  padding: 0 10%;
+}
+
+/*# sourceMappingURL=order-success.module.css.map */

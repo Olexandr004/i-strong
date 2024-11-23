@@ -1,0 +1,36 @@
+.menu_bar {
+  padding-bottom: 1.2rem;
+  margin-bottom: 2.4rem;
+  display: grid;
+  gap: 2.4rem;
+}
+.menu_bar__top,
+.menu_bar__colors {
+  display: flex;
+  gap: 2.4rem;
+  justify-content: flex-start;
+}
+.menu_bar__top svg,
+.menu_bar__colors svg {
+  width: 1.7rem;
+  height: 1.7rem;
+  color: var(--font-color-primary);
+}
+.menu_bar__redo_btn svg {
+  transform: scaleX(-1);
+}
+.menu_bar__bold_text svg {
+  width: 2.7rem;
+  height: 1.7rem;
+}
+.menu_bar__list svg {
+  width: 2rem;
+  height: 1.7rem;
+}
+.menu_bar__color_btn {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+}
+
+/*# sourceMappingURL=menu-bar.module.css.map */

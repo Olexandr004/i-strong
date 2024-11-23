@@ -1,0 +1,31 @@
+.icon_button {
+  cursor: pointer;
+  position: relative;
+  outline: none;
+}
+.icon_button:after {
+  position: absolute;
+  z-index: -1;
+  content: '';
+  width: 2rem;
+  height: 2rem;
+  top: 0rem;
+  left: 0rem;
+  border-radius: 0.4rem;
+  background-color: var(--border-color);
+  transition:
+    opacity var(--transition),
+    transform var(--transition);
+  opacity: 0;
+}
+.icon_button:active:after {
+  transform: scale(1.2);
+  opacity: 0.3;
+}
+.icon_button svg {
+  width: 2rem;
+  height: 2rem;
+  color: inherit;
+}
+
+/*# sourceMappingURL=icon-button.module.css.map */

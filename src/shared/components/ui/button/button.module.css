@@ -1,0 +1,50 @@
+.button {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 1rem 2.4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.6rem;
+  line-height: 2rem;
+  font-weight: 700;
+  color: var(--font-color-primary);
+  background-color: var(--button-default);
+  border: 1px solid var(--button-default);
+  border-radius: 2.4rem;
+  box-shadow: var(--box-shadow);
+  transition:
+    background-color var(--transition),
+    border-color var(--transition),
+    color var(--transition);
+  cursor: pointer;
+}
+.button:active {
+  background-color: var(--button-active);
+  border-color: var(--button-active);
+}
+.button:disabled {
+  background-color: var(--button-disabled);
+  border-color: var(--button-disabled);
+  color: var(--font-color-grey);
+}
+.button.outlined {
+  background-color: transparent;
+  box-shadow: none;
+  border: 1px solid var(--font-color-primary);
+}
+.button.outlined:active {
+  background-color: var(--button-active);
+}
+.button.outlined:disabled {
+  border-color: var(--button-disabled);
+  color: var(--font-color-grey);
+}
+.button.small {
+  padding: 0.4rem 2.4rem;
+  font-size: 1.2rem;
+  line-height: 1.5rem;
+  font-weight: 600;
+}
+
+/*# sourceMappingURL=button.module.css.map */

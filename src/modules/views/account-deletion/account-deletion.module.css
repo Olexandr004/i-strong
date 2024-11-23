@@ -1,0 +1,24 @@
+.account_deletion {
+  height: 100vh;
+  padding-bottom: 7rem;
+  display: grid;
+  grid-gap: 2.4rem;
+  align-content: space-between;
+}
+.account_deletion__text {
+  text-align: center;
+  margin-top: 0.8;
+  margin-bottom: 1.8rem;
+}
+.account_deletion__img {
+  width: 199px;
+  height: 168px;
+  margin: 0 auto;
+}
+.account_deletion__btn_wrap {
+  display: grid;
+  align-content: start;
+  gap: 1.2rem;
+}
+
+/*# sourceMappingURL=account-deletion.module.css.map */
