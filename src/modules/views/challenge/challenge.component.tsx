@@ -17,7 +17,6 @@ import styles from './challenge.module.scss'
 
 interface IChallengeComponent {}
 
-//component
 export const ChallengeComponent: FC<Readonly<IChallengeComponent>> = () => {
   const searchParams = useSearchParams()
   const challenge_id = Number(searchParams.get('id'))
@@ -49,6 +48,7 @@ export const ChallengeComponent: FC<Readonly<IChallengeComponent>> = () => {
     }
 
     if (note) {
+      // Send the note as is, preserving the newlines
       challengeSlide.note = note
     }
     completeChallengePartMutate(challengeSlide)
@@ -67,7 +67,6 @@ export const ChallengeComponent: FC<Readonly<IChallengeComponent>> = () => {
     }
   }, [statusCompleteChallenge])
 
-  // Handle scroll into view when the textarea is focused
   const handleFocus = (e: React.FocusEvent<HTMLTextAreaElement>) => {
     const target = e.target as HTMLTextAreaElement
     setTimeout(() => {
@@ -189,4 +188,5 @@ export const ChallengeComponent: FC<Readonly<IChallengeComponent>> = () => {
     </section>
   )
 }
+
 export default ChallengeComponent
