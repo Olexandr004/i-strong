@@ -78,11 +78,47 @@ export const TrackerComponent: FC = () => {
     console.log('Tracker data in state:', trackerData) // Логируем данные после установки в state
   }, [trackerData])
 
-  const handleExpandMonth = (year: number, month: number) => {
+  const handleExpandMonth = async (year: number, month: number) => {
     const monthKey = `${year}-${month}`
+
     if (expandedMonth === monthKey) {
       setExpandedMonth(null)
     } else {
+      try {
+        setIsFetching(true)
+        const response = await fetch(
+          `https://istrongapp.com/api/users/diary/tracker/by-date/${year}/${month}/`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        )
+        if (!response.ok) {
+          throw new Error('Error fetching notes for the selected month')
+        }
+        const data = await response.json()
+        console.log('Fetched notes:', data)
+
+        // Обновляем данные трекера с учетом полученных данных
+        setTrackerData((prevData) =>
+          prevData.map((yearData) =>
+            yearData.year === year
+              ? {
+                  ...yearData,
+                  months: yearData.months.map((monthData) =>
+                    monthData.month === month ? { ...monthData, notes: data.notes } : monthData,
+                  ),
+                }
+              : yearData,
+          ),
+        )
+      } catch (error) {
+        console.error('Error fetching notes:', error)
+      } finally {
+        setIsFetching(false)
+      }
+
       setExpandedMonth(monthKey)
     }
   }
