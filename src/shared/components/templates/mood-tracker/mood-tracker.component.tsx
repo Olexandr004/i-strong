@@ -1,16 +1,14 @@
-import { useMutation } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
-import 'moment/locale/uk'
 import moment from 'moment'
+import 'moment/locale/uk'
 import { FC } from 'react'
-import { postMood } from '@/api/mood-tracker'
-import { useGetUserProfile } from '@/api/setting-user.api'
-import { MOODS } from '@/shared/constants/moods'
-import { useUserStore } from '@/shared/stores'
 import { ButtonComponent } from '@/shared/components'
+import { useUserStore } from '@/shared/stores'
 import styles from './mood-tracker.module.scss'
+import { MOODS } from '@/shared/constants/moods'
 
-interface IMoodTrackerComponent {}
+// Маппинг месяцев
 const monthNamesGenitive: { [key: string]: string } = {
   січень: 'січня',
   лютий: 'лютого',
@@ -26,61 +24,64 @@ const monthNamesGenitive: { [key: string]: string } = {
   грудень: 'грудня',
 }
 
-export const MoodTrackerComponent: FC<Readonly<IMoodTrackerComponent>> = () => {
-  const token = useUserStore((state) => state.user?.access_token)
-  const handleChangeUserStore = useUserStore((state) => state.handleChangeUserStore)
-  const user = useUserStore((state) => state.user)
-  const router = useRouter()
-
-  const currentMonth = moment().format('MMMM') // "жовтень"
-  const currentMonthGenitive =
-    monthNamesGenitive[currentMonth as keyof typeof monthNamesGenitive] ?? ''
-
-  const selectedMood = user?.mood?.mood ?? null // Сохраняем null, если настроение не отмечено
-  const { data: UserProfile, refetch: userProfileRefetch } = useGetUserProfile(token ?? '')
-
-  const { mutate: postCurrentMood } = useMutation({
-    mutationFn: (form: any) => postMood(token ?? '', form),
-    onSuccess: (data: any) => {
-      console.log(data)
-      userProfileRefetch().then((data) => {
-        handleChangeUserStore({ user: data.data })
-      })
-    },
-    onError: (error) => {
-      console.error('Error posting mood:', error)
-      // Здесь можно добавить логику для отображения ошибки
+// API-запрос
+const fetchUserProfile = async (token: string) => {
+  const response = await fetch('https://istrongapp.com/api/users/profile/', {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
     },
   })
 
-  // Функция для навигации на страницу /statistics
-  const goToStatistics = () => {
-    router.push('/statistic')
+  if (!response.ok) {
+    throw new Error('Failed to fetch user profile')
   }
 
-  // Функция для навигации на страницу /select-mood
-  const goToSelectMood = () => {
-    router.push('/select-mood')
+  return response.json()
+}
+
+const MoodTrackerComponent: FC = () => {
+  const token = useUserStore((state) => state.user?.access_token)
+  const handleChangeUserStore = useUserStore((state) => state.handleChangeUserStore)
+  const router = useRouter()
+
+  const { data, isError, isLoading } = useQuery({
+    queryKey: ['userProfile', token],
+    queryFn: async () => {
+      const data = await fetchUserProfile(token ?? '')
+      handleChangeUserStore({ user: data })
+      return data
+    },
+    enabled: !!token,
+  })
+
+  if (isLoading) {
+    return <div>Завантаження...</div>
   }
 
-  const selectedMoodData = MOODS.find((item) => item.slug === selectedMood)
+  if (isError) {
+    return <div>Помилка завантаження даних.</div>
+  }
 
-  // Проверяем, есть ли у пользователя настроение, если нет — рендерим альтернативный компонент
+  const user = data
+  const currentMonth = moment().format('MMMM')
+  const currentMonthGenitive =
+    monthNamesGenitive[currentMonth as keyof typeof monthNamesGenitive] ?? ''
+  const selectedMoodSlug = user?.mood?.mood ?? null
+  const moodCreatedAt = user?.mood?.created_at
+
+  const selectedMood = MOODS.find((mood) => mood.slug === selectedMoodSlug)
+
   if (!selectedMood) {
     return (
-      <section className={`${styles.mood_tracker_passive}`}>
+      <section className={styles.mood_tracker_passive}>
         <h2 className={styles.mood_tracker__title}>Трекер настрою</h2>
-
-        {/* Контейнер, внутри которого будет и картинка, и блок */}
         <div>
-          {/* Изображение капибары */}
           <img
             src='/image/capibara_mood_tracker.png'
             alt='capibara_mood_tracker'
             className={styles.mood_tracker_passive__image}
           />
-
-          {/* Блок с контентом */}
           <div className={styles.mood_tracker__box}>
             <div className={styles.mood_tracker__box2}>
               <div className={styles.mood_tracker__bottom}>
@@ -92,18 +93,22 @@ export const MoodTrackerComponent: FC<Readonly<IMoodTrackerComponent>> = () => {
                 </div>
               </div>
               <div className={styles.mood_tracker__top_passive}>
-                <span>
-                  Як твій настрій <br /> сьогодні?
-                </span>
+                <span>Як твій настрій сьогодні?</span>
                 <span>Поділись зі мною</span>
               </div>
-              <button className={styles.mood_tracker__btn} onClick={goToSelectMood}>
+              <button
+                className={styles.mood_tracker__btn}
+                onClick={() => router.push('/select-mood')}
+              >
                 +
               </button>
             </div>
-            {/* Кнопка для перехода к статистике */}
             <div className={styles.mood_tracker__statistics}>
-              <ButtonComponent onClick={goToStatistics} size='small' variant='filled'>
+              <ButtonComponent
+                onClick={() => router.push('/statistic')}
+                size='small'
+                variant='filled'
+              >
                 Статистика
               </ButtonComponent>
             </div>
@@ -113,34 +118,33 @@ export const MoodTrackerComponent: FC<Readonly<IMoodTrackerComponent>> = () => {
     )
   }
 
-  //return текущий компонент, если настроение задано
   return (
-    <section className={`${styles.mood_tracker}`}>
+    <section className={styles.mood_tracker}>
       <h2 className={styles.mood_tracker__title}>Трекер настрою</h2>
       <div className={styles.mood_tracker__box}>
         <div className={styles.mood_tracker__box2}>
           <div className={styles.mood_tracker__bottom}>
             <div
               className={styles.mood_tracker__selected_emotion}
-              style={{ backgroundColor: selectedMoodData?.color }}
+              style={{ backgroundColor: selectedMood.color }}
             >
-              {selectedMoodData?.icon}
+              {selectedMood.icon}
             </div>
           </div>
           <div className={styles.mood_tracker__top}>
             <span>Останнє оновлення:</span>
             <span className={styles.mood_tracker__time}>
-              {moment(user?.mood?.date).isSame(new Date(), 'day')
-                ? `Сьогодні ${moment(user?.mood?.date).format('HH:mm')}`
-                : moment(user?.mood?.date).format('dddd HH:mm')}
+              {moment(moodCreatedAt).isSame(new Date(), 'day')
+                ? `Сьогодні ${moment.utc(moodCreatedAt).local().format('HH:mm')}`
+                : moment.utc(moodCreatedAt).local().format('dddd HH:mm')}
             </span>
           </div>
-          <button className={styles.mood_tracker__btn} onClick={goToSelectMood}>
+          <button className={styles.mood_tracker__btn} onClick={() => router.push('/select-mood')}>
             +
           </button>
         </div>
         <div className={styles.mood_tracker__statistics}>
-          <ButtonComponent onClick={goToStatistics} size='small' variant='filled'>
+          <ButtonComponent onClick={() => router.push('/statistic')} size='small' variant='filled'>
             Статистика
           </ButtonComponent>
         </div>
