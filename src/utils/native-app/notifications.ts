@@ -40,7 +40,7 @@ export const notifications: NotificationConfig[] = [
     id: 2,
     title: 'IStrong',
     body: 'Привіт, ти як? Поділись своїм станом з Капібарою та отримай монетку.',
-    url: `${BASE_URL}/diary`,
+    url: `${BASE_URL}/select-mood`,
     schedule: { at: adjustNotificationTime(9, 0), every: 'day', repeats: true }, // 9:00
     smallIcon: 'ic_stat_icon1',
   },
@@ -79,6 +79,15 @@ export const scheduleNotifications = async (enabledNotifications: NotificationCo
   const permissionsGranted = await requestPermissions()
   if (!permissionsGranted) return
 
+  // Проверка, что уведомления разрешены (например, для moodTracker или challenge)
+  const moodTrackerEnabled = await getNotificationState('moodTrackerNotificationsEnabled')
+  const challengeEnabled = await getNotificationState('challengeNotificationsEnabled')
+
+  if (!moodTrackerEnabled && !challengeEnabled) {
+    console.log('Уведомления отключены, не будет отправлено уведомлений')
+    return // Если оба типа уведомлений отключены, прекращаем выполнение
+  }
+
   try {
     await LocalNotifications.schedule({
       notifications: enabledNotifications.map((notification) => ({
@@ -96,7 +105,6 @@ export const scheduleNotifications = async (enabledNotifications: NotificationCo
   }
 }
 
-// Функция для переключения состояния уведомлений
 // Функция для переключения состояния уведомлений
 export const toggleNotifications = async (type: 'moodTracker' | 'challenge') => {
   const key =
