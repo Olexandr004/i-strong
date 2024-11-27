@@ -11,7 +11,7 @@ import StarterKit from '@tiptap/starter-kit'
 
 import moment from 'moment'
 
-import React, { FC, useEffect } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 import { postDiaryRecord, updateDiaryRecord, useGetSingleRecord } from '@/api/diary.api'
@@ -31,6 +31,7 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
   const token = useUserStore((state) => state.user?.access_token)
   const { control, watch, setValue } = useForm()
   const searchParams = useSearchParams()
+  const [isDelayed, setIsDelayed] = useState(false)
 
   const router = useRouter()
 
@@ -73,6 +74,16 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
     ],
     editable: true,
   })
+
+  useEffect(() => {
+    if (singleDiaryRecord) {
+      const timer = setTimeout(() => {
+        setIsDelayed(true)
+      }, 300)
+
+      return () => clearTimeout(timer) // Очистка таймера при размонтировании
+    }
+  }, [singleDiaryRecord])
 
   useEffect(() => {
     diaryRecordRefetch()
@@ -139,7 +150,7 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
         <MenuBarComponent editor={editor} />
       </div>
 
-      {status !== 'pending' || singleDiaryRecord ? (
+      {isDelayed && (status !== 'pending' || singleDiaryRecord) ? (
         <div className={styles.diary_record__editor_box}>
           <Controller
             control={control}
@@ -163,7 +174,7 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
           <EditorContent editor={editor} />
         </div>
       ) : (
-        <div>Завантаження</div>
+        <div></div>
       )}
     </section>
   )

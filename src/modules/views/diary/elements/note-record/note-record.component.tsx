@@ -1,5 +1,5 @@
 'use client'
-import React, { FC, useEffect } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useMutation } from '@tanstack/react-query'
@@ -30,6 +30,7 @@ export const NoteRecordComponent: FC<Readonly<INoteRecord>> = () => {
   const token = useUserStore((state) => state.user?.access_token)
   const { control, watch, setValue } = useForm() // <-- Извлекаем setValue здесь
   const searchParams = useSearchParams()
+  const [isDelayed, setIsDelayed] = useState(false)
 
   const router = useRouter()
 
@@ -82,6 +83,15 @@ export const NoteRecordComponent: FC<Readonly<INoteRecord>> = () => {
     editor?.commands.setContent(cleanedNote)
   }, [singleNote, editor])
 
+  useEffect(() => {
+    if (singleNote) {
+      const timer = setTimeout(() => {
+        setIsDelayed(true)
+      }, 300)
+
+      return () => clearTimeout(timer) // Очистка таймера при размонтировании
+    }
+  }, [singleNote])
   // Используем setValue для установки заголовка в форму
   useEffect(() => {
     if (singleNote) {
@@ -127,7 +137,7 @@ export const NoteRecordComponent: FC<Readonly<INoteRecord>> = () => {
         <MenuBarComponent editor={editor} />
       </div>
 
-      {status !== 'pending' || singleNote ? (
+      {isDelayed && (status !== 'pending' || singleNote) ? (
         <div className={styles.diary_record__editor_box}>
           <Controller
             control={control}
@@ -151,7 +161,7 @@ export const NoteRecordComponent: FC<Readonly<INoteRecord>> = () => {
           <EditorContent editor={editor} />
         </div>
       ) : (
-        <div>Завантаження</div>
+        <div></div>
       )}
     </section>
   )

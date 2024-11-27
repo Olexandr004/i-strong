@@ -10,7 +10,7 @@ import { EditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 
 import moment from 'moment'
-import React, { FC, useEffect } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 import { useUpdateTrackerRecord, useGetSingleTracker } from '@/api/tracker'
@@ -31,6 +31,7 @@ export const TrackerRecordComponent: FC<Readonly<ITrackerRecord>> = () => {
   const token = useUserStore((state) => state.user?.access_token)
   const { control, watch } = useForm()
   const searchParams = useSearchParams()
+  const [isDelayed, setIsDelayed] = useState(false)
   const router = useRouter()
 
   const handleBackClick = () => {
@@ -77,6 +78,16 @@ export const TrackerRecordComponent: FC<Readonly<ITrackerRecord>> = () => {
     console.log('Record ID изменился:', searchParams.get('record_id'))
     trackerRefetch()
   }, [searchParams.get('record_id')])
+
+  useEffect(() => {
+    if (singleTracker) {
+      const timer = setTimeout(() => {
+        setIsDelayed(true)
+      }, 300)
+
+      return () => clearTimeout(timer) // Очистка таймера при размонтировании
+    }
+  }, [singleTracker])
 
   useEffect(() => {
     console.log('Полученные данные трекера:', singleTracker)
@@ -128,7 +139,7 @@ export const TrackerRecordComponent: FC<Readonly<ITrackerRecord>> = () => {
         <MenuBarComponent editor={editor} />
       </div>
 
-      {status !== 'pending' && singleTracker ? (
+      {isDelayed && status !== 'pending' && singleTracker ? (
         <div className={styles.tracker_record__editor_box}>
           <h4>Мій стан:</h4>
           <Controller
@@ -150,7 +161,7 @@ export const TrackerRecordComponent: FC<Readonly<ITrackerRecord>> = () => {
           <EditorContent editor={editor} />
         </div>
       ) : (
-        <div>Завантаження</div>
+        <div></div>
       )}
     </section>
   )
