@@ -52,7 +52,10 @@ export const SelectComponent: FC<Readonly<ISelect>> = ({
           ...periods,
           {
             value: 'custom',
-            title: duration <= 1 ? '1 день' : `Дні: ${duration + 1}`,
+            title:
+              duration == null || duration <= 0.1
+                ? '1 день' // По умолчанию "1 день"
+                : `Дні: ${Math.round(duration) + 1}`, // Для остальных значений
           },
         ]
 
