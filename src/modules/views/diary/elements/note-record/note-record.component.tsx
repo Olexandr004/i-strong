@@ -75,7 +75,7 @@ export const NoteRecordComponent: FC<Readonly<INoteRecord>> = () => {
       return ''
     }
     const cleanedText = text.substring(1, text.length - 1)
-    return cleanedText
+    return cleanedText.replace(/\n/g, '<br />')
   }
 
   useEffect(() => {

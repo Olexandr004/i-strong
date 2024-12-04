@@ -51,6 +51,8 @@ export const ChallengeComponent: FC<Readonly<IChallengeComponent>> = () => {
       // Send the note as is, preserving the newlines
       challengeSlide.note = note
     }
+    console.log('Отправляем данные:', challengeSlide)
+
     completeChallengePartMutate(challengeSlide)
     useCommonStore.setState({ isModalActive: true })
   }, [challenge_id, challenge, note, completeChallengePartMutate])
