@@ -6,6 +6,7 @@ import styles from './chest.module.scss'
 import { PhotoTutorialComponent } from '@/modules/views/tutorials/elements/'
 import { DiaryNoteCardViewComponent } from '@/modules/views/diary/elements'
 import { ModalGettingToInstructionsComponent } from '@/shared/components'
+import { LoadingComponent } from '@/modules/layouts/loading'
 
 const ChestComponent: React.FC = () => {
   const { view, setView } = useChestStore()
@@ -15,6 +16,8 @@ const ChestComponent: React.FC = () => {
   const [favoriteDiaryEntries, setFavoriteDiaryEntries] = useState<any[]>([])
   const [guideImages, setGuideImages] = useState<string[]>([]) // Состояние для изображений
   const [isModalActive, setIsModalActive] = useState(false) // Для контроля модала
+  const [isLoading, setIsLoading] = useState(true)
+  const [isDataLoaded, setIsDataLoaded] = useState(false)
   const token = useUserStore((state) => state.user?.access_token)
 
   useEffect(() => {
@@ -44,21 +47,36 @@ const ChestComponent: React.FC = () => {
 
   const fetchFavoriteTechniques = async () => {
     try {
-      const response = await fetch('https://istrongapp.com/api/users/favorites/techniques/', {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      // Устанавливаем статус загрузки
+      setIsLoading(true)
 
-      if (response.ok) {
-        const data = await response.json()
-        setFavoriteTechniques(data.favorite_techniques.map((item: any) => item.technique) || [])
-      } else {
-        console.error('Ошибка при получении избранных техник:', response.status)
-      }
+      // Симулируем задержку для показа загрузки хотя бы на 1 секунду
+      setTimeout(async () => {
+        try {
+          const response = await fetch('https://istrongapp.com/api/users/favorites/techniques/', {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+
+          if (response.ok) {
+            const data = await response.json()
+            setFavoriteTechniques(data.favorite_techniques.map((item: any) => item.technique) || [])
+          } else {
+            console.error('Ошибка при получении избранных техник:', response.status)
+          }
+        } catch (error) {
+          console.error('Ошибка при получении избранных техник:', error)
+        } finally {
+          setIsLoading(false) // Завершаем загрузку
+          setIsDataLoaded(true) // Устанавливаем, что данные загружены
+        }
+      }, 1000) // 1 секунда задержки
     } catch (error) {
-      console.error('Ошибка при получении избранных техник:', error)
+      console.error('Ошибка при загрузке:', error)
+      setIsLoading(false) // Завершаем загрузку в случае ошибки
+      setIsDataLoaded(true) // Устанавливаем, что данные загружены (для обработок ошибок)
     }
   }
 
@@ -84,21 +102,36 @@ const ChestComponent: React.FC = () => {
 
   const fetchFavoriteDiaryEntries = async () => {
     try {
-      const response = await fetch('https://istrongapp.com/api/users/favorites/diary/', {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      // Устанавливаем статус загрузки
+      setIsLoading(true)
 
-      if (response.ok) {
-        const data = await response.json()
-        setFavoriteDiaryEntries(data.favorite_notes || [])
-      } else {
-        console.error('Ошибка при получении избранных записей дневника:', response.status)
-      }
+      // Симулируем задержку для показа загрузки хотя бы на 1 секунду
+      setTimeout(async () => {
+        try {
+          const response = await fetch('https://istrongapp.com/api/users/favorites/diary/', {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+
+          if (response.ok) {
+            const data = await response.json()
+            setFavoriteDiaryEntries(data.favorite_notes || [])
+          } else {
+            console.error('Ошибка при получении избранных записей дневника:', response.status)
+          }
+        } catch (error) {
+          console.error('Ошибка при получении избранных записей дневника:', error)
+        } finally {
+          setIsLoading(false) // Завершаем загрузку после обработки данных
+          setIsDataLoaded(true) // Устанавливаем, что данные загружены
+        }
+      }, 1000) // 1 секунда задержки
     } catch (error) {
-      console.error('Ошибка при получении избранных записей дневника:', error)
+      console.error('Ошибка при загрузке:', error)
+      setIsLoading(false)
+      setIsDataLoaded(true)
     }
   }
 
@@ -176,7 +209,11 @@ const ChestComponent: React.FC = () => {
           <div className={styles.box__chest}>
             <IconArrow onClick={goBack} className={styles.backBtn__chest} />
             <h1>Техніки</h1>
-            {favoriteTechniques.length > 0 ? (
+
+            {/* Показываем индикатор загрузки, если данные еще не загружены */}
+            {isLoading && !isDataLoaded ? (
+              <LoadingComponent /> // Показываем компонент загрузки
+            ) : favoriteTechniques.length > 0 ? (
               <ul>
                 {favoriteTechniques.map((technique) => (
                   <li key={technique.id} onClick={() => handleTechniqueSelect(technique)}>
@@ -186,7 +223,7 @@ const ChestComponent: React.FC = () => {
                 ))}
               </ul>
             ) : (
-              <p>Немає вибраних технік.</p>
+              <p>Немає вибраних технік</p> // Показываем сообщение, если нет данных
             )}
           </div>
         )
@@ -195,21 +232,29 @@ const ChestComponent: React.FC = () => {
           <div>
             <IconArrow onClick={goBack} className={styles.backBtn__chest} />
             <h1>Щоденник</h1>
-            {favoriteDiaryEntries.map((entry) => (
-              <DiaryNoteCardViewComponent
-                key={entry.id}
-                item={{
-                  ...entry,
-                  note: stripHtmlTags(entry.note || ''),
-                  description:
-                    entry.type === 'challenges' || entry.type === 'tracker'
-                      ? 'Запис не знайдено'
-                      : stripHtmlTags(entry.description || ''),
-                }}
-                type={entry.type}
-                showActions={false}
-              />
-            ))}
+
+            {/* Показываем индикатор загрузки, если данные не загружены */}
+            {isLoading && !isDataLoaded ? (
+              <LoadingComponent />
+            ) : favoriteDiaryEntries.length > 0 ? (
+              favoriteDiaryEntries.map((entry) => (
+                <DiaryNoteCardViewComponent
+                  key={entry.id}
+                  item={{
+                    ...entry,
+                    note: stripHtmlTags(entry.note || ''),
+                    description:
+                      entry.type === 'challenges' || entry.type === 'tracker'
+                        ? 'Запис не знайдено'
+                        : stripHtmlTags(entry.description || ''),
+                  }}
+                  type={entry.type}
+                  showActions={false}
+                />
+              ))
+            ) : (
+              <p>Немає вибраних записів</p>
+            )}
           </div>
         )
       default:
