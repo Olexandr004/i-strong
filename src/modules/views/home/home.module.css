@@ -1,6 +1,8 @@
 .home {
   padding-top: 6.8rem;
   overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 .home__title {
   margin-bottom: 3.6rem;
