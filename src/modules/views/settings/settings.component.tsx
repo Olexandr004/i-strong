@@ -13,6 +13,7 @@ import {
   getNotificationState,
   saveNotificationState,
 } from '@/utils/native-app/notifications' // Импортируйте ваши функции
+import { PushNotifications } from '@capacitor/push-notifications'
 import styles from './settings.module.scss'
 
 interface ISettings {}
@@ -24,6 +25,16 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
   const [moodTrackerEnabled, setMoodTrackerEnabled] = useState<boolean>(false)
   const [challengeNotificationsEnabled, setChallengeNotificationsEnabled] = useState<boolean>(false)
 
+  const checkNotificationPermission = async () => {
+    const permissionStatus = await PushNotifications.checkPermissions()
+    if (permissionStatus.receive === 'granted') {
+      setMoodTrackerEnabled(true)
+      setChallengeNotificationsEnabled(true)
+    } else {
+      setMoodTrackerEnabled(false)
+      setChallengeNotificationsEnabled(false)
+    }
+  }
   // Функция для загрузки состояния уведомлений с сервера
   const fetchNotificationPreferences = async (token: string) => {
     const response = await fetch('https://istrongapp.com/api/users/profile/', {
@@ -81,6 +92,7 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
           console.error('Error loading notification states:', error)
         }
       }
+      checkNotificationPermission()
     }
     loadNotificationStates()
   }, [user])
