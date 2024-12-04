@@ -1,6 +1,6 @@
 .home {
   padding-top: 6.8rem;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 .home__title {
   margin-bottom: 3.6rem;
