@@ -53,13 +53,15 @@ export const NotesComponent: FC<Readonly<INotes>> = () => {
               <div className={styles.diary__visible_cards}>
                 {/* Показываем только последние две записи, если месяц не развернут */}
                 {extendedNote === challenge.challenge.id.toString()
-                  ? challenge.notes.map((item: any) => (
-                      <DiaryNoteCardComponent
-                        key={`${item.id}-${index}`}
-                        item={item}
-                        type={'challenges'}
-                      />
-                    ))
+                  ? challenge.notes
+                      .slice(2)
+                      .map((item: any) => (
+                        <DiaryNoteCardComponent
+                          key={`${item.id}-${index}`}
+                          item={item}
+                          type={'challenges'}
+                        />
+                      ))
                   : challenge.notes
                       .slice(-2)
                       .map((item: any) => (
