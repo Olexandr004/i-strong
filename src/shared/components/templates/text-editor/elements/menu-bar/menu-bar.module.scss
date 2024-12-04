@@ -24,6 +24,8 @@
   }
 
   &__bold_text {
+    transform: scale(1.2);
+    font-weight: 600;
     & svg {
       width: 2.7rem;
       height: 1.7rem;

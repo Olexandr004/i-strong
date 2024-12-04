@@ -218,7 +218,7 @@ const AvatarComponent: FC = () => {
     <BaseModalComponent>
       <div className={styles.modal__box}>
         <div className={styles.header}>
-          <span>Аватарка</span>
+          <span></span>
           <IconClose onClick={() => handleChangeCommonStore({ isModalActive: false })} />
         </div>
         <div className={styles.image_container}>

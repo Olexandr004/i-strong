@@ -57,7 +57,7 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
     content: '',
     extensions: [
       Placeholder.configure({
-        placeholder: 'Як ти?',
+        placeholder: 'Тут ще немає тексту',
       }),
       Color.configure({ types: [TextStyle.name, ListItem.name] }),
       TextStyle.configure(),
@@ -158,7 +158,7 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
             key={`title`}
             defaultValue={singleDiaryRecord?.title ?? ''}
             render={({ field: { value, onChange } }) => (
-              <textarea
+              <input
                 value={value}
                 onChange={onChange}
                 className={styles.diary_record__title_input}
