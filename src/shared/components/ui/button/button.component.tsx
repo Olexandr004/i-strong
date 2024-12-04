@@ -3,12 +3,13 @@ import { FC, ReactNode } from 'react'
 import styles from './button.module.scss'
 
 //interface
+
 interface IButton {
-  type?: 'button' | 'submit' | 'reset' | undefined
+  type?: 'button' | 'submit' | 'reset'
   children: ReactNode
   disabled?: boolean
   variant?: 'outlined' | 'filled'
-  onClick?: () => void
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
   size?: 'small' | 'regular'
 }
 

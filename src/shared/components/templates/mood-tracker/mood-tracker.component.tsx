@@ -72,9 +72,18 @@ const MoodTrackerComponent: FC = () => {
 
   const selectedMood = MOODS.find((mood) => mood.slug === selectedMoodSlug)
 
+  const handleBlockClick = () => {
+    router.push('/select-mood')
+  }
+
+  const handleStatisticClick = (e: React.MouseEvent) => {
+    e.stopPropagation() // предотвращаем переход по клику на общий блок
+    router.push('/statistic')
+  }
+
   if (!selectedMood) {
     return (
-      <section className={styles.mood_tracker_passive}>
+      <section className={styles.mood_tracker_passive} onClick={handleBlockClick}>
         <h2 className={styles.mood_tracker__title}>Трекер настрою</h2>
         <div>
           <img
@@ -98,14 +107,17 @@ const MoodTrackerComponent: FC = () => {
               </div>
               <button
                 className={styles.mood_tracker__btn}
-                onClick={() => router.push('/select-mood')}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  router.push('/select-mood')
+                }}
               >
                 +
               </button>
             </div>
             <div className={styles.mood_tracker__statistics}>
               <ButtonComponent
-                onClick={() => router.push('/statistic')}
+                onClick={(e) => handleStatisticClick(e)} // кнопка "Статистика" не вызывает переход на блок
                 size='small'
                 variant='filled'
               >
@@ -119,7 +131,7 @@ const MoodTrackerComponent: FC = () => {
   }
 
   return (
-    <section className={styles.mood_tracker}>
+    <section className={styles.mood_tracker} onClick={handleBlockClick}>
       <h2 className={styles.mood_tracker__title}>Трекер настрою</h2>
       <div className={styles.mood_tracker__box}>
         <div className={styles.mood_tracker__box2}>
@@ -139,12 +151,18 @@ const MoodTrackerComponent: FC = () => {
                 : moment.utc(moodCreatedAt).local().format('dddd HH:mm')}
             </span>
           </div>
-          <button className={styles.mood_tracker__btn} onClick={() => router.push('/select-mood')}>
+          <button
+            className={styles.mood_tracker__btn}
+            onClick={(e) => {
+              e.stopPropagation()
+              router.push('/select-mood')
+            }}
+          >
             +
           </button>
         </div>
         <div className={styles.mood_tracker__statistics}>
-          <ButtonComponent onClick={() => router.push('/statistic')} size='small' variant='filled'>
+          <ButtonComponent onClick={(e) => handleStatisticClick(e)} size='small' variant='filled'>
             Статистика
           </ButtonComponent>
         </div>
