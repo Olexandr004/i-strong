@@ -31,7 +31,7 @@ export const QuotesDayComponent: FC<IQuotesDay> = () => {
         {/* Изображение */}
         <div className={styles.quotes__img}>
           <Image
-            src={'/image/capybara-chill.png'}
+            src={'/image/capi-cutata.png'}
             alt={`Capybara`}
             width={400}
             height={200}
