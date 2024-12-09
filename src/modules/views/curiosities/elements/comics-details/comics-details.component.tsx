@@ -189,18 +189,29 @@ const ComicsDetailsComponent: React.FC<{ comicId: string | number; onClose: () =
         <h1>{comicDetails.name}</h1>
 
         <div className={styles.tabs}>
-          <button className={`${styles.tabButton} ${currentTab === 1 ? styles.activeTab : ''}`}>
-            1
-          </button>
-          <button className={`${styles.tabButton} ${currentTab === 2 ? styles.activeTab : ''}`}>
-            2
-          </button>
-          <button className={`${styles.tabButton} ${currentTab === 3 ? styles.activeTab : ''}`}>
-            3
-          </button>
-          <button className={`${styles.tabButton} ${currentTab === 4 ? styles.activeTab : ''}`}>
-            4
-          </button>
+          <div>
+            <button className={`${styles.tabButton} ${currentTab === 1 ? styles.activeTab : ''}`}>
+              1
+            </button>
+          </div>
+          <div className={styles.line}></div>
+          <div>
+            <button className={`${styles.tabButton} ${currentTab === 2 ? styles.activeTab : ''}`}>
+              2
+            </button>
+          </div>
+          <div className={styles.line}></div>
+          <div>
+            <button className={`${styles.tabButton} ${currentTab === 3 ? styles.activeTab : ''}`}>
+              3
+            </button>
+          </div>
+          <div className={styles.line}></div>
+          <div>
+            <button className={`${styles.tabButton} ${currentTab === 4 ? styles.activeTab : ''}`}>
+              4
+            </button>
+          </div>
         </div>
 
         {currentTab === 1 && (
