@@ -48,7 +48,8 @@ export const RootLayoutComponent: FC<Readonly<IRootLayout>> = ({ entry, home }) 
       pathName === '/' ||
       pathName === '/chest' ||
       pathName === '/tutorials' ||
-      pathName === '/diary'
+      pathName === '/diary' ||
+      pathName === '/curiosities'
     )
   }
 

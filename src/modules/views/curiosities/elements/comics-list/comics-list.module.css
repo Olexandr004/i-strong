@@ -1,0 +1,36 @@
+.comicsList h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 15px;
+}
+.comicsList ul {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.comicsList ul li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed #ffc75a;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 20px;
+  color: #1e1e1e;
+}
+
+.loading {
+  text-align: center;
+  font-size: 18px;
+  color: #666;
+}
+
+.error {
+  text-align: center;
+  font-size: 18px;
+  color: red;
+}
+
+/*# sourceMappingURL=comics-list.module.css.map */
