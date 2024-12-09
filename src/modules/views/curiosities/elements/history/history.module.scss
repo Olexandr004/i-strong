@@ -1,0 +1,43 @@
+.history {
+  h1 {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 34px;
+    color: #1e1e1e;
+  }
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-style: normal;
+      font-weight: 700;
+      font-size: 16px;
+      line-height: 20px;
+      color: #1e1e1e;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed #ffc75a;
+    }
+  }
+
+  .backButton {
+    width: 22px;
+    height: 20px;
+    margin-bottom: 10px;
+  }
+  .storyImage {
+    border-radius: 12px;
+    margin-bottom: 10px;
+  }
+  .storyContentText {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+    color: #1e1e1e;
+  }
+}
