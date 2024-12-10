@@ -85,6 +85,7 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
     const loadNotificationStates = async () => {
       if (user?.access_token) {
         try {
+          // Завантажуємо налаштування з сервера
           const preferences = await fetchNotificationPreferences(user.access_token)
           setMoodTrackerEnabled(preferences.notifications_preferences.mood_survey)
           setChallengeNotificationsEnabled(preferences.notifications_preferences.challenges)
@@ -92,12 +93,14 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
           console.error('Error loading notification states:', error)
         }
       }
+      // Перевірка дозволів на сповіщення
       checkNotificationPermission()
     }
+
     loadNotificationStates()
   }, [user])
 
-  // Сохранение состояния для трекера настроения
+  // Функція для зміни налаштувань тумблерів
   const handleToggleMoodTracker = async () => {
     const newState = !moodTrackerEnabled
     console.log('Mood Tracker Notifications Enabled:', newState)
@@ -106,11 +109,14 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
 
     if (user?.access_token) {
       try {
+        // Оновлюємо налаштування на сервері
         await updateNotificationPreferences(
           user.access_token,
           newState,
           challengeNotificationsEnabled,
         )
+
+        // Плануємо або скасовуємо сповіщення
         if (newState) {
           await scheduleNotifications(
             notifications.filter((notification) => [2, 3].includes(notification.id)),
@@ -132,7 +138,10 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
 
     if (user?.access_token) {
       try {
+        // Оновлюємо налаштування на сервері
         await updateNotificationPreferences(user.access_token, moodTrackerEnabled, newState)
+
+        // Плануємо або скасовуємо сповіщення
         if (newState) {
           await scheduleNotifications(
             notifications.filter((notification) => [1].includes(notification.id)),
