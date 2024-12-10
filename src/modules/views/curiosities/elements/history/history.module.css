@@ -23,8 +23,11 @@
   border-bottom: 1px dashed #ffc75a;
 }
 .history .backButton {
+  position: absolute;
+  top: 50px;
   width: 22px;
   height: 20px;
+  margin-top: -20px;
   margin-bottom: 10px;
 }
 .history .storyImage {

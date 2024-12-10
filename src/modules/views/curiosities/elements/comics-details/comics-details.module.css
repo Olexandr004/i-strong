@@ -147,6 +147,8 @@
   z-index: 1;
   overflow-y: auto;
   background: #f2f2f2;
+  margin-left: -30px;
+  padding-left: 30px;
 }
 .learning_block button {
   margin-top: 20px;
