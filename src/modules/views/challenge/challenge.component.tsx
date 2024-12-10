@@ -83,6 +83,12 @@ export const ChallengeComponent: FC<Readonly<IChallengeComponent>> = () => {
   if (!challenge) {
     return <div>Oшибка</div>
   }
+  const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const cleanedValue = e.target.value.replace(/ {3,}/g, '  ')
+    setNote(cleanedValue)
+    e.target.style.height = 'auto'
+    e.target.style.height = `${e.target.scrollHeight}px`
+  }
 
   return (
     <section className={`${styles.challenge} container`}>
@@ -137,10 +143,7 @@ export const ChallengeComponent: FC<Readonly<IChallengeComponent>> = () => {
                 id='challenge-impressions'
                 className={`text-5 ${styles.challenge__area_input}`}
                 value={note}
-                onChange={(e) => {
-                  const cleanedValue = e.target.value.replace(/ {3,}/g, '  ') // Заменяем более двух пробелов на два
-                  setNote(cleanedValue) // Обновляем состояние очищенным значением
-                }}
+                onChange={handleInput}
                 onFocus={handleFocus}
                 disabled={disableInteraction}
               ></textarea>
