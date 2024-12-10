@@ -74,7 +74,7 @@ export const NoteRecordComponent: FC<Readonly<INoteRecord>> = () => {
     if (text.length <= 2) {
       return ''
     }
-    const cleanedText = text.substring(1, text.length - 1)
+    const cleanedText = text
     return cleanedText.replace(/\n/g, '<br />')
   }
 

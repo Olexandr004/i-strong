@@ -100,7 +100,7 @@ export const DiaryNoteCardComponent: FC<Readonly<IDiaryNoteCard>> = ({
   const openModal = () => setIsModalOpen(true)
   const closeModal = () => setIsModalOpen(false)
 
-  const modifiedNote = item.note || 'Тут ще немає тексту'
+  const modifiedNote = (item.note || 'Тут ще немає тексту').replace(/^"|"$/g, '')
   const createdAt = moment(item.created_at)
   const formattedDate = createdAt.format('DD.MM.YYYY')
   const formattedTime = createdAt.format('HH:mm')
