@@ -253,7 +253,7 @@ const ChestComponent: React.FC = () => {
                 />
               ))
             ) : (
-              <p>Немає вибраних записів</p>
+              <p className={styles.box_chestText}>Немає вибраних записів</p>
             )}
           </div>
         )
