@@ -134,8 +134,6 @@ export const DiaryRecordViewComponent: FC<Readonly<IDiaryRecord>> = () => {
 
           <div>{moment(singleDiaryRecord?.created_at).format('DD.MM.YYYY')}</div>
         </div>
-
-        <MenuBarComponent editor={editor} />
       </div>
 
       {status !== 'pending' || singleDiaryRecord ? (

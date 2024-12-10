@@ -120,8 +120,6 @@ export const NoteRecordViewComponent: FC<Readonly<INoteRecord>> = () => {
 
           <div>{moment(singleNote?.created_at).format('DD.MM.YYYY')}</div>
         </div>
-
-        <MenuBarComponent editor={editor} />
       </div>
 
       {status !== 'pending' || singleNote ? (

@@ -175,7 +175,7 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
 
         <div className={`${styles.settings_card} ${styles.yellow}`}>
           <div className={styles.settings_card__header}>
-            <h2>Звуки та сповіщення</h2>
+            <h2>Сповіщення</h2>
           </div>
 
           <div className={styles.settings_card__content}>

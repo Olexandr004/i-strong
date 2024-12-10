@@ -107,8 +107,6 @@ export const TrackerRecordViewComponent: FC<Readonly<ITrackerRecord>> = () => {
               : 'Завантаження'}
           </div>
         </div>
-
-        <MenuBarComponent editor={editor} />
       </div>
 
       {status !== 'pending' && singleTracker ? (
