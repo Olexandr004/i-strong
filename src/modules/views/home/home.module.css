@@ -1,12 +1,12 @@
 .home {
-  padding-top: 6.8rem;
+  padding-top: 9.8rem;
   overflow: hidden;
 }
 .home__title {
   margin-bottom: 3.6rem;
   text-align: left !important;
   position: absolute;
-  top: 2.7rem;
+  top: 5.7rem;
 }
 .home__content {
   display: grid;
