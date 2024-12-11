@@ -83,19 +83,14 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
   // Загрузка состояния уведомлений при инициализации
   useEffect(() => {
     const loadNotificationStates = async () => {
-      try {
-        // Используем getNotificationState для получения сохраненного состояния уведомлений
-        const moodTrackerEnabledState = await getNotificationState(
-          'moodTrackerNotificationsEnabled',
-        )
-        const challengeNotificationsEnabledState = await getNotificationState(
-          'challengeNotificationsEnabled',
-        )
-
-        setMoodTrackerEnabled(moodTrackerEnabledState)
-        setChallengeNotificationsEnabled(challengeNotificationsEnabledState)
-      } catch (error) {
-        console.error('Error loading notification states:', error)
+      if (user?.access_token) {
+        try {
+          const preferences = await fetchNotificationPreferences(user.access_token)
+          setMoodTrackerEnabled(preferences.notifications_preferences.mood_survey)
+          setChallengeNotificationsEnabled(preferences.notifications_preferences.challenges)
+        } catch (error) {
+          console.error('Error loading notification states:', error)
+        }
       }
       checkNotificationPermission()
     }
