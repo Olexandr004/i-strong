@@ -48,9 +48,6 @@
   align-items: center;
   padding: 7px;
 }
-.card_icon svg {
-  fill: none;
-}
 
 @keyframes slideInFromLeft {
   0% {
