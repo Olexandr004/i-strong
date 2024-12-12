@@ -115,12 +115,6 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
     },
   })
 
-  useEffect(() => {
-    if (editor) {
-      editor.commands.focus()
-    }
-  }, [editor])
-
   const handleSave = () => {
     const title = watch('title')
 
@@ -177,12 +171,7 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
             }}
           />
 
-          <EditorContent
-            editor={editor}
-            onTouchStart={() => editor?.commands.focus()} // Принудительно фокусируемся при касании
-            onFocus={() => editor?.commands.focus()} // Обрабатываем фокус
-            placeholder='Введите текст'
-          />
+          <EditorContent editor={editor} />
         </div>
       ) : (
         <div></div>

@@ -224,9 +224,4 @@ img {
   display: block;
 }
 
-.ProseMirror {
-  min-height: 100px;
-  contenteditable: true;
-}
-
 /*# sourceMappingURL=globals.css.map */
