@@ -43,7 +43,7 @@ const SliderCardComponent: React.FC<ISliderCard> = ({ slide }) => {
       <h3 className={`text-6 ${styles.card_title}`}>{title}</h3>
       {type === `long_term` && (
         <div className={styles.card_icon}>
-          <IconFlag />
+          <img src='/icon/flag.svg' alt='flag' />
         </div>
       )}
       <div className={styles.card__avatar}>
