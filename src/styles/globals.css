@@ -225,7 +225,8 @@ img {
 }
 
 .ProseMirror {
-  position: unset !important;
+  min-height: 100px;
+  contenteditable: true;
 }
 
 /*# sourceMappingURL=globals.css.map */

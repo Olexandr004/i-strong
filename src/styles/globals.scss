@@ -72,5 +72,6 @@ img {
   display: block;
 }
 .ProseMirror {
-  position: unset !important;
+  min-height: 100px;
+  contenteditable: true;
 }

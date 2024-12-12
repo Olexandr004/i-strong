@@ -179,8 +179,9 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
 
           <EditorContent
             editor={editor}
-            onTouchStart={() => {}}
-            onFocus={() => editor?.commands.focus()}
+            onTouchStart={() => editor?.commands.focus()} // Принудительно фокусируемся при касании
+            onFocus={() => editor?.commands.focus()} // Обрабатываем фокус
+            placeholder='Введите текст'
           />
         </div>
       ) : (
