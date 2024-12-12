@@ -124,7 +124,7 @@ export const DiaryNoteCardComponent: FC<Readonly<IDiaryNoteCard>> = ({
 
               {type !== 'challenges' && type !== 'tracker' && (
                 <IconButtonComponent onClick={openModal} name={'delete record'}>
-                  <IconTrashBin />
+                  <IconTrashBin className={styles.trashBin} />
                 </IconButtonComponent>
               )}
             </div>
