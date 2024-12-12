@@ -17,7 +17,11 @@ interface StoryContent {
   }
 }
 
-const HistoryComponent: React.FC = () => {
+interface HistoryComponentProps {
+  onBack: () => void // Добавляем проп для возврата
+}
+
+const HistoryComponent: React.FC<HistoryComponentProps> = ({ onBack }) => {
   const [stories, setStories] = useState<Story[]>([])
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
@@ -42,7 +46,6 @@ const HistoryComponent: React.FC = () => {
         }
 
         const data = await response.json()
-        console.log('Полученные истории:', data)
         setStories(data.stories || [])
       } catch (err: any) {
         if (err instanceof Error) {
@@ -75,7 +78,6 @@ const HistoryComponent: React.FC = () => {
       }
 
       const data = await response.json()
-      console.log('Полученные данные истории:', data)
       setSelectedStory(data)
     } catch (err: any) {
       if (err instanceof Error) {
@@ -98,6 +100,11 @@ const HistoryComponent: React.FC = () => {
       {error && <p style={{ color: 'red' }}></p>}
 
       {/* Условно показываем заголовок */}
+      {!selectedStory && (
+        <button className={styles.backButton} onClick={onBack}>
+          <IconArrow />
+        </button>
+      )}
       {!selectedStory && <h1>Історії</h1>}
 
       {selectedStory ? (

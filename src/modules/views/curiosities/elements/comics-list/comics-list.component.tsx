@@ -2,18 +2,23 @@ import React, { useState, useEffect } from 'react'
 import styles from './comics-list.module.scss'
 import { useUserStore } from '@/shared/stores'
 import { ComicsDetailsComponent } from '@/modules/views/curiosities/elements'
-import { IconNextArrow } from '@/shared/icons'
+import { IconNextArrow, IconArrow } from '@/shared/icons'
 
 interface Comic {
   id: string | number
   name: string
 }
-const ComicsListComponent = () => {
+
+interface ComicsListComponentProps {
+  onBack: () => void // Проп для возврата
+}
+
+const ComicsListComponent: React.FC<ComicsListComponentProps> = ({ onBack }) => {
   const [comics, setComics] = useState<Comic[]>([])
   const [error, setError] = useState<string | null>(null)
-  const [loading, setLoading] = useState(true) // Состояние загрузки
+  const [loading, setLoading] = useState(true)
   const [selectedComicId, setSelectedComicId] = useState<string | number | null>(null)
-  const token = useUserStore((state) => state.user?.access_token) // Получение токена из хранилища
+  const token = useUserStore((state) => state.user?.access_token)
 
   useEffect(() => {
     if (!token) {
@@ -38,11 +43,10 @@ const ComicsListComponent = () => {
         }
 
         const data = await response.json()
-        setComics(data.comixes || []) // Обработка структуры данных
+        setComics(data.comixes || [])
       } catch (err) {
-        // Проверяем, что err имеет свойство message
         if (err instanceof Error) {
-          setError(err.message) // Теперь TypeScript знает, что err имеет свойство message
+          setError(err.message)
         } else {
           setError('Произошла неизвестная ошибка')
         }
@@ -55,11 +59,11 @@ const ComicsListComponent = () => {
   }, [token])
 
   const handleSelectComic = (comicId: string | number) => {
-    setSelectedComicId(comicId) // Устанавливаем выбранный комикс
+    setSelectedComicId(comicId)
   }
 
   const handleCloseDetails = () => {
-    setSelectedComicId(null) // Закрытие компонента с деталями
+    setSelectedComicId(null)
   }
 
   if (loading) return <p className={styles.loading}></p>
@@ -67,7 +71,12 @@ const ComicsListComponent = () => {
 
   return (
     <div className={styles.comicsList}>
-      {/* Скрываем заголовок, если выбран комикс */}
+      {/* Кнопка возврата */}
+      {!selectedComicId && (
+        <div className={styles.btnBack} onClick={onBack}>
+          <IconArrow />
+        </div>
+      )}
       {!selectedComicId && <h1>Комікси</h1>}
 
       {selectedComicId ? (

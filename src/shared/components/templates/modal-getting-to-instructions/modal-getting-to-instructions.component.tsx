@@ -6,7 +6,14 @@ import { useUserStore } from '@/shared/stores'
 interface IModalGettingToInstructionsComponent {
   title: string
   images: string[]
-  check: 'challenges' | 'wardrobe' | 'diary' | 'techniques' | 'mood-stats' | 'favorites'
+  check:
+    | 'challenges'
+    | 'wardrobe'
+    | 'diary'
+    | 'techniques'
+    | 'mood-stats'
+    | 'favorites'
+    | 'curiosities'
   isModalActive: boolean
   closeModal: () => void
 }

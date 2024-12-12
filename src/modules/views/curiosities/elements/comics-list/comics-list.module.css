@@ -33,4 +33,14 @@
   color: red;
 }
 
+.btnBack {
+  width: 22px;
+  margin-top: -25px;
+  margin-bottom: 20px;
+}
+.btnBack svg {
+  width: 22px;
+  height: 20px;
+}
+
 /*# sourceMappingURL=comics-list.module.css.map */
