@@ -115,6 +115,12 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
     },
   })
 
+  useEffect(() => {
+    if (editor) {
+      editor.commands.focus()
+    }
+  }, [editor])
+
   const handleSave = () => {
     const title = watch('title')
 
