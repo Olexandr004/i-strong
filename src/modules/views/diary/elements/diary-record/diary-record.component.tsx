@@ -171,7 +171,11 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
             }}
           />
 
-          <EditorContent editor={editor} onTouchStart={() => {}} />
+          <EditorContent
+            editor={editor}
+            onTouchStart={() => {}}
+            onFocus={() => editor?.commands.focus()}
+          />
         </div>
       ) : (
         <div></div>
