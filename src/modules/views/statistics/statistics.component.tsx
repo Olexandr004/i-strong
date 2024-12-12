@@ -83,7 +83,7 @@ export const StatisticsComponent: FC<Readonly<IStatistics>> = () => {
 
   const handleIconGuidesClick = () => {
     console.log('IconGuides clicked in StatisticsComponent!')
-    handleChangeCommonStore({ isModalActive: true, activeModal: 'guides' })
+    handleChangeCommonStore({ isModalActive: true, activeModal: 'mood-stats' })
     fetchGuideImages() // Загружаем данные для модального окна
   }
 
@@ -147,6 +147,13 @@ export const StatisticsComponent: FC<Readonly<IStatistics>> = () => {
     statisticsRefetch()
   }, [searchParams.get('start_date'), searchParams.get('end_date'), selectedPeriod])
 
+  useEffect(() => {
+    const visitedKey = `mood-stats_visited`
+    if (!localStorage.getItem(visitedKey)) {
+      handleChangeCommonStore({ isModalActive: true, activeModal: 'mood-stats' })
+    }
+  }, [])
+
   return (
     <section className={`${styles.statistics} container`}>
       <PageHeaderComponent title={'Статистика'} />
@@ -194,7 +201,7 @@ export const StatisticsComponent: FC<Readonly<IStatistics>> = () => {
         </p>
       </div>
 
-      {isModalActive && activeModal === 'guides' && (
+      {isModalActive && activeModal === 'mood-stats' && (
         <ModalGettingToInstructionsComponent
           title='Статистика - аналізуй свої емоції'
           images={modalContent}

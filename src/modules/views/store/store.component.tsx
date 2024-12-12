@@ -40,6 +40,17 @@ export const StoreComponent: FC<Readonly<IStoreComponent>> = () => {
 
   const defaultImage = '/image/default-capi.png'
 
+  useEffect(() => {
+    const visitedKey = 'wardrobe_visited' // Уникальный ключ для этой модалки
+    const hasVisited = localStorage.getItem(visitedKey)
+
+    if (!hasVisited) {
+      setIsModalActive(true) // Открываем модальное окно
+      localStorage.setItem(visitedKey, 'true') // Сохраняем, что пользователь посетил
+      fetchGuideImages() // Загружаем изображения
+    }
+  }, [])
+
   // Load saved image on mount
   useEffect(() => {
     const savedImage = localStorage.getItem('mainImage')
