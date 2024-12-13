@@ -2,6 +2,8 @@
   padding-top: 6.8rem;
   display: grid;
   gap: 3.2rem;
+  overflow-y: auto;
+  height: 100vh;
 
   &__disable_new_record {
     font-weight: 700;
@@ -57,22 +59,16 @@
   }
 }
 
-.iconGuides {
-  position: absolute;
-  top: 52px;
-  right: 20px;
-}
-
 .title {
   font-style: normal;
   font-weight: 700;
   font-size: 28px;
   line-height: 34px;
   color: #1e1e1e;
-  position: absolute;
   top: 57px;
 }
 
-.margin_top {
-  margin-top: 50px;
+.titleAndGuide {
+  display: flex;
+  justify-content: space-between;
 }

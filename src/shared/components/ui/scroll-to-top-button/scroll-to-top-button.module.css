@@ -1,7 +1,7 @@
 .button__wrap {
   position: fixed;
   right: 54px;
-  bottom: 60px;
+  bottom: 80px;
   z-index: 3;
 }
 .button__wrap__icon {

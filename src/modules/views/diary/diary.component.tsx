@@ -2,7 +2,7 @@
 import { useRouter } from 'next/navigation'
 import { DiaryNoteCardComponent } from './elements'
 import moment from 'moment/moment'
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useState, useRef } from 'react'
 import { useGetDiaryRecords, useGetRecordsByDate, useGetTrackerRecords } from '@/api/diary.api'
 import { NotesComponent } from '@/modules/views/diary/elements/notes'
 import { TrackerComponent } from '@/modules/views/diary/elements/trackers'
@@ -10,6 +10,7 @@ import {
   ButtonBarComponent,
   ButtonComponent,
   ModalGettingToInstructionsComponent,
+  ScrollToTopButtonComponent,
   PageHeaderComponent,
 } from '@/shared/components'
 import { IconButtonComponent } from '@/shared/components/ui/icon-button'
@@ -25,6 +26,7 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
   const token = useUserStore((state) => state.user?.access_token)
 
   const { activeTab, setActiveTab } = useTabStore()
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const savedTab = localStorage.getItem('activeTab')
@@ -132,11 +134,14 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
   }
 
   return (
-    <section className={`${styles.diary} container`}>
-      <h1 className={styles.title}>Щоденник</h1>
-      <div className={styles.iconGuides} onClick={handleIconGuidesClick}>
-        <IconGuides />
+    <section ref={scrollContainerRef} className={`${styles.diary} container`}>
+      <div className={styles.titleAndGuide}>
+        <h1 className={styles.title}>Щоденник</h1>
+        <div className={styles.iconGuides} onClick={handleIconGuidesClick}>
+          <IconGuides />
+        </div>
       </div>
+
       <div className={styles.margin_top}>
         <ButtonBarComponent buttons={tabs} onButtonClick={setActiveTab} />
       </div>
@@ -154,6 +159,7 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
           )}
         </>
       )}
+
       {activeTab === 'main' && (
         <div className={styles.diary__records}>
           {diaryRecords?.notes?.map((year, index) => (
@@ -167,7 +173,6 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
                       </p>
                     )}
                   </p>
-
                   <div className={styles.diary__record_cards}>
                     <div>
                       {month.notes.slice(0, 3).map((item: any) => (
@@ -178,10 +183,13 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
                         />
                       ))}
                     </div>
-
                     {!isFetching && diaryRecordsByDate?.notes && (
                       <div
-                        className={`${styles.diary__hidden_cards} ${extendedBlock.month === month.month && extendedBlock.year === year.year && styles.extended}`}
+                        className={`${styles.diary__hidden_cards} ${
+                          extendedBlock.month === month.month &&
+                          extendedBlock.year === year.year &&
+                          styles.extended
+                        }`}
                       >
                         <div className={styles.diary__hidden_wrapper}>
                           {diaryRecordsByDate?.notes
@@ -196,10 +204,13 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
                         </div>
                       </div>
                     )}
-
                     {month.notes.length > 3 && (
                       <div
-                        className={`${styles.diary__arrow_btn} ${extendedBlock.month === month.month && extendedBlock.year === year.year && styles.extended}`}
+                        className={`${styles.diary__arrow_btn} ${
+                          extendedBlock.month === month.month &&
+                          extendedBlock.year === year.year &&
+                          styles.extended
+                        }`}
                       >
                         <IconButtonComponent
                           onClick={() => handleRequestRecordsByDate(year.year, month.month)}
@@ -216,10 +227,10 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
           ))}
         </div>
       )}
+
       {activeTab === 'challenges' && <NotesComponent />}
       {activeTab === 'tracker' && <TrackerComponent />}
 
-      {/* Добавляем модальное окно */}
       <ModalGettingToInstructionsComponent
         title='Щоденник - фіксуй свої думки і почуття кожного дня, це допоможе тобі слідкувати за своїм прогресом'
         images={guideImages}
@@ -227,6 +238,8 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
         isModalActive={isModalActive}
         closeModal={() => handleChangeCommonStore({ isModalActive: false })}
       />
+
+      <ScrollToTopButtonComponent scrollContainerRef={scrollContainerRef} />
     </section>
   )
 }
