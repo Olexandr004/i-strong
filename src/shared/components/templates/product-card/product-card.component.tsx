@@ -35,29 +35,29 @@ const ProductCardComponent: React.FC<
   const [errorText, setErrorText] = useState('')
 
   const handleCardClick = async () => {
-    // Если текущая карточка уже активная, сбрасываем её на первую карточку
-    if (selectedCard === product.id) {
-      onCardClick(product.id.toString())
-      return
-    }
-
-    // Иначе делаем текущую карточку активной
-    onCardClick(product.id.toString())
-
-    // Проверяем, хватает ли монет для покупки только для не купленных товаров
+    // Перевіряємо, чи вистачає монет для покупки
     if (!isBought && (user?.coins ?? 0) < product.price) {
-      // Если монет недостаточно, показываем ошибку через тостер
       setErrorText('Недостатньо монеток')
       handleChangeCommonStore({ errorText: 'Недостатньо монеток' })
 
-      // Ожидаем 1 секунду, чтобы скрыть ошибку
+      // Відображаємо помилку на 1 секунду
       setTimeout(() => {
         setErrorText('')
         handleChangeCommonStore({ errorText: '' })
       }, 1000)
 
+      return // Завершуємо виконання, якщо монет недостатньо
+    }
+
+    // Якщо обраний образ вже активний, скидаємо вибір
+    if (selectedCard === product.id) {
+      onCardClick(product.id.toString())
       return
     }
+
+    // Інакше робимо образ активним
+    onCardClick(product.id.toString())
+    setErrorText('') // Очистити помилку, якщо вибір успішний
 
     if (!isBought) {
       setIsModalOpen(true)
