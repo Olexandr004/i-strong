@@ -48,9 +48,21 @@ export const StatisticsComponent: FC<Readonly<IStatistics>> = () => {
       ? removeMilliseconds(searchParams.get('start_date')?.toString())
       : removeMilliseconds(moment().startOf('day').toString()),
 
-    end_date: searchParams.get('end_date')
-      ? removeMilliseconds(searchParams.get('end_date')?.toString())
-      : removeMilliseconds(moment().endOf('day').toString()),
+    // end_date: searchParams.get('end_date')
+    //   ? removeMilliseconds(searchParams.get('end_date')?.toString())
+    //   : removeMilliseconds(moment().endOf('day').toString()),
+    end_date: (() => {
+      const startDate = searchParams.get('start_date');
+      const endDate = searchParams.get('end_date');
+
+      const start = startDate ? moment(startDate) : moment().startOf('day');
+      const end = endDate ? moment(endDate) : moment().endOf('day');
+  
+      // If equals, add 1 day
+      return removeMilliseconds(
+        start.isSame(end, 'day') ? start.add(1, 'day').toISOString() : end.toISOString()
+      );
+    })(),
   })
 
   // Fetch для получения контента модального окна
@@ -102,10 +114,17 @@ export const StatisticsComponent: FC<Readonly<IStatistics>> = () => {
 
   const handleSetDates = (value: { first: string; second: string }) => {
     setDates(value)
-    const duration = moment.duration(moment(value.second).diff(moment(value.first)))
+
+    const end = value.second
+    ? moment(value.second).utc().endOf('day')
+    : moment(value.first).utc().endOf('day');
+
+    // const duration = moment.duration(moment(value.second).diff(moment(value.first)))
+    const duration = moment.duration(end.diff(moment(value.first)));
 
     if (!value.second) {
-      setCustomPeriod(1)
+      setCustomPeriod(0) // Десь робиться +1
+      setSelectedPeriod('custom') // Update period in select
     } else {
       setCustomPeriod(duration.asDays())
     }
