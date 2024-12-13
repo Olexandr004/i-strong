@@ -324,7 +324,7 @@ export const TutorialsComponent: FC<Readonly<ITutorialsComponent>> = () => {
             </div>
           ))}
           <button className={styles.tutorials__back_btn} onClick={() => setSelectedCategory(null)}>
-            <IconArrow />
+            <img src='/icon/arrow-back.svg' alt='arrow-back' />
           </button>
         </div>
       )}
@@ -366,7 +366,7 @@ export const TutorialsComponent: FC<Readonly<ITutorialsComponent>> = () => {
                 setSelectedTechniqueData(null)
               }}
             >
-              <IconArrow />
+              <img src='/icon/arrow-back.svg' alt='arrow-back' />
             </button>
           </div>
         </div>
