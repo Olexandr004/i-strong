@@ -46,14 +46,14 @@ export const SelectComponent: FC<Readonly<ISelect>> = ({
   ]
 
   const periodsWithCustom =
-    duration == null
+    duration == null || selectedValue !== 'custom'
       ? periods
       : [
           ...periods,
           {
             value: 'custom',
             title:
-              duration == null || duration <= 0.1
+              duration <= 0.1
                 ? '1 день' // По умолчанию "1 день"
                 : `Дні: ${Math.round(duration) + 1}`, // Для остальных значений
           },
