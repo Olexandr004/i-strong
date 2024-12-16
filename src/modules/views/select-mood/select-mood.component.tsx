@@ -1,6 +1,6 @@
 import { useRouter } from 'next/navigation'
 import { useMutation } from '@tanstack/react-query'
-import { FC, useState, useEffect, useRef, useCallback } from 'react'
+import { FC, useState, useEffect, useRef } from 'react'
 import { postMood } from '@/api/mood-tracker'
 import { ButtonComponent } from '@/shared/components'
 import { MOODS } from '@/shared/constants/moods'
@@ -111,26 +111,38 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
     router.push('/') // Перейти на главную страницу после закрытия модального окна
   }
 
-  const handleTextareaChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const value = e.target.value
-    setDescription(value)
-
-    // Динамическая высота textarea
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto'
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`
-    }
-  }, [])
+  const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setDescription(e.target.value)
+  }
 
   useEffect(() => {
     if (showModal) {
+      // Останавливаем прокрутку страницы
       document.body.style.overflow = 'hidden'
+      // Добавляем затемнение фона
+      document.body.style.position = 'fixed'
+      document.body.style.top = '0'
+      document.body.style.left = '0'
+      document.body.style.width = '100%'
+      document.body.style.height = '100%'
     } else {
+      // Восстанавливаем нормальную прокрутку
       document.body.style.overflow = 'auto'
+      document.body.style.position = ''
+      document.body.style.top = ''
+      document.body.style.left = ''
+      document.body.style.width = ''
+      document.body.style.height = ''
     }
 
     return () => {
+      // Обеспечиваем восстановление состояния при размонтировании компонента
       document.body.style.overflow = 'auto'
+      document.body.style.position = ''
+      document.body.style.top = ''
+      document.body.style.left = ''
+      document.body.style.width = ''
+      document.body.style.height = ''
     }
   }, [showModal])
 
