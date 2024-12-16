@@ -38,7 +38,23 @@ const fetchUserAvatar = async (token: string) => {
         },
       })
       .json<{ avatar: string }>()
-    return response.avatar // Вернёт URL аватара
+    const url = response.avatar // URL аватара
+    console.log('IMAGE URL = ' + url)
+
+    // Second request to access image
+    const fileResponse = await ky.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+
+    if (!fileResponse.ok) {
+      console.error('Помилка при завантаженні файлу')
+      return null
+    }
+
+    const blob = await fileResponse.blob() // Завантаження файлу як blob
+    return URL.createObjectURL(blob)
   } catch (error) {
     console.error('Ошибка при загрузке аватара:', error)
     return null // Обработка ошибок
