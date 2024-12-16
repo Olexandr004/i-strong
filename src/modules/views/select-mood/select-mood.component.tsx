@@ -112,9 +112,15 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
   }
 
   const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    console.log('Textarea value:', e.target.value)
     setDescription(e.target.value)
-  }
 
+    // Изменение высоты
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto' // Сброс высоты перед установкой новой
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px` // Установка новой высоты
+    }
+  }
   useEffect(() => {
     if (showModal) {
       // Останавливаем прокрутку страницы
@@ -145,6 +151,12 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
       document.body.style.height = ''
     }
   }, [showModal])
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.focus()
+    }
+  }, [])
 
   // return
   return (
