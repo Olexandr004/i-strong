@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
-import { FC, useCallback, useEffect, useMemo, useState } from 'react'
+import { FC, useCallback, useEffect, useMemo, useState, useRef } from 'react'
 
 import { IChallengeData } from '@/interfaces/challenge'
 import {
@@ -69,10 +69,11 @@ export const ChallengeComponent: FC<Readonly<IChallengeComponent>> = () => {
     }
   }, [statusCompleteChallenge])
 
-  const handleFocus = (e: React.FocusEvent<HTMLTextAreaElement>) => {
-    const target = e.target as HTMLTextAreaElement
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null)
+  const handleFocus = () => {
+    textareaRef.current?.focus()
     setTimeout(() => {
-      target.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      textareaRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
     }, 100)
   }
 
@@ -140,13 +141,14 @@ export const ChallengeComponent: FC<Readonly<IChallengeComponent>> = () => {
                 {challenge.current_subtask?.description}
               </label>
               <textarea
+                ref={textareaRef}
                 id='challenge-impressions'
                 className={`text-5 ${styles.challenge__area_input}`}
                 value={note}
                 onChange={handleInput}
                 onFocus={handleFocus}
                 disabled={disableInteraction}
-              ></textarea>
+              />
               <p className={`text-4-grey`}>*50+ символів</p>
             </div>
           ))}
