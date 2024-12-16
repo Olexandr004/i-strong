@@ -38,13 +38,13 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
   const user = useUserStore((state) => state.user)
   const router = useRouter()
 
-  const [selectedMood, setSelectedMood] = useState<string>('Чудово')
+  const [selectedMood, setSelectedMood] = useState<string>('Чудово') // Установка по умолчанию на "чудово"
   const [selectedAdditionalMoods, setSelectedAdditionalMoods] = useState<string[]>([])
   const [description, setDescription] = useState<string>('')
-  const [validationImage, setValidationImage] = useState<string | null>(null)
-  const [showModal, setShowModal] = useState(false)
+  const [validationImage, setValidationImage] = useState<string | null>(null) // состояние для изображения
+  const [showModal, setShowModal] = useState(false) // состояние для отображения модального окна
 
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null)
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null) // Ссылка на textarea
 
   const { mutate: postCurrentMood } = useMutation({
     mutationFn: (form: any) => postMood(token ?? '', form),
@@ -75,12 +75,13 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
         },
       })
 
+      // Проверяем наличие изображения в ответе
       if (data.validation_image) {
         setValidationImage(data.validation_image)
-        setShowModal(true)
+        setShowModal(true) // Показываем модальное окно
       } else {
         setValidationImage(null)
-        router.push('/')
+        router.push('/') // Перенаправляем на главную страницу, если изображение отсутствует
       }
     },
 
@@ -107,50 +108,19 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
 
   const handleModalClose = () => {
     setShowModal(false)
-    router.push('/')
+    router.push('/') // Перейти на главную страницу после закрытия модального окна
   }
 
   const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setDescription(e.target.value)
-    // Изменение высоты текстового поля
+
+    // Изменение высоты
     if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto'
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`
+      textareaRef.current.style.height = 'auto' // Сброс высоты перед установкой новой
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px` // Установка новой высоты
     }
   }
 
-  useEffect(() => {
-    if (showModal) {
-      document.body.style.overflow = 'hidden'
-      document.body.style.position = 'fixed'
-      document.body.style.top = '0'
-      document.body.style.left = '0'
-      document.body.style.width = '100%'
-      document.body.style.height = '100%'
-    } else {
-      document.body.style.overflow = 'auto'
-      document.body.style.position = ''
-      document.body.style.top = ''
-      document.body.style.left = ''
-      document.body.style.width = ''
-      document.body.style.height = ''
-    }
-
-    return () => {
-      document.body.style.overflow = 'auto'
-      document.body.style.position = ''
-      document.body.style.top = ''
-      document.body.style.left = ''
-      document.body.style.width = ''
-      document.body.style.height = ''
-    }
-  }, [showModal])
-
-  useEffect(() => {
-    if (textareaRef.current) {
-      textareaRef.current.focus()
-    }
-  }, [])
   // return
   return (
     <section className={`${styles.select_mood} ${selectedMood && styles.active}`}>
@@ -196,11 +166,11 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
         <textarea
           name='description'
           id='description'
-          ref={textareaRef}
+          ref={textareaRef} // Присваиваем ссылку на textarea
           value={description}
-          onChange={handleTextareaChange}
-          maxLength={1000}
-          style={{ overflow: 'hidden', resize: 'none', minHeight: '54px' }}
+          onChange={handleTextareaChange} // Используем обработчик
+          maxLength={1000} // Ограничение на 1000 символов
+          style={{ overflow: 'hidden', resize: 'none', minHeight: '54px' }} // Скроем прокрутку
         />
       </div>
 
