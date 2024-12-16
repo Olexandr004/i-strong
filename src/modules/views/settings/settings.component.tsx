@@ -12,7 +12,8 @@ import {
   cancelNotifications,
   getNotificationState,
   saveNotificationState,
-} from '@/utils/native-app/notifications' // Импортируйте ваши функции
+  toggleNotifications,
+} from '@/utils/native-app/notifications' // Импортируем функции
 import { PushNotifications } from '@capacitor/push-notifications'
 import styles from './settings.module.scss'
 
@@ -35,6 +36,7 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
       setChallengeNotificationsEnabled(false)
     }
   }
+
   // Функция для загрузки состояния уведомлений с сервера
   const fetchNotificationPreferences = async (token: string) => {
     const response = await fetch('https://istrongapp.com/api/users/profile/', {

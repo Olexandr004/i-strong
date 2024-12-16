@@ -46,7 +46,10 @@
   border: 0.5px solid #bdbdbd;
   border-radius: 0.4rem;
   text-align: center;
-  transition: background var(--transition), border-color var(--transition), color var(--transition);
+  transition:
+    background var(--transition),
+    border-color var(--transition),
+    color var(--transition);
 }
 .date_picker__day.today {
   border: 1px solid var(--accent-color-yellow);
