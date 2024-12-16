@@ -123,7 +123,8 @@ const AvatarComponent: FC = () => {
     }
   }
 
-  const mutation: UseMutationResult<UpdateAvatarResponse, unknown, Blob, unknown> = useMutation({
+  // const mutation: UseMutationResult<UpdateAvatarResponse, unknown, Blob, unknown> = useMutation({
+  const mutation: UseMutationResult<string, unknown, Blob, unknown> = useMutation({
     mutationFn: async (file: Blob) => {
       const formData = new FormData()
       formData.append('media', file, 'avatar.jpg')
@@ -151,13 +152,29 @@ const AvatarComponent: FC = () => {
           throw new Error(errorResponse.error || 'Відбулася помилка під час оновлення аватара')
         }
 
-        return await response.json()
+        // return await response.json()
+        const responseData = (await response.json()) as UpdateAvatarResponse
+        const url = responseData.avatar.avatar
+
+        // Second request to access image
+        const fileResponse = await ky.get(url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+
+        if (!fileResponse.ok) {
+          throw new Error('Не вдалося оновити аватар')
+        }
+
+        const blob = await fileResponse.blob()
+        return URL.createObjectURL(blob)
       } catch (error) {
         throw new Error('Не вдалося оновити аватар')
       }
     },
-    onSuccess: (responseData) => {
-      handleChangeCommonStore({ avatarImage: responseData.avatar.avatar })
+    onSuccess: (avatarUrl) => {
+      handleChangeCommonStore({ avatarImage: avatarUrl })
 
       const updatedUser = {
         id: user?.id || 0,
@@ -165,7 +182,7 @@ const AvatarComponent: FC = () => {
         phone_number: user?.phone_number || '',
         access_token: user?.access_token || '',
         coins: user?.coins || 0,
-        avatar: responseData.avatar.avatar,
+        avatar: avatarUrl,
         mood: user?.mood || { mood: '', date: '' },
         has_dairy_password: user?.has_dairy_password || false,
         activity: user?.activity || {

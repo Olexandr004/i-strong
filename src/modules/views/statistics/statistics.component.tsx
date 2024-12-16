@@ -56,12 +56,9 @@ export const StatisticsComponent: FC<Readonly<IStatistics>> = () => {
       const endDate = searchParams.get('end_date')
 
       const start = startDate ? moment(startDate) : moment().startOf('day')
-      const end = endDate ? moment(endDate) : moment().endOf('day')
+      const end = endDate ? moment(endDate).add(1, 'day') : moment(start).add(1, 'day')
 
-      // If equals, add 1 day
-      return removeMilliseconds(
-        start.isSame(end, 'day') ? start.add(1, 'day').toISOString() : end.toISOString(),
-      )
+      return removeMilliseconds(end.toISOString())
     })(),
   })
 

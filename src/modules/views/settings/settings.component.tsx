@@ -81,30 +81,19 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
   }
 
   // Загрузка состояния уведомлений при инициализации
-  // Загрузка состояния уведомлений при инициализации
   useEffect(() => {
     const loadNotificationStates = async () => {
       if (user?.access_token) {
         try {
           const preferences = await fetchNotificationPreferences(user.access_token)
-
-          // Логируем данные для отладки
-          console.log('Loaded notification preferences:', preferences)
-
-          // Проверяем, что preferences.notifications_preferences существует
-          if (preferences.notifications_preferences) {
-            setMoodTrackerEnabled(preferences.notifications_preferences.mood_survey)
-            setChallengeNotificationsEnabled(preferences.notifications_preferences.challenges)
-          } else {
-            console.error('Notifications preferences not found in response')
-          }
+          setMoodTrackerEnabled(preferences.notifications_preferences.mood_survey)
+          setChallengeNotificationsEnabled(preferences.notifications_preferences.challenges)
         } catch (error) {
           console.error('Error loading notification states:', error)
         }
       }
       checkNotificationPermission()
     }
-
     loadNotificationStates()
   }, [user])
 
