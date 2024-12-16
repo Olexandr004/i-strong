@@ -3,7 +3,7 @@
   display: grid;
   gap: 3.2rem;
   overflow-y: auto;
-  height: 100vh;
+  max-height: 100vh;
 }
 .diary__disable_new_record {
   font-weight: 700;
