@@ -111,18 +111,17 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
     router.push('/') // Перейти на главную страницу после закрытия модального окна
   }
 
-  const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleTextareaChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value
-    setTimeout(() => {
-      setDescription(value)
-    }, 50)
+    setDescription(value)
 
-    // Изменение высоты
+    // Динамическая высота textarea
     if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto' // Сброс высоты перед установкой новой
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px` // Установка новой высоты
+      textareaRef.current.style.height = 'auto'
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`
     }
-  }
+  }, [])
+
   useEffect(() => {
     if (showModal) {
       // Останавливаем прокрутку страницы
