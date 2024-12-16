@@ -100,16 +100,20 @@ export const StatisticsComponent: FC<Readonly<IStatistics>> = () => {
   }
 
   const getDateRange = () => {
-    if (searchParams.get('start_date') && searchParams.get('end_date')) {
-      if (
-        moment(searchParams.get('start_date')).isSame(moment(searchParams.get('end_date')), 'day')
-      ) {
-        return `${moment(searchParams.get('start_date')).format('DD.MM.YYYY')}`
-      } else
-        return `${moment(searchParams.get('start_date')).format('DD.MM.YYYY')} - ${moment(
-          searchParams.get('end_date'),
-        ).format('DD.MM.YYYY')}`
-    } else return moment().format('DD.MM.YYYY')
+    const startDate = searchParams.get('start_date')
+    const endDate = searchParams.get('end_date')
+
+    if (startDate && endDate) {
+      if (moment(startDate).isSame(moment(endDate), 'day')) {
+        return `${moment(startDate).format('DD.MM.YYYY')}`
+      } else {
+        return `${moment(startDate).format('DD.MM.YYYY')} - ${moment(endDate).format('DD.MM.YYYY')}`
+      }
+    } else if (startDate) {
+      return `${moment(startDate).format('DD.MM.YYYY')}`
+    } else {
+      return moment().format('DD.MM.YYYY') // Показывать текущую дату по умолчанию
+    }
   }
 
   const handleSetDates = (value: { first: string; second: string }) => {
