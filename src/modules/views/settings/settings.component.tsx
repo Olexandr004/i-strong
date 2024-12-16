@@ -12,8 +12,7 @@ import {
   cancelNotifications,
   getNotificationState,
   saveNotificationState,
-  toggleNotifications,
-} from '@/utils/native-app/notifications' // Импортируем функции
+} from '@/utils/native-app/notifications' // Импортируйте ваши функции
 import { PushNotifications } from '@capacitor/push-notifications'
 import styles from './settings.module.scss'
 
@@ -36,7 +35,6 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
       setChallengeNotificationsEnabled(false)
     }
   }
-
   // Функция для загрузки состояния уведомлений с сервера
   const fetchNotificationPreferences = async (token: string) => {
     const response = await fetch('https://istrongapp.com/api/users/profile/', {
@@ -83,19 +81,30 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
   }
 
   // Загрузка состояния уведомлений при инициализации
+  // Загрузка состояния уведомлений при инициализации
   useEffect(() => {
     const loadNotificationStates = async () => {
       if (user?.access_token) {
         try {
           const preferences = await fetchNotificationPreferences(user.access_token)
-          setMoodTrackerEnabled(preferences.notifications_preferences.mood_survey)
-          setChallengeNotificationsEnabled(preferences.notifications_preferences.challenges)
+
+          // Логируем данные для отладки
+          console.log('Loaded notification preferences:', preferences)
+
+          // Проверяем, что preferences.notifications_preferences существует
+          if (preferences.notifications_preferences) {
+            setMoodTrackerEnabled(preferences.notifications_preferences.mood_survey)
+            setChallengeNotificationsEnabled(preferences.notifications_preferences.challenges)
+          } else {
+            console.error('Notifications preferences not found in response')
+          }
         } catch (error) {
           console.error('Error loading notification states:', error)
         }
       }
       checkNotificationPermission()
     }
+
     loadNotificationStates()
   }, [user])
 
