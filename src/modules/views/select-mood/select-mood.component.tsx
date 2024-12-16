@@ -112,7 +112,10 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
   }
 
   const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setDescription(e.target.value)
+    const value = e.target.value
+    setTimeout(() => {
+      setDescription(value)
+    }, 50)
 
     // Изменение высоты
     if (textareaRef.current) {
