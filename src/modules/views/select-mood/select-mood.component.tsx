@@ -1,6 +1,6 @@
 import { useRouter } from 'next/navigation'
 import { useMutation } from '@tanstack/react-query'
-import { FC, useState, useEffect, useRef } from 'react'
+import { FC, useState, useEffect, useRef, useCallback } from 'react'
 import { postMood } from '@/api/mood-tracker'
 import { ButtonComponent } from '@/shared/components'
 import { MOODS } from '@/shared/constants/moods'
