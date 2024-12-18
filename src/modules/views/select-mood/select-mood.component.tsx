@@ -1,11 +1,12 @@
 import { useRouter } from 'next/navigation'
 import { useMutation } from '@tanstack/react-query'
-import { FC, useState } from 'react'
+import { FC, useState, useEffect, useRef } from 'react'
 import { postMood } from '@/api/mood-tracker'
 import { ButtonComponent } from '@/shared/components'
 import { MOODS } from '@/shared/constants/moods'
 import { useUserStore } from '@/shared/stores'
 import styles from './select-mood.module.scss'
+import { IconArrow } from '@/shared/icons'
 
 interface ISelectMoodComponent {}
 
@@ -30,19 +31,60 @@ const ADDITIONAL_MOODS = [
   'Щастя',
 ]
 
+// компонент
 export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
   const token = useUserStore((state) => state.user?.access_token)
+  const handleChangeUserStore = useUserStore((state) => state.handleChangeUserStore)
+  const user = useUserStore((state) => state.user)
   const router = useRouter()
 
-  const [selectedMood, setSelectedMood] = useState<string>('Чудово')
-  const [description, setDescription] = useState<string>('')
+  const [selectedMood, setSelectedMood] = useState<string>('Чудово') // Установка по умолчанию на "чудово"
   const [selectedAdditionalMoods, setSelectedAdditionalMoods] = useState<string[]>([])
+  const [description, setDescription] = useState<string>('')
+  const [validationImage, setValidationImage] = useState<string | null>(null) // состояние для изображения
+  const [showModal, setShowModal] = useState(false) // состояние для отображения модального окна
+
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null) // Ссылка на textarea
 
   const { mutate: postCurrentMood } = useMutation({
     mutationFn: (form: any) => postMood(token ?? '', form),
-    onSuccess: () => {
-      router.push('/')
+
+    onSuccess: (data: any) => {
+      console.log(data)
+      handleChangeUserStore({
+        user: {
+          id: user?.id ?? 0,
+          name: user?.name ?? '',
+          phone_number: user?.phone_number ?? '',
+          access_token: user?.access_token ?? '',
+          coins: user?.coins ?? 0,
+          avatar: user?.avatar ?? null,
+          mood: {
+            mood: selectedMood!,
+            date: new Date().toISOString(),
+          },
+          has_dairy_password: user?.has_dairy_password ?? false,
+          activity: {
+            challenges_visited: user?.activity?.challenges_visited ?? false,
+            diary_visited: user?.activity?.diary_visited ?? false,
+            id: user?.activity?.id ?? 0,
+            instructions_visited: user?.activity?.instructions_visited ?? false,
+            mood_stats_visited: user?.activity?.mood_stats_visited ?? false,
+            shop_visited: user?.activity?.shop_visited ?? false,
+          },
+        },
+      })
+
+      // Проверяем наличие изображения в ответе
+      if (data.validation_image) {
+        setValidationImage(data.validation_image)
+        setShowModal(true) // Показываем модальное окно
+      } else {
+        setValidationImage(null)
+        router.push('/') // Перенаправляем на главную страницу, если изображение отсутствует
+      }
     },
+
     onError: (error) => {
       console.error('Ошибка при сохранении настроения:', error)
     },
@@ -50,6 +92,7 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
 
   const handleSubmitMood = () => {
     if (!selectedMood) return
+
     postCurrentMood({
       mood: selectedMood,
       description: description,
@@ -63,12 +106,54 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
     )
   }
 
-  const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setDescription(e.target.value)
+  const handleModalClose = () => {
+    setShowModal(false)
+    router.push('/') // Перейти на главную страницу после закрытия модального окна
   }
 
+  const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setDescription(e.target.value)
+
+    // Изменение высоты
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto' // Сброс высоты перед установкой новой
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px` // Установка новой высоты
+    }
+  }
+  useEffect(() => {
+    if (showModal) {
+      // Останавливаем прокрутку страницы
+      document.body.style.overflow = 'hidden'
+      // Добавляем затемнение фона
+      document.body.style.position = 'fixed'
+      document.body.style.top = '0'
+      document.body.style.left = '0'
+      document.body.style.width = '100%'
+      document.body.style.height = '100%'
+    } else {
+      // Восстанавливаем нормальную прокрутку
+      document.body.style.overflow = 'auto'
+      document.body.style.position = ''
+      document.body.style.top = ''
+      document.body.style.left = ''
+      document.body.style.width = ''
+      document.body.style.height = ''
+    }
+
+    return () => {
+      // Обеспечиваем восстановление состояния при размонтировании компонента
+      document.body.style.overflow = 'auto'
+      document.body.style.position = ''
+      document.body.style.top = ''
+      document.body.style.left = ''
+      document.body.style.width = ''
+      document.body.style.height = ''
+    }
+  }, [showModal])
+
+  // return
   return (
-    <section className={styles.select_mood}>
+    <section className={`${styles.select_mood} ${selectedMood && styles.active}`}>
       <div className={styles.select_mood__head}>
         <h1 className={styles.title}>
           Як ти себе <br /> почуваєш?
@@ -78,7 +163,9 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
       <div className={styles.select_mood__emotions}>
         {MOODS.map((item) => (
           <button
-            className={item.slug === selectedMood ? styles.active : styles.select_mood__emotion}
+            className={`${styles.select_mood__emotion} ${
+              item.slug === selectedMood ? styles.active : styles.activated
+            }`}
             onClick={() => setSelectedMood(item.slug)}
             key={item.slug}
             style={{ backgroundColor: item.color }}
@@ -95,9 +182,7 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
           {ADDITIONAL_MOODS.map((mood) => (
             <button
               key={mood}
-              className={
-                selectedAdditionalMoods.includes(mood) ? styles.active : styles.additional_mood
-              }
+              className={`${styles.additional_mood} ${selectedAdditionalMoods.includes(mood) ? styles.active : ''} ${selectedMood ? styles.activated : ''}`}
               onClick={() => toggleAdditionalMood(mood)}
             >
               <span>{mood}</span>
@@ -109,11 +194,13 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
       <div className={styles.footer}>
         <label htmlFor='description'>Чому я так почуваюсь?</label>
         <textarea
+          name='description'
           id='description'
+          ref={textareaRef} // Присваиваем ссылку на textarea
           value={description}
-          onChange={handleTextareaChange}
-          maxLength={1000}
-          style={{ overflow: 'auto', resize: 'none', minHeight: '54px' }}
+          onChange={handleTextareaChange} // Используем обработчик
+          maxLength={1000} // Ограничение на 1000 символов
+          style={{ overflow: 'hidden', resize: 'none', minHeight: '54px' }} // Скроем прокрутку
         />
       </div>
 
@@ -124,8 +211,18 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
       </div>
 
       <button className={styles.backBtn} onClick={() => router.push('/')}>
-        Назад
+        <IconArrow />
       </button>
+
+      {/* Модальное окно, если выбраны дополнительные эмоции */}
+      {validationImage ? (
+        <div className={styles.modal}>
+          <div className={styles.modalContent}>
+            <img src={validationImage} alt='Эмоция' />
+            <ButtonComponent onClick={handleModalClose}>Зрозуміло</ButtonComponent>
+          </div>
+        </div>
+      ) : null}
     </section>
   )
 }
