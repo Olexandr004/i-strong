@@ -1,5 +1,5 @@
 .container__chest {
-  padding: 7.8rem 3rem;
+  padding: 8.8rem 3rem;
 }
 .container__chest h1 {
   font-style: normal;
@@ -63,7 +63,7 @@
 }
 .container__chest .backBtn__chest {
   position: absolute;
-  top: 50px;
+  top: 60px;
   left: 30px;
   width: 22px;
   height: 20px;
@@ -71,7 +71,7 @@
 
 .iconGuides {
   position: absolute;
-  top: 73px;
+  top: 83px;
   right: 20px;
 }
 

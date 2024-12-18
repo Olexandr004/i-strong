@@ -3,6 +3,7 @@
   display: grid;
   align-content: start;
   grid-gap: 6.8rem;
+  padding-bottom: 6rem;
 
   @media (min-height: 620px) {
     grid-gap: 10.8rem;

@@ -150,14 +150,6 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
       document.body.style.height = ''
     }
   }, [showModal])
-  const handleFocus = (e: React.FocusEvent<HTMLTextAreaElement>) => {
-    e.stopPropagation() // Остановить всплытие фокуса
-  }
-  useEffect(() => {
-    if (textareaRef.current) {
-      textareaRef.current.focus()
-    }
-  }, [description])
 
   // return
   return (
@@ -206,9 +198,9 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
           id='description'
           ref={textareaRef} // Присваиваем ссылку на textarea
           value={description}
-          onFocus={handleFocus}
           onChange={handleTextareaChange} // Используем обработчик
           maxLength={1000} // Ограничение на 1000 символов
+          style={{ overflow: 'hidden', resize: 'none', minHeight: '54px' }} // Скроем прокрутку
         />
       </div>
 
