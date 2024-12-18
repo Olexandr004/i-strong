@@ -43,7 +43,7 @@
   aspect-ratio: 1;
   color: black;
   background-color: transparent;
-  border: 0.5px solid #bdbdbd;
+  border: 1px solid #bdbdbd;
   border-radius: 0.4rem;
   text-align: center;
   transition:
