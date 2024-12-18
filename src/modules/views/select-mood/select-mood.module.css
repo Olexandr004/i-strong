@@ -1,7 +1,7 @@
 @charset "UTF-8";
 .select_mood {
   min-height: 100vh;
-  padding-top: 7.3rem;
+  padding-top: 9.3rem;
   padding-bottom: 7rem;
   display: grid;
   grid-gap: var(--gap-large);
@@ -143,7 +143,7 @@
 }
 .select_mood .backBtn {
   position: absolute;
-  top: 3.7rem;
+  top: 5.7rem;
   left: 2rem;
   width: 2.2rem;
   height: 2rem;
