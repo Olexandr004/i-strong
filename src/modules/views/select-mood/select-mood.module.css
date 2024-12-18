@@ -1,3 +1,196 @@
+@charset "UTF-8";
+.select_mood {
+  padding-top: 9.3rem;
+  padding-bottom: 7rem;
+  display: grid;
+  grid-gap: var(--gap-large);
+  align-content: space-between;
+  justify-items: center;
+  transition: background-color var(--transition);
+}
+.select_mood.red {
+  background-color: var(--accent-color-red);
+}
+.select_mood.blue {
+  background-color: var(--accent-color-light-blue);
+}
+.select_mood.green {
+  background-color: var(--accent-color-green);
+}
+.select_mood.yellow {
+  background-color: var(--accent-color-light-yellow);
+}
+.select_mood h2 {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 20px;
+  color: #1e1e1e;
+  margin-bottom: 1rem;
+}
+.select_mood__head {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  grid-gap: var(--gap-medium);
+  text-align: center;
+  font-size: 1.2rem;
+}
+.select_mood__head .title {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 2.8rem;
+  line-height: 3.4rem;
+  text-align: center;
+  color: #1e1e1e;
+}
+.select_mood__emotions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 1.8rem;
+}
+.select_mood__emotion {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8rem 3.4rem;
+  transition: opacity var(--transition);
+  border-radius: 20px;
+}
+.select_mood__emotion span {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 1.6rem;
+  line-height: 2rem;
+  color: #1e1e1e;
+}
+.select_mood__emotion.activated {
+  opacity: 0.3;
+}
+.select_mood__emotion.active {
+  opacity: 1;
+}
+.select_mood__emotion svg {
+  width: 5.4rem;
+  height: 5.4rem;
+}
+.select_mood__buttons {
+  width: 100%;
+  display: grid;
+  grid-gap: var(--gap-medium-small);
+  padding: 0 2rem;
+}
+.select_mood .additional_moods {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.select_mood .additional_moods .additional_mood {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 8px;
+  gap: 8px;
+  height: 31px;
+  background: #ffffff;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+.select_mood .additional_moods .additional_mood span {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 15px;
+  text-align: center;
+  color: #000000;
+}
+.select_mood .additional_moods .additional_mood.active {
+  background: #ffc75a;
+}
+.select_mood .additional_moods .additional_mood.active span {
+  font-weight: 700;
+}
+.select_mood .footer {
+  display: flex;
+  width: 100%;
+  gap: 1rem;
+  padding: 0 2rem;
+  flex-direction: column;
+}
+.select_mood .footer label {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 20px;
+  color: #1e1e1e;
+}
+.select_mood .footer textarea {
+  background: #f2f2f2;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  height: 54px;
+  width: 100%;
+  flex: none;
+  border: none;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+  color: #1e1e1e;
+}
+.select_mood .backBtn {
+  position: absolute;
+  top: 5.7rem;
+  left: 2rem;
+  width: 2.2rem;
+  height: 2rem;
+}
 
+.validationImage {
+  height: auto;
+  animation: fadeInOut 3s ease;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  20% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+.modal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  z-index: 1000; /* Обеспечиваем, что окно будет поверх остальных элементов */
+}
+
+.modalContent {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  text-align: center;
+  max-width: 500px; /* Ограничиваем максимальную ширину, чтобы окно не было слишком широким */
+  width: 100%;
+}
 
 /*# sourceMappingURL=select-mood.module.css.map */
