@@ -1,6 +1,6 @@
 import { useRouter } from 'next/navigation'
 import { useMutation } from '@tanstack/react-query'
-import { FC, useState, useEffect, useRef } from 'react'
+import { FC, useState, useEffect, useRef, useCallback } from 'react'
 import { postMood } from '@/api/mood-tracker'
 import { ButtonComponent } from '@/shared/components'
 import { MOODS } from '@/shared/constants/moods'
@@ -111,15 +111,22 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
     router.push('/') // Перейти на главную страницу после закрытия модального окна
   }
 
-  const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setDescription(e.target.value)
+  const handleTextareaChange = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      setDescription(e.target.value)
 
-    // Изменение высоты
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto' // Сброс высоты перед установкой новой
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px` // Установка новой высоты
-    }
-  }
+      if (textareaRef.current) {
+        const textarea = textareaRef.current
+        const currentHeight = textarea.style.height
+        textarea.style.height = 'auto'
+        const newHeight = `${textarea.scrollHeight}px`
+        if (currentHeight !== newHeight) {
+          textarea.style.height = newHeight
+        }
+      }
+    },
+    [setDescription], // Зависимости
+  )
   useEffect(() => {
     if (showModal) {
       // Останавливаем прокрутку страницы
@@ -200,7 +207,7 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
           value={description}
           onChange={handleTextareaChange} // Используем обработчик
           maxLength={1000} // Ограничение на 1000 символов
-          style={{ overflow: 'auto', resize: 'none', height: '54px' }} // Скроем прокрутку
+          style={{ overflow: 'hidden', resize: 'none', minHeight: '54px' }} // Скроем прокрутку
         />
       </div>
 
