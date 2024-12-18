@@ -200,7 +200,7 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
           value={description}
           onChange={handleTextareaChange} // Используем обработчик
           maxLength={1000} // Ограничение на 1000 символов
-          style={{ overflow: 'hidden', resize: 'none', minHeight: '54px' }} // Скроем прокрутку
+          style={{ overflow: 'auto', resize: 'none', height: '54px' }} // Скроем прокрутку
         />
       </div>
 
