@@ -1,7 +1,5 @@
 @charset "UTF-8";
 .select_mood {
-  padding-top: 9.3rem;
-  padding-bottom: 7rem;
   display: grid;
   grid-gap: var(--gap-large);
   align-content: space-between;
