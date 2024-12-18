@@ -1,6 +1,6 @@
 import { useRouter } from 'next/navigation'
 import { useMutation } from '@tanstack/react-query'
-import { FC, useState, useEffect, useRef, useCallback } from 'react'
+import { FC, useState, useEffect, useRef } from 'react'
 import { postMood } from '@/api/mood-tracker'
 import { ButtonComponent } from '@/shared/components'
 import { MOODS } from '@/shared/constants/moods'
@@ -111,22 +111,20 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
     router.push('/') // Перейти на главную страницу после закрытия модального окна
   }
 
-  const handleTextareaChange = useCallback(
-    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      setDescription(e.target.value)
+  const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setDescription(e.target.value)
 
-      if (textareaRef.current) {
-        const textarea = textareaRef.current
-        const currentHeight = textarea.style.height
-        textarea.style.height = 'auto'
-        const newHeight = `${textarea.scrollHeight}px`
-        if (currentHeight !== newHeight) {
-          textarea.style.height = newHeight
-        }
+    // Установку высоты делаем только при необходимости
+    if (textareaRef.current) {
+      const textarea = textareaRef.current
+      const currentHeight = textarea.style.height
+      textarea.style.height = 'auto' // Сбрасываем высоту
+      const newHeight = `${textarea.scrollHeight}px`
+      if (currentHeight !== newHeight) {
+        textarea.style.height = newHeight // Устанавливаем только если высота изменилась
       }
-    },
-    [setDescription], // Зависимости
-  )
+    }
+  }
   useEffect(() => {
     if (showModal) {
       // Останавливаем прокрутку страницы
