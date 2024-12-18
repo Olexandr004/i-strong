@@ -24,10 +24,10 @@
 }
 .history .backButton {
   position: absolute;
-  top: 50px;
+  top: 60px;
   width: 22px;
   height: 20px;
-  margin-top: -20px;
+  margin-top: -10px;
   margin-bottom: 10px;
 }
 .history .storyImage {

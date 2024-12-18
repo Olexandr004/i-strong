@@ -1,5 +1,5 @@
 .tutorials {
-  padding-top: 6.8rem;
+  padding-top: 7.8rem;
   display: grid;
   gap: 3.2rem;
   max-width: 100%;
@@ -23,7 +23,7 @@
 }
 .tutorials__back_btn {
   position: absolute;
-  top: 37px;
+  top: 57px;
   left: 31px;
   width: 22px;
   height: 20px;
@@ -116,7 +116,7 @@
 
 .iconGuides2 {
   position: absolute;
-  top: 23px;
+  top: 43px;
   right: 20px;
 }
 

@@ -101,8 +101,8 @@
 
 .closeButton {
   position: absolute;
-  top: 20px;
-  left: 20px;
+  top: 50px;
+  left: 32px;
 }
 .closeButton svg {
   width: 22px;
@@ -151,7 +151,7 @@
   padding-left: 30px;
 }
 .learning_block button {
-  margin-top: 20px;
+  margin-top: 60px;
 }
 .learning_block button svg {
   width: 22px;
