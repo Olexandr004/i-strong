@@ -153,6 +153,11 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
   const handleFocus = (e: React.FocusEvent<HTMLTextAreaElement>) => {
     e.stopPropagation() // Остановить всплытие фокуса
   }
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.focus()
+    }
+  }, [description])
 
   // return
   return (
