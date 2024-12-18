@@ -7,7 +7,6 @@ import { MOODS } from '@/shared/constants/moods'
 import { useUserStore } from '@/shared/stores'
 import styles from './select-mood.module.scss'
 import { IconArrow } from '@/shared/icons'
-import { Keyboard } from '@capacitor/keyboard'
 
 interface ISelectMoodComponent {}
 
@@ -91,10 +90,6 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
     },
   })
 
-  useEffect(() => {
-    Keyboard.setAccessoryBarVisible({ isVisible: true })
-  }, [])
-
   const handleSubmitMood = () => {
     if (!selectedMood) return
 
@@ -119,12 +114,11 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
   const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setDescription(e.target.value)
 
-    // Изменение высоты
     if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto' // Сброс высоты перед установкой новой
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px` // Установка новой высоты
+      textareaRef.current.focus() // Возвращаем фокус
     }
   }
+
   useEffect(() => {
     if (showModal) {
       // Останавливаем прокрутку страницы
