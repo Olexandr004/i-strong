@@ -3,10 +3,10 @@
   display: grid;
   gap: 3.2rem;
   max-height: 100vh;
+  height: auto;
   margin: 0 auto;
   grid-template-rows: 0fr;
   align-content: space-between;
-  overflow-y: scroll;
 }
 .challenge__title {
   margin-bottom: 2.4rem;
