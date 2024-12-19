@@ -113,24 +113,24 @@ export const ChallengeComponent: FC<Readonly<IChallengeComponent>> = () => {
       </div>
 
       <div>
-        {/*{challenge.current_subtask?.day_number && (*/}
-        {/*  <div className={styles.challenge__progressbar}>*/}
-        {/*    <div className={styles.challenge__progressbar_info}>*/}
-        {/*      <h3 className={`text-3`}>*/}
-        {/*        День {challenge.current_subtask?.day_number}/{challenge.duration}*/}
-        {/*      </h3>*/}
-        {/*      <CoinsDisplayComponent coin={challenge.current_subtask?.points} />*/}
-        {/*    </div>*/}
-        {/*    <div className={styles.challenge__progressbar_line}>*/}
-        {/*      <div*/}
-        {/*        className={styles.challenge__progressbar_span}*/}
-        {/*        style={{*/}
-        {/*          width: `${(challenge.current_subtask?.day_number / challenge.duration) * 100}%`,*/}
-        {/*        }}*/}
-        {/*      ></div>*/}
-        {/*    </div>*/}
-        {/*  </div>*/}
-        {/*)}*/}
+        {challenge.current_subtask?.day_number && (
+          <div className={styles.challenge__progressbar}>
+            <div className={styles.challenge__progressbar_info}>
+              <h3 className={`text-3`}>
+                День {challenge.current_subtask?.day_number}/{challenge.duration}
+              </h3>
+              <CoinsDisplayComponent coin={challenge.current_subtask?.points} />
+            </div>
+            <div className={styles.challenge__progressbar_line}>
+              <div
+                className={styles.challenge__progressbar_span}
+                style={{
+                  width: `${(challenge.current_subtask?.day_number / challenge.duration) * 100}%`,
+                }}
+              ></div>
+            </div>
+          </div>
+        )}
 
         {challenge.track_diary &&
           (disableInteraction ? (
