@@ -209,6 +209,21 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
           Зберегти
         </ButtonComponent>
       </div>
+      <div className={styles.select_mood__buttons}>
+        <ButtonComponent onClick={handleSubmitMood} disabled={!selectedMood}>
+          Зберегти
+        </ButtonComponent>
+      </div>
+      <div className={styles.select_mood__buttons}>
+        <ButtonComponent onClick={handleSubmitMood} disabled={!selectedMood}>
+          Зберегти
+        </ButtonComponent>
+      </div>
+      <div className={styles.select_mood__buttons}>
+        <ButtonComponent onClick={handleSubmitMood} disabled={!selectedMood}>
+          Зберегти
+        </ButtonComponent>
+      </div>
 
       <button className={styles.backBtn} onClick={() => router.push('/')}>
         <IconArrow />
