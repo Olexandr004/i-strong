@@ -1,4 +1,5 @@
 .select_mood {
+  height: auto;
   padding-top: 9.3rem;
   padding-bottom: 7rem;
 
@@ -162,7 +163,7 @@
 }
 
 .modal {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -179,6 +180,4 @@
   padding: 2rem;
   border-radius: 10px;
   text-align: center;
-  max-width: 500px; /* Ограничиваем максимальную ширину, чтобы окно не было слишком широким */
-  width: 100%;
 }

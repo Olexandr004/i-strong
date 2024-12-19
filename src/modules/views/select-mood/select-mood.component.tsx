@@ -120,36 +120,6 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px` // Установка новой высоты
     }
   }
-  useEffect(() => {
-    if (showModal) {
-      // Останавливаем прокрутку страницы
-      document.body.style.overflow = 'hidden'
-      // Добавляем затемнение фона
-      document.body.style.position = 'fixed'
-      document.body.style.top = '0'
-      document.body.style.left = '0'
-      document.body.style.width = '100%'
-      document.body.style.height = '100%'
-    } else {
-      // Восстанавливаем нормальную прокрутку
-      document.body.style.overflow = 'auto'
-      document.body.style.position = ''
-      document.body.style.top = ''
-      document.body.style.left = ''
-      document.body.style.width = ''
-      document.body.style.height = ''
-    }
-
-    return () => {
-      // Обеспечиваем восстановление состояния при размонтировании компонента
-      document.body.style.overflow = 'auto'
-      document.body.style.position = ''
-      document.body.style.top = ''
-      document.body.style.left = ''
-      document.body.style.width = ''
-      document.body.style.height = ''
-    }
-  }, [showModal])
 
   // return
   return (
