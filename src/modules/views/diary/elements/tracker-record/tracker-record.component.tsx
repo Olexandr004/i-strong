@@ -90,14 +90,14 @@ export const TrackerRecordComponent: FC<Readonly<ITrackerRecord>> = () => {
   }, [singleTracker])
 
   useEffect(() => {
-    console.log('Полученные данные трекера:', singleTracker)
     if (singleTracker && editor) {
       const noteContent = singleTracker.note // Получаем объект note
-      console.log('Содержимое note:', noteContent) // Логируем содержимое note
+      console.log('Содержимое note:', noteContent)
 
-      // Получаем текст записи
-      const cleanedTrackerNote = noteContent.note || '' // Извлекаем текст записи
-      console.log('Очистка записи:', cleanedTrackerNote) // Логируем очищенную запись
+      // Преобразуем переносы строк (\n) в <br> для корректного отображения
+      const cleanedTrackerNote = (noteContent.note || '').replace(/\n/g, '<br>')
+      console.log('Очистка записи:', cleanedTrackerNote)
+
       editor.commands.setContent(cleanedTrackerNote)
     }
   }, [singleTracker, editor])
