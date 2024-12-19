@@ -2,9 +2,8 @@
   padding-bottom: 7rem;
   display: grid;
   gap: 3.2rem;
-  max-height: 100vh;
+  max-height: 100%;
   margin: 0 auto;
-  grid-template-rows: 0fr;
   align-content: space-between;
 }
 .challenge__title {
