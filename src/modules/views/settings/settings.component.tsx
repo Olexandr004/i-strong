@@ -27,14 +27,19 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
 
   const checkNotificationPermission = async () => {
     const permissionStatus = await PushNotifications.checkPermissions()
-    if (permissionStatus.receive === 'granted') {
-      setMoodTrackerEnabled(true)
-      setChallengeNotificationsEnabled(true)
-    } else {
+    // if (permissionStatus.receive === 'granted') {
+    //   setMoodTrackerEnabled(true)
+    //   setChallengeNotificationsEnabled(true)
+    // } else {
+    //   setMoodTrackerEnabled(false)
+    //   setChallengeNotificationsEnabled(false)
+    // }
+    if (permissionStatus.receive !== 'granted') {
       setMoodTrackerEnabled(false)
       setChallengeNotificationsEnabled(false)
     }
   }
+
   // Функция для загрузки состояния уведомлений с сервера
   const fetchNotificationPreferences = async (token: string) => {
     const response = await fetch('https://istrongapp.com/api/users/profile/', {
@@ -92,7 +97,7 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
           console.error('Error loading notification states:', error)
         }
       }
-      checkNotificationPermission()
+      await checkNotificationPermission()
     }
     loadNotificationStates()
   }, [user])
