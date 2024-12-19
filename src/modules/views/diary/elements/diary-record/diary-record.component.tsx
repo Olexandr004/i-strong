@@ -170,7 +170,10 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
               pattern: namePattern,
             }}
           />
-
+          <textarea
+            style={{ position: 'absolute', opacity: 0, height: 0, width: 0 }}
+            onFocus={() => editor?.commands.focus()}
+          />
           <EditorContent editor={editor} />
         </div>
       ) : (
