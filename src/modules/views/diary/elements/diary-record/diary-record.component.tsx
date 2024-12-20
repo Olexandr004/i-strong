@@ -11,7 +11,7 @@ import StarterKit from '@tiptap/starter-kit'
 
 import moment from 'moment'
 
-import React, { FC, useEffect, useState useRef } from 'react'
+import React, { FC, useEffect, useState, useRef } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 import { postDiaryRecord, updateDiaryRecord, useGetSingleRecord } from '@/api/diary.api'
@@ -142,7 +142,7 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
     if (editor) {
       const editorElement = editorRef.current
       if (editorElement) {
-        editorElement.focus()  // Устанавливаем фокус сразу, когда редактор инициализирован
+        editorElement.focus() // Устанавливаем фокус сразу, когда редактор инициализирован
       }
     }
   }, [editor])
