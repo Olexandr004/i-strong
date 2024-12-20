@@ -130,13 +130,17 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
 
   // Функция для открытия клавиатуры на iOS
   const handleEditorFocus = () => {
-    const editorElement = document.querySelector('.ProseMirror') as HTMLElement
-    if (editorElement) {
-      editorElement.style.visibility = 'visible' // Сделать видимым
-      setTimeout(() => {
-        editorElement.focus() // Установить фокус с задержкой
-      }, 50)
+    if (editor) {
+      editor.commands.focus() // Используем команду фокуса Tiptap для установки фокуса на редактор
     }
+
+    // Дополнительная попытка с небольшим интервалом, чтобы гарантировать фокус
+    setTimeout(() => {
+      const editorElement = document.querySelector('.ProseMirror') as HTMLElement
+      if (editorElement) {
+        editorElement.focus()
+      }
+    }, 100)
   }
 
   return (
