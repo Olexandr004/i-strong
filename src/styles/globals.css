@@ -224,10 +224,4 @@ img {
   display: block;
 }
 
-.ProseMirror {
-  min-height: 100vh; /* Чтобы поле не схлопывалось */
-  max-height: calc(100vh - 200px); /* Учитывая место для клавиатуры */
-  overflow-y: auto;
-}
-
 /*# sourceMappingURL=globals.css.map */
