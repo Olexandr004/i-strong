@@ -34,10 +34,17 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
     //   setMoodTrackerEnabled(false)
     //   setChallengeNotificationsEnabled(false)
     // }
-    if (permissionStatus.receive !== 'granted') {
-      setMoodTrackerEnabled(false)
-      setChallengeNotificationsEnabled(false)
-    }
+
+    return permissionStatus.receive === 'granted'
+  }
+
+  const disableNotifications = () => {
+    setMoodTrackerEnabled(false)
+    setChallengeNotificationsEnabled(false)
+  }
+
+  const isAnyNotificationEnabled = () => {
+    return moodTrackerEnabled || challengeNotificationsEnabled
   }
 
   // Функция для загрузки состояния уведомлений с сервера
@@ -59,23 +66,23 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
 
   // Функция для обновления настроек уведомлений на сервере
   const updateNotificationPreferences = async (
-    token: string,
-    moodSurvey: boolean,
-    challenges: boolean,
+      token: string,
+      moodSurvey: boolean,
+      challenges: boolean,
   ) => {
     const response = await fetch(
-      'https://istrongapp.com/api/users/profile/notifications-preferences/',
-      {
-        method: 'PUT',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
+        'https://istrongapp.com/api/users/profile/notifications-preferences/',
+        {
+          method: 'PUT',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            mood_survey: moodSurvey,
+            challenges: challenges,
+          }),
         },
-        body: JSON.stringify({
-          mood_survey: moodSurvey,
-          challenges: challenges,
-        }),
-      },
     )
 
     if (!response.ok) {
@@ -91,14 +98,29 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
       if (user?.access_token) {
         try {
           const preferences = await fetchNotificationPreferences(user.access_token)
+          // enabled by default
           setMoodTrackerEnabled(preferences.notifications_preferences.mood_survey)
           setChallengeNotificationsEnabled(preferences.notifications_preferences.challenges)
         } catch (error) {
           console.error('Error loading notification states:', error)
         }
       }
-      await checkNotificationPermission()
+
+      const granted = await checkNotificationPermission()
+      // If permission is not granted and any notification is enabled
+      if (!granted && isAnyNotificationEnabled()) {
+        disableNotifications()
+
+        if (user?.access_token) {
+          updateNotificationPreferences(
+              user.access_token,
+              moodTrackerEnabled,
+              challengeNotificationsEnabled,
+          )
+        }
+      }
     }
+
     loadNotificationStates()
   }, [user])
 
@@ -112,13 +134,13 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
     if (user?.access_token) {
       try {
         await updateNotificationPreferences(
-          user.access_token,
-          newState,
-          challengeNotificationsEnabled,
+            user.access_token,
+            newState,
+            challengeNotificationsEnabled,
         )
         if (newState) {
           await scheduleNotifications(
-            notifications.filter((notification) => [2, 3].includes(notification.id)),
+              notifications.filter((notification) => [2, 3].includes(notification.id)),
           )
         } else {
           await cancelNotifications([2, 3])
@@ -140,7 +162,7 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
         await updateNotificationPreferences(user.access_token, moodTrackerEnabled, newState)
         if (newState) {
           await scheduleNotifications(
-            notifications.filter((notification) => [1].includes(notification.id)),
+              notifications.filter((notification) => [1].includes(notification.id)),
           )
         } else {
           await cancelNotifications([1])
@@ -152,60 +174,60 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
   }
 
   return (
-    <section className={`${styles.settings} container`}>
-      <PageHeaderComponent title={'Налаштування'} />
+      <section className={`${styles.settings} container`}>
+        <PageHeaderComponent title={'Налаштування'} />
 
-      <div className={styles.settings__cards}>
-        <ContactInfoComponent balance={false} color={`BLUE`} />
+        <div className={styles.settings__cards}>
+          <ContactInfoComponent balance={false} color={`BLUE`} />
 
-        <div className={`${styles.settings_card} ${styles.green}`}>
-          <div className={styles.settings_card__header}>
-            <h2>Конфіденційність</h2>
+          <div className={`${styles.settings_card} ${styles.green}`}>
+            <div className={styles.settings_card__header}>
+              <h2>Конфіденційність</h2>
 
-            <IconButtonComponent
-              name={'Edit'}
-              onClick={() => router.push('/settings/reset-password')}
-            >
-              <IconEdit />
-            </IconButtonComponent>
+              <IconButtonComponent
+                  name={'Edit'}
+                  onClick={() => router.push('/settings/reset-password')}
+              >
+                <IconEdit />
+              </IconButtonComponent>
+            </div>
+
+            <div className={styles.settings_card__content}>
+              <div className={styles.settings_card__field}>
+                <span>Пароль для входу</span>
+                <span className={styles.settings_card__field_value}>********</span>
+              </div>
+            </div>
           </div>
 
-          <div className={styles.settings_card__content}>
-            <div className={styles.settings_card__field}>
-              <span>Пароль для входу</span>
-              <span className={styles.settings_card__field_value}>********</span>
+          <div className={`${styles.settings_card} ${styles.yellow}`}>
+            <div className={styles.settings_card__header}>
+              <h2>Сповіщення</h2>
+            </div>
+
+            <div className={styles.settings_card__content}>
+              <div className={styles.settings_card__field}>
+                <span>Трекер настрою</span>
+                <ToggleBtnComponent
+                    isChecked={moodTrackerEnabled}
+                    onToggle={handleToggleMoodTracker}
+                />
+              </div>
+              <div className={styles.settings_card__field}>
+                <span>Сповіщення про челенджі</span>
+                <ToggleBtnComponent
+                    isChecked={challengeNotificationsEnabled}
+                    onToggle={handleToggleChallengeNotifications}
+                />
+              </div>
             </div>
           </div>
         </div>
 
-        <div className={`${styles.settings_card} ${styles.yellow}`}>
-          <div className={styles.settings_card__header}>
-            <h2>Сповіщення</h2>
-          </div>
-
-          <div className={styles.settings_card__content}>
-            <div className={styles.settings_card__field}>
-              <span>Трекер настрою</span>
-              <ToggleBtnComponent
-                isChecked={moodTrackerEnabled}
-                onToggle={handleToggleMoodTracker}
-              />
-            </div>
-            <div className={styles.settings_card__field}>
-              <span>Сповіщення про челенджі</span>
-              <ToggleBtnComponent
-                isChecked={challengeNotificationsEnabled}
-                onToggle={handleToggleChallengeNotifications}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <ButtonComponent onClick={() => router.push('/account-deletion')}>
-        Видалити аккаунт
-      </ButtonComponent>
-    </section>
+        <ButtonComponent onClick={() => router.push('/account-deletion')}>
+          Видалити аккаунт
+        </ButtonComponent>
+      </section>
   )
 }
 
