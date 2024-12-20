@@ -11,7 +11,7 @@ import StarterKit from '@tiptap/starter-kit'
 
 import moment from 'moment'
 
-import React, { FC, useEffect, useState, useRef } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 import { postDiaryRecord, updateDiaryRecord, useGetSingleRecord } from '@/api/diary.api'
@@ -74,8 +74,6 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
     editable: true,
   })
 
-  const editorRef = useRef<HTMLDivElement>(null)
-
   useEffect(() => {
     if (singleDiaryRecord) {
       const timer = setTimeout(() => {
@@ -132,20 +130,11 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
 
   // Функция для открытия клавиатуры на iOS
   const handleEditorFocus = () => {
-    // Проверка, чтобы не фокусировать элемент несколько раз
-    if (editorRef.current && !editorRef.current.contains(document.activeElement)) {
-      editorRef.current.focus()
+    const editorElement = document.querySelector('.ProseMirror') as HTMLElement
+    if (editorElement) {
+      editorElement.focus() // Устанавливаем фокус на элемент
     }
   }
-
-  useEffect(() => {
-    if (editor) {
-      const editorElement = editorRef.current
-      if (editorElement) {
-        editorElement.focus() // Устанавливаем фокус сразу, когда редактор инициализирован
-      }
-    }
-  }, [editor])
 
   return (
     <section className={`${styles.diary_record} container`}>
@@ -189,7 +178,7 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
           />
 
           {/* При фокусе на EditorContent открывается клавиатура */}
-          <div ref={editorRef} onClick={handleEditorFocus}>
+          <div onClick={handleEditorFocus}>
             <EditorContent editor={editor} />
           </div>
         </div>
