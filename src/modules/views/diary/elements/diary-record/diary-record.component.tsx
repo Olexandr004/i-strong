@@ -24,7 +24,6 @@ import { namePattern, required } from '@/shared/validation'
 
 import styles from './diary-record.module.scss'
 
-//interface
 interface IDiaryRecord {}
 
 export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
@@ -81,7 +80,7 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
         setIsDelayed(true)
       }, 300)
 
-      return () => clearTimeout(timer) // Очистка таймера при размонтировании
+      return () => clearTimeout(timer)
     }
   }, [singleDiaryRecord])
 
@@ -94,7 +93,6 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
     editor?.commands.setContent(cleanedNote)
   }, [singleDiaryRecord, editor])
 
-  // Устанавливаем заголовок, если запись загружена
   useEffect(() => {
     if (singleDiaryRecord) {
       setValue('title', singleDiaryRecord.title)
@@ -128,6 +126,14 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
           note: formattedHtml,
           title: title ? title : moment(singleDiaryRecord?.created_at).format('dddd'),
         })
+  }
+
+  // Функция для открытия клавиатуры на iOS
+  const handleEditorFocus = () => {
+    const editorElement = document.querySelector('.ProseMirror') as HTMLElement
+    if (editorElement) {
+      editorElement.focus()
+    }
   }
 
   return (
@@ -171,12 +177,10 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
             }}
           />
 
-          <EditorContent
-            editor={editor}
-            className={styles.editor_content}
-            contentEditable='true'
-            onTouchStart={() => editor?.commands.focus()}
-          />
+          {/* При фокусе на EditorContent открывается клавиатура */}
+          <div onClick={handleEditorFocus}>
+            <EditorContent editor={editor} />
+          </div>
         </div>
       ) : (
         <div></div>
