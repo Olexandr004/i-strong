@@ -34,17 +34,10 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
     //   setMoodTrackerEnabled(false)
     //   setChallengeNotificationsEnabled(false)
     // }
-
-    return permissionStatus.receive === 'granted'
-  }
-
-  const disableNotifications = () => {
-    setMoodTrackerEnabled(false)
-    setChallengeNotificationsEnabled(false)
-  }
-
-  const isAnyNotificationEnabled = () => {
-    return moodTrackerEnabled || challengeNotificationsEnabled
+    if (permissionStatus.receive !== 'granted') {
+      setMoodTrackerEnabled(false)
+      setChallengeNotificationsEnabled(false)
+    }
   }
 
   // Функция для загрузки состояния уведомлений с сервера
@@ -98,29 +91,14 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
       if (user?.access_token) {
         try {
           const preferences = await fetchNotificationPreferences(user.access_token)
-          // enabled by default
           setMoodTrackerEnabled(preferences.notifications_preferences.mood_survey)
           setChallengeNotificationsEnabled(preferences.notifications_preferences.challenges)
         } catch (error) {
           console.error('Error loading notification states:', error)
         }
       }
-
-      const granted = await checkNotificationPermission()
-      // If permission is not granted and any notification is enabled
-      if (!granted && isAnyNotificationEnabled()) {
-        disableNotifications()
-
-        if (user?.access_token) {
-          updateNotificationPreferences(
-            user.access_token,
-            moodTrackerEnabled,
-            challengeNotificationsEnabled,
-          )
-        }
-      }
+      await checkNotificationPermission()
     }
-
     loadNotificationStates()
   }, [user])
 
