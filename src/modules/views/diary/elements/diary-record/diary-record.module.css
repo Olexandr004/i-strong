@@ -47,10 +47,10 @@
   color: var(--font-color-grey);
 }
 
-.touch_editor_content {
-  touch-action: manipulation;
-  pointer-events: auto;
-  caret-color: auto;
+.editor_content {
+  min-height: 200px;
+  cursor: text;
+  outline: none;
 }
 
 /*# sourceMappingURL=diary-record.module.css.map */

@@ -6,13 +6,12 @@ import { Color } from '@tiptap/extension-color'
 import ListItem from '@tiptap/extension-list-item'
 import { Placeholder } from '@tiptap/extension-placeholder'
 import TextStyle from '@tiptap/extension-text-style'
-import { TextSelection } from 'prosemirror-state'
 import { EditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 
 import moment from 'moment'
 
-import React, { FC, useEffect, useState, useRef } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 import { postDiaryRecord, updateDiaryRecord, useGetSingleRecord } from '@/api/diary.api'
@@ -35,16 +34,6 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
   const [isDelayed, setIsDelayed] = useState(false)
 
   const router = useRouter()
-
-  const hiddenInputRef = useRef<HTMLTextAreaElement>(null)
-
-  const handleFocus = () => {
-    // Принудительно фокусируем скрытый textarea
-    hiddenInputRef.current?.focus()
-    setTimeout(() => {
-      editor?.commands.focus()
-    }, 100) // Небольшая задержка для переключения фокуса
-  }
 
   const handleBackClick = () => {
     router.back()
@@ -84,35 +73,7 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
       }),
     ],
     editable: true,
-    onUpdate: ({ editor }) => {
-      const content = editor.getHTML()
-      setValue('note', content) // Сохраняем состояние
-    },
   })
-
-  const updateEditorContent = (newContent: string) => {
-    if (editor) {
-      const currentState = editor.state
-
-      // Сохраняем текущую позицию курсора
-      const currentPos = currentState.selection.$anchor.pos
-
-      // Устанавливаем новое содержимое
-      editor.commands.setContent(newContent, false)
-
-      // Обновляем состояние после изменения содержимого
-      const updatedState = editor.state
-
-      // Рассчитываем новую допустимую позицию курсора
-      const resolvedPos = updatedState.doc.resolve(
-        Math.min(currentPos, updatedState.doc.content.size),
-      )
-
-      // Создаем новую селекцию и применяем ее
-      const selection = new TextSelection(resolvedPos)
-      editor.view.dispatch(updatedState.tr.setSelection(selection))
-    }
-  }
 
   useEffect(() => {
     if (singleDiaryRecord) {
@@ -129,10 +90,8 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
   }, [searchParams.get('record_id')])
 
   useEffect(() => {
-    if (singleDiaryRecord) {
-      const cleanedNote = cleanText(singleDiaryRecord?.note ?? '')
-      updateEditorContent(cleanedNote)
-    }
+    const cleanedNote = cleanText(singleDiaryRecord?.note ?? '')
+    editor?.commands.setContent(cleanedNote)
   }, [singleDiaryRecord, editor])
 
   // Устанавливаем заголовок, если запись загружена
@@ -211,29 +170,13 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
               pattern: namePattern,
             }}
           />
-          <div>
-            <textarea
-              ref={hiddenInputRef}
-              style={{
-                position: 'absolute',
-                opacity: 0,
-                height: 0,
-                width: 0,
-                pointerEvents: 'none',
-              }}
-              onFocus={() => {
-                editor?.commands.focus() // Переключение фокуса на редактор
-              }}
-            />
-            <EditorContent
-              onFocus={() => {
-                const currentPos = editor?.state.selection.$anchor.pos || 0
-                editor?.commands.focus(currentPos)
-              }}
-              className={styles.touch_editor_content}
-              editor={editor}
-            />
-          </div>
+
+          <EditorContent
+            editor={editor}
+            className={styles.editor_content}
+            contentEditable='true'
+            onTouchStart={() => editor?.commands.focus()}
+          />
         </div>
       ) : (
         <div></div>
