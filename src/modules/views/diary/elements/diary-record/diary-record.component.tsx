@@ -6,6 +6,7 @@ import { Color } from '@tiptap/extension-color'
 import ListItem from '@tiptap/extension-list-item'
 import { Placeholder } from '@tiptap/extension-placeholder'
 import TextStyle from '@tiptap/extension-text-style'
+import { TextSelection } from 'prosemirror-state'
 import { EditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 
@@ -94,15 +95,13 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
 
     if (transaction) {
       // Сохранение текущей позиции курсора
-      const currentPos = editor.view.state.selection.$anchor.pos
+      const currentPos = editor.state.selection.$anchor.pos
 
       // Установка нового содержимого
       transaction.replaceWith(0, editor.state.doc.content.size, editor.schema.text(newContent))
 
       // Восстановление позиции курсора
-      transaction.setSelection(
-        editor.state.selection.constructor.near(transaction.doc.resolve(currentPos)),
-      )
+      transaction.setSelection(TextSelection.create(transaction.doc, currentPos))
 
       editor.view.dispatch(transaction)
     }
