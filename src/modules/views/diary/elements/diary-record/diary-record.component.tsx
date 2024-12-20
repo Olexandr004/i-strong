@@ -11,7 +11,7 @@ import StarterKit from '@tiptap/starter-kit'
 
 import moment from 'moment'
 
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useEffect, useState, useRef } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 import { postDiaryRecord, updateDiaryRecord, useGetSingleRecord } from '@/api/diary.api'
