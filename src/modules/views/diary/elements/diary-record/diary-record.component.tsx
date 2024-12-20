@@ -8,6 +8,7 @@ import { Placeholder } from '@tiptap/extension-placeholder'
 import TextStyle from '@tiptap/extension-text-style'
 import { EditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
+import { KeyboardAvoidingView, Platform } from 'react-native'
 
 import moment from 'moment'
 
@@ -144,55 +145,60 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
   }
 
   return (
-    <section className={`${styles.diary_record} container`}>
-      <div className={styles.diary_record__fixed_menu}>
-        <div className={styles.diary_record__top}>
-          <div className={styles.diary_record__header}>
-            <IconButtonComponent name={'back'} onClick={handleBackClick}>
-              <IconArrow />
-            </IconButtonComponent>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{ flex: 1 }}
+    >
+      <section className={`${styles.diary_record} container`}>
+        <div className={styles.diary_record__fixed_menu}>
+          <div className={styles.diary_record__top}>
+            <div className={styles.diary_record__header}>
+              <IconButtonComponent name={'back'} onClick={handleBackClick}>
+                <IconArrow />
+              </IconButtonComponent>
 
-            <ButtonComponent size={'small'} onClick={handleSave}>
-              Зберегти
-            </ButtonComponent>
+              <ButtonComponent size={'small'} onClick={handleSave}>
+                Зберегти
+              </ButtonComponent>
+            </div>
+
+            <div>{moment(singleDiaryRecord?.created_at).format('DD.MM.YYYY')}</div>
           </div>
 
-          <div>{moment(singleDiaryRecord?.created_at).format('DD.MM.YYYY')}</div>
+          <MenuBarComponent editor={editor} />
         </div>
 
-        <MenuBarComponent editor={editor} />
-      </div>
+        {isDelayed && (status !== 'pending' || singleDiaryRecord) ? (
+          <div className={styles.diary_record__editor_box}>
+            <Controller
+              control={control}
+              name={'title'}
+              key={`title`}
+              defaultValue={singleDiaryRecord?.title ?? ''}
+              render={({ field: { value, onChange } }) => (
+                <input
+                  value={value}
+                  onChange={onChange}
+                  className={styles.diary_record__title_input}
+                  placeholder={'Що сталося сьогодні?'}
+                />
+              )}
+              rules={{
+                required: required,
+                pattern: namePattern,
+              }}
+            />
 
-      {isDelayed && (status !== 'pending' || singleDiaryRecord) ? (
-        <div className={styles.diary_record__editor_box}>
-          <Controller
-            control={control}
-            name={'title'}
-            key={`title`}
-            defaultValue={singleDiaryRecord?.title ?? ''}
-            render={({ field: { value, onChange } }) => (
-              <input
-                value={value}
-                onChange={onChange}
-                className={styles.diary_record__title_input}
-                placeholder={'Що сталося сьогодні?'}
-              />
-            )}
-            rules={{
-              required: required,
-              pattern: namePattern,
-            }}
-          />
-
-          {/* При фокусе на EditorContent открывается клавиатура */}
-          <div onClick={handleEditorFocus}>
-            <EditorContent editor={editor} />
+            {/* При фокусе на EditorContent открывается клавиатура */}
+            <div onClick={handleEditorFocus}>
+              <EditorContent editor={editor} />
+            </div>
           </div>
-        </div>
-      ) : (
-        <div></div>
-      )}
-    </section>
+        ) : (
+          <div></div>
+        )}
+      </section>
+    </KeyboardAvoidingView>
   )
 }
 
