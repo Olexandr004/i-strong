@@ -35,6 +35,16 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
 
   const router = useRouter()
 
+  const hiddenInputRef = useRef<HTMLTextAreaElement>(null)
+
+  const handleFocus = () => {
+    // Принудительно фокусируем скрытый textarea
+    hiddenInputRef.current?.focus()
+    setTimeout(() => {
+      editor?.commands.focus()
+    }, 100) // Небольшая задержка для переключения фокуса
+  }
+
   const handleBackClick = () => {
     router.back()
   }
@@ -170,8 +180,18 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
               pattern: namePattern,
             }}
           />
-
-          <EditorContent className={styles.touch_editor_content} editor={editor} />
+          <div>
+            <textarea
+              ref={hiddenInputRef}
+              style={{ position: 'absolute', opacity: 0, height: 0, width: 0 }}
+            />
+            <EditorContent
+              onClick={handleFocus}
+              onFocus={handleFocus}
+              className={styles.touch_editor_content}
+              editor={editor}
+            />
+          </div>
         </div>
       ) : (
         <div></div>
