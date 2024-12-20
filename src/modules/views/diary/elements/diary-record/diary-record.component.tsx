@@ -8,7 +8,6 @@ import { Placeholder } from '@tiptap/extension-placeholder'
 import TextStyle from '@tiptap/extension-text-style'
 import { EditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
-import { Keyboard, KeyboardInfo } from '@capacitor/keyboard'
 
 import moment from 'moment'
 
@@ -128,25 +127,6 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
           title: title ? title : moment(singleDiaryRecord?.created_at).format('dddd'),
         })
   }
-
-  useEffect(() => {
-    const handleKeyboardWillShow = async (info: KeyboardInfo) => {
-      console.log('Keyboard will show', info)
-      await Keyboard.setScroll({ isDisabled: true }) // Отключить автоскролл
-    }
-
-    const handleKeyboardWillHide = async () => {
-      console.log('Keyboard will hide')
-      await Keyboard.setScroll({ isDisabled: false }) // Включить автоскролл
-    }
-
-    Keyboard.addListener('keyboardWillShow', handleKeyboardWillShow)
-    Keyboard.addListener('keyboardWillHide', handleKeyboardWillHide)
-
-    return () => {
-      Keyboard.removeAllListeners()
-    }
-  }, [])
 
   // Функция для открытия клавиатуры на iOS
   const handleEditorFocus = () => {
