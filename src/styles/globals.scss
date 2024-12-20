@@ -71,3 +71,8 @@ img {
   height: auto;
   display: block;
 }
+
+.ProseMirror {
+  max-height: 70vh; /* ограничиваем высоту редактора */
+  overflow-y: auto; /* добавляем прокрутку */
+}
