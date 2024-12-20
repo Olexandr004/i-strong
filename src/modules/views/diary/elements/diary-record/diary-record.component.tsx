@@ -92,15 +92,25 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
 
   const updateEditorContent = (newContent: string) => {
     if (editor) {
-      const state = editor.state
-      const currentPos = state.selection.$anchor.pos
+      const currentState = editor.state
 
+      // Сохраняем текущую позицию курсора
+      const currentPos = currentState.selection.$anchor.pos
+
+      // Устанавливаем новое содержимое
       editor.commands.setContent(newContent, false)
 
-      // Устанавливаем сохраненную позицию курсора
-      const resolvedPos = state.doc.resolve(Math.min(currentPos, editor.state.doc.content.size))
+      // Обновляем состояние после изменения содержимого
+      const updatedState = editor.state
+
+      // Рассчитываем новую допустимую позицию курсора
+      const resolvedPos = updatedState.doc.resolve(
+        Math.min(currentPos, updatedState.doc.content.size),
+      )
+
+      // Создаем новую селекцию и применяем ее
       const selection = new TextSelection(resolvedPos)
-      editor.view.dispatch(editor.state.tr.setSelection(selection))
+      editor.view.dispatch(updatedState.tr.setSelection(selection))
     }
   }
 
