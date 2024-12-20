@@ -113,6 +113,21 @@ export const TrackerRecordComponent: FC<Readonly<ITrackerRecord>> = () => {
     router.back()
   }
 
+  // Функция для открытия клавиатуры на iOS
+  const handleEditorFocus = () => {
+    if (editor) {
+      editor.commands.focus() // Используем команду фокуса Tiptap для установки фокуса на редактор
+    }
+
+    // Дополнительная попытка с небольшим интервалом, чтобы гарантировать фокус
+    setTimeout(() => {
+      const editorElement = document.querySelector('.ProseMirror') as HTMLElement
+      if (editorElement) {
+        editorElement.focus()
+      }
+    }, 100)
+  }
+
   // return
   return (
     <section className={`${styles.tracker_record} container`}>
@@ -158,7 +173,9 @@ export const TrackerRecordComponent: FC<Readonly<ITrackerRecord>> = () => {
             )}
           />
 
-          <EditorContent editor={editor} />
+          <div onClick={handleEditorFocus}>
+            <EditorContent editor={editor} />
+          </div>
         </div>
       ) : (
         <div></div>
