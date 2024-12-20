@@ -83,7 +83,30 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
       }),
     ],
     editable: true,
+    onUpdate: ({ editor }) => {
+      const content = editor.getHTML()
+      setValue('note', content) // Сохраняем состояние
+    },
   })
+
+  const updateEditorContent = (newContent: string) => {
+    const transaction = editor?.state.tr
+
+    if (transaction) {
+      // Сохранение текущей позиции курсора
+      const currentPos = editor.view.state.selection.$anchor.pos
+
+      // Установка нового содержимого
+      transaction.replaceWith(0, editor.state.doc.content.size, editor.schema.text(newContent))
+
+      // Восстановление позиции курсора
+      transaction.setSelection(
+        editor.state.selection.constructor.near(transaction.doc.resolve(currentPos)),
+      )
+
+      editor.view.dispatch(transaction)
+    }
+  }
 
   useEffect(() => {
     if (singleDiaryRecord) {
@@ -100,8 +123,10 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
   }, [searchParams.get('record_id')])
 
   useEffect(() => {
-    const cleanedNote = cleanText(singleDiaryRecord?.note ?? '')
-    editor?.commands.setContent(cleanedNote)
+    if (singleDiaryRecord) {
+      const cleanedNote = cleanText(singleDiaryRecord?.note ?? '')
+      updateEditorContent(cleanedNote)
+    }
   }, [singleDiaryRecord, editor])
 
   // Устанавливаем заголовок, если запись загружена
