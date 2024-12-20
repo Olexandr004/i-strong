@@ -134,7 +134,7 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
     if (editorElement) {
       editorElement.style.visibility = 'visible' // Сделать видимым
       setTimeout(() => {
-        editorElement.focus() // Установить фокус с небольшой задержкой
+        editorElement.focus() // Установить фокус с задержкой
       }, 50)
     }
   }
@@ -181,12 +181,14 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
           />
 
           {/* При фокусе на EditorContent открывается клавиатура */}
-          <div onMouseDown={handleEditorFocus}>
+          <div onClick={handleEditorFocus}>
             <EditorContent
               editor={editor}
               onFocus={() => {
                 const editorElement = document.querySelector('.ProseMirror') as HTMLElement
-                editorElement?.focus() // Устанавливаем фокус вручную
+                setTimeout(() => {
+                  editorElement?.focus() // Устанавливаем фокус с небольшой задержкой
+                }, 50)
               }}
             />
           </div>
