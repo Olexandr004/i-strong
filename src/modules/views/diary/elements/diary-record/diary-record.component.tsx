@@ -183,11 +183,24 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
           <div>
             <textarea
               ref={hiddenInputRef}
-              style={{ position: 'absolute', opacity: 0, height: 0, width: 0 }}
+              style={{
+                position: 'absolute',
+                opacity: 0,
+                height: 0,
+                width: 0,
+                pointerEvents: 'none',
+              }}
+              onFocus={() => {
+                editor?.commands.focus() // Переключение фокуса на редактор
+              }}
             />
             <EditorContent
-              onClick={handleFocus}
-              onFocus={handleFocus}
+              onClick={() => {
+                hiddenInputRef.current?.focus() // Фокусируемся на скрытый textarea, чтобы вызвать клавиатуру
+              }}
+              onFocus={() => {
+                editor?.commands.focus() // Устанавливаем фокус в редакторе
+              }}
               className={styles.touch_editor_content}
               editor={editor}
             />
