@@ -179,7 +179,13 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
 
           {/* При фокусе на EditorContent открывается клавиатура */}
           <div onClick={handleEditorFocus}>
-            <EditorContent editor={editor} />
+            <EditorContent
+              editor={editor}
+              onFocus={() => {
+                const editorElement = document.querySelector('.ProseMirror') as HTMLElement
+                editorElement?.focus() // Устанавливаем фокус вручную
+              }}
+            />
           </div>
         </div>
       ) : (
