@@ -71,8 +71,8 @@ img {
   height: auto;
   display: block;
 }
-
 .ProseMirror {
-  max-height: 100vh; /* ограничиваем высоту редактора */
-  overflow-y: auto; /* добавляем прокрутку */
+  min-height: 200px; /* Чтобы поле не схлопывалось */
+  max-height: calc(100vh - 200px); /* Учитывая место для клавиатуры */
+  overflow-y: auto;
 }
