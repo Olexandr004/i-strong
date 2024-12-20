@@ -92,14 +92,15 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
 
   const updateEditorContent = (newContent: string) => {
     if (editor) {
-      // Сохраняем текущую позицию курсора
-      const currentPos = editor.state.selection.$anchor.pos
+      const state = editor.state
+      const currentPos = state.selection.$anchor.pos
 
-      // Устанавливаем новое содержимое без лишнего оборачивания
       editor.commands.setContent(newContent, false)
 
-      // Восстанавливаем позицию курсора
-      editor.commands.setTextSelection(currentPos)
+      // Устанавливаем сохраненную позицию курсора
+      const resolvedPos = state.doc.resolve(Math.min(currentPos, editor.state.doc.content.size))
+      const selection = new TextSelection(resolvedPos)
+      editor.view.dispatch(editor.state.tr.setSelection(selection))
     }
   }
 
@@ -215,11 +216,9 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
               }}
             />
             <EditorContent
-              onClick={() => {
-                hiddenInputRef.current?.focus() // Фокусируемся на скрытый textarea, чтобы вызвать клавиатуру
-              }}
               onFocus={() => {
-                editor?.commands.focus() // Устанавливаем фокус в редакторе
+                const currentPos = editor?.state.selection.$anchor.pos || 0
+                editor?.commands.focus(currentPos)
               }}
               className={styles.touch_editor_content}
               editor={editor}
