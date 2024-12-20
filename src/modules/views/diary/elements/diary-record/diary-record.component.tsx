@@ -35,12 +35,6 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
 
   const router = useRouter()
 
-  const [logMessages, setLogMessages] = useState<string[]>([])
-
-  const addLog = (message: string) => {
-    setLogMessages((prev) => [...prev, message])
-  }
-
   const handleBackClick = () => {
     router.back()
   }
@@ -177,34 +171,7 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
             }}
           />
 
-          <EditorContent
-            editor={editor}
-            onClick={() => {
-              addLog('Click event triggered')
-              editor?.commands.focus()
-            }}
-            onFocus={() => {
-              addLog('Focus event triggered')
-              editor?.commands.focus()
-            }}
-          />
-
-          {/* Вывод сообщений на экран */}
-          <div
-            style={{
-              marginTop: '20px',
-              padding: '10px',
-              border: '1px solid #ccc',
-              backgroundColor: '#f9f9f9',
-              maxHeight: '200px',
-              overflowY: 'auto',
-            }}
-          >
-            <h4>Лог сообщений:</h4>
-            {logMessages.map((msg, index) => (
-              <div key={index}>{msg}</div>
-            ))}
-          </div>
+          <EditorContent className={styles.touch_editor_content} editor={editor} />
         </div>
       ) : (
         <div></div>
