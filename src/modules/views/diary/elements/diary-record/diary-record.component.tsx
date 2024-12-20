@@ -74,7 +74,7 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
     editable: true,
   })
 
-  const editorRef = useRef<HTMLElement>(null)
+  const editorRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (singleDiaryRecord) {
