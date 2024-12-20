@@ -132,7 +132,10 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
   const handleEditorFocus = () => {
     const editorElement = document.querySelector('.ProseMirror') as HTMLElement
     if (editorElement) {
-      editorElement.focus()
+      editorElement.style.visibility = 'visible' // Сделать видимым
+      setTimeout(() => {
+        editorElement.focus() // Установить фокус с небольшой задержкой
+      }, 50)
     }
   }
 
