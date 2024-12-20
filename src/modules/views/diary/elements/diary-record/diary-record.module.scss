@@ -58,7 +58,6 @@
 }
 
 .editor_content {
-  min-height: 200px;
-  cursor: text;
-  outline: none;
+  height: calc(100vh - 50px); /* Высота экрана минус фиксированное меню */
+  overflow-y: auto;
 }
