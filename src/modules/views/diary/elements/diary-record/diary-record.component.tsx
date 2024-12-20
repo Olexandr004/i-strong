@@ -181,7 +181,7 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
           />
 
           {/* При фокусе на EditorContent открывается клавиатура */}
-          <div onClick={handleEditorFocus}>
+          <div onMouseDown={handleEditorFocus}>
             <EditorContent
               editor={editor}
               onFocus={() => {
