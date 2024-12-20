@@ -91,19 +91,15 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
   })
 
   const updateEditorContent = (newContent: string) => {
-    const transaction = editor?.state.tr
-
-    if (transaction) {
-      // Сохранение текущей позиции курсора
+    if (editor) {
+      // Сохраняем текущую позицию курсора
       const currentPos = editor.state.selection.$anchor.pos
 
-      // Установка нового содержимого
-      transaction.replaceWith(0, editor.state.doc.content.size, editor.schema.text(newContent))
+      // Устанавливаем новое содержимое без лишнего оборачивания
+      editor.commands.setContent(newContent, false)
 
-      // Восстановление позиции курсора
-      transaction.setSelection(TextSelection.create(transaction.doc, currentPos))
-
-      editor.view.dispatch(transaction)
+      // Восстанавливаем позицию курсора
+      editor.commands.setTextSelection(currentPos)
     }
   }
 
