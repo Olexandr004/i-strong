@@ -71,10 +71,10 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
 
   const handleRequestRecordsByDate = (year: number, month: number) => {
     if (extendedBlock.year === year && extendedBlock.month === month) {
-      setExtendedBlock({ year: null, month: null })
+      setExtendedBlock({ year: null, month: null }) // Скрыть записи при повторном клике
     } else {
-      setExtendedBlock({ year, month })
-      setTimeout(() => diaryRecordsByDateRefetch(), 0)
+      setExtendedBlock({ year, month }) // Раскрыть записи для выбранного месяца
+      setTimeout(() => diaryRecordsByDateRefetch(), 0) // Перезапросить записи
     }
   }
 
@@ -87,7 +87,10 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
       const currentMonth = moment().month() + 1
       const currentYear = moment().year()
 
-      setExtendedBlock({ year: currentYear, month: currentMonth })
+      // Обновляем extendedBlock только если текущий месяц не раскрыт
+      if (extendedBlock.year !== currentYear || extendedBlock.month !== currentMonth) {
+        setExtendedBlock({ year: null, month: null }) // Сбрасываем расширенный месяц
+      }
     }
   }, [diaryRecords])
 
