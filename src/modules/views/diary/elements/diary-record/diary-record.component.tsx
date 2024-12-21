@@ -143,6 +143,32 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
     }, 100)
   }
 
+  useEffect(() => {
+    const handleResize = () => {
+      // Вычисляем отступ в зависимости от высоты окна
+      const windowHeight = window.innerHeight
+      const editorElement = document.querySelector('.ProseMirror') as HTMLElement
+      if (editorElement) {
+        const rect = editorElement.getBoundingClientRect()
+        const distanceFromBottom = windowHeight - rect.bottom
+        if (distanceFromBottom < 150) {
+          editorElement.style.marginBottom = '50px'
+        } else {
+          editorElement.style.marginBottom = '0' // Убираем отступ
+        }
+      }
+    }
+
+    window.addEventListener('resize', handleResize)
+
+    // Вызываем сразу для первичной загрузки
+    handleResize()
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
+
   return (
     <section className={`${styles.diary_record} container`}>
       <div className={styles.diary_record__fixed_menu}>
