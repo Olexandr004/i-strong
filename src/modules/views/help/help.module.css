@@ -14,7 +14,7 @@
 }
 .help__top {
   display: grid;
-  padding-top: 3.8rem;
+  padding-top: 6.8rem;
   gap: 2rem;
 }
 .help__top button {
