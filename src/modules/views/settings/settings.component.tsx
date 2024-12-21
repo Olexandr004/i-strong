@@ -1,18 +1,12 @@
 'use client'
+
 import { useRouter } from 'next/navigation'
 import { FC, useState, useEffect } from 'react'
+import { App } from '@capacitor/app'
 import { ButtonComponent, ContactInfoComponent, PageHeaderComponent } from '@/shared/components'
 import { IconButtonComponent } from '@/shared/components/ui/icon-button'
 import ToggleBtnComponent from '@/shared/components/ui/toggle-btn/toggle-btn.component'
 import { IconEdit } from '@/shared/icons'
-import { useUserStore } from '@/shared/stores'
-import {
-  notifications,
-  scheduleNotifications,
-  cancelNotifications,
-  getNotificationState,
-  saveNotificationState,
-} from '@/utils/native-app/notifications' // Импортируйте ваши функции
 import { PushNotifications } from '@capacitor/push-notifications'
 import styles from './settings.module.scss'
 
@@ -20,136 +14,61 @@ interface ISettings {}
 
 export const SettingsComponent: FC<Readonly<ISettings>> = () => {
   const router = useRouter()
-  const { user, handleChangeUserStore } = useUserStore()
 
   const [moodTrackerEnabled, setMoodTrackerEnabled] = useState<boolean>(false)
   const [challengeNotificationsEnabled, setChallengeNotificationsEnabled] = useState<boolean>(false)
-
+  const [errorText, setErrorText] = useState('')
   const checkNotificationPermission = async () => {
     const permissionStatus = await PushNotifications.checkPermissions()
-    // if (permissionStatus.receive === 'granted') {
-    //   setMoodTrackerEnabled(true)
-    //   setChallengeNotificationsEnabled(true)
-    // } else {
-    //   setMoodTrackerEnabled(false)
-    //   setChallengeNotificationsEnabled(false)
-    // }
-    if (permissionStatus.receive !== 'granted') {
+    if (permissionStatus.receive === 'granted') {
+      setMoodTrackerEnabled(true)
+      setChallengeNotificationsEnabled(true)
+    } else {
       setMoodTrackerEnabled(false)
       setChallengeNotificationsEnabled(false)
     }
   }
 
-  // Функция для загрузки состояния уведомлений с сервера
-  const fetchNotificationPreferences = async (token: string) => {
-    const response = await fetch('https://istrongapp.com/api/users/profile/', {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    })
+  const requestNotificationPermission = async () => {
+    const permissionStatus = await PushNotifications.requestPermissions()
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch notification preferences: ${response.status}`)
+    if (permissionStatus.receive === 'granted') {
+      setMoodTrackerEnabled(true)
+      setChallengeNotificationsEnabled(true)
+    } else {
+      setErrorText('Будь ласка, дайте дозвіл на отримання сповіщень у налаштуваннях телефону.')
     }
-
-    return await response.json()
   }
 
-  // Функция для обновления настроек уведомлений на сервере
-  const updateNotificationPreferences = async (
-    token: string,
-    moodSurvey: boolean,
-    challenges: boolean,
-  ) => {
-    const response = await fetch(
-      'https://istrongapp.com/api/users/profile/notifications-preferences/',
-      {
-        method: 'PUT',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          mood_survey: moodSurvey,
-          challenges: challenges,
-        }),
-      },
-    )
-
-    if (!response.ok) {
-      throw new Error('Failed to update notification preferences')
-    }
-
-    return await response.json()
-  }
-
-  // Загрузка состояния уведомлений при инициализации
-  useEffect(() => {
-    const loadNotificationStates = async () => {
-      if (user?.access_token) {
-        try {
-          const preferences = await fetchNotificationPreferences(user.access_token)
-          setMoodTrackerEnabled(preferences.notifications_preferences.mood_survey)
-          setChallengeNotificationsEnabled(preferences.notifications_preferences.challenges)
-        } catch (error) {
-          console.error('Error loading notification states:', error)
-        }
-      }
-      await checkNotificationPermission()
-    }
-    loadNotificationStates()
-  }, [user])
-
-  // Сохранение состояния для трекера настроения
   const handleToggleMoodTracker = async () => {
-    const newState = !moodTrackerEnabled
-    console.log('Mood Tracker Notifications Enabled:', newState)
-    setMoodTrackerEnabled(newState)
-    await saveNotificationState('moodTrackerNotificationsEnabled', newState)
-
-    if (user?.access_token) {
-      try {
-        await updateNotificationPreferences(
-          user.access_token,
-          newState,
-          challengeNotificationsEnabled,
-        )
-        if (newState) {
-          await scheduleNotifications(
-            notifications.filter((notification) => [2, 3].includes(notification.id)),
-          )
-        } else {
-          await cancelNotifications([2, 3])
-        }
-      } catch (error) {
-        console.error('Error updating notification preferences:', error)
+    if (moodTrackerEnabled) {
+      setMoodTrackerEnabled(false)
+    } else {
+      const permissionStatus = await PushNotifications.checkPermissions()
+      if (permissionStatus.receive === 'granted') {
+        setMoodTrackerEnabled(true)
+      } else {
+        await requestNotificationPermission()
       }
     }
   }
 
   const handleToggleChallengeNotifications = async () => {
-    const newState = !challengeNotificationsEnabled
-    console.log('Challenge Notifications Enabled:', newState)
-    setChallengeNotificationsEnabled(newState)
-    await saveNotificationState('challengeNotificationsEnabled', newState)
-
-    if (user?.access_token) {
-      try {
-        await updateNotificationPreferences(user.access_token, moodTrackerEnabled, newState)
-        if (newState) {
-          await scheduleNotifications(
-            notifications.filter((notification) => [1].includes(notification.id)),
-          )
-        } else {
-          await cancelNotifications([1])
-        }
-      } catch (error) {
-        console.error('Error updating notification preferences:', error)
+    if (challengeNotificationsEnabled) {
+      setChallengeNotificationsEnabled(false)
+    } else {
+      const permissionStatus = await PushNotifications.checkPermissions()
+      if (permissionStatus.receive === 'granted') {
+        setChallengeNotificationsEnabled(true)
+      } else {
+        await requestNotificationPermission()
       }
     }
   }
+
+  useEffect(() => {
+    checkNotificationPermission()
+  }, [])
 
   return (
     <section className={`${styles.settings} container`}>
