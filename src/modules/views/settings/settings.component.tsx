@@ -39,7 +39,9 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
       setChallengeNotificationsEnabled(true)
     } else {
       setErrorText('Будь ласка, дайте дозвіл на отримання сповіщень у налаштуваннях телефону.')
-      handleChangeCommonStore({ errorText: 'Недостатньо монеток' })
+      handleChangeCommonStore({
+        errorText: 'Будь ласка, дайте дозвіл на отримання сповіщень у налаштуваннях телефону.',
+      })
     }
   }
 
@@ -50,7 +52,9 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
       setMoodTrackerEnabled((prev) => !prev)
     } else {
       setErrorText('Будь ласка, дайте дозвіл на отримання сповіщень у налаштуваннях телефону.')
-      handleChangeCommonStore({ errorText: 'Недостатньо монеток' })
+      handleChangeCommonStore({
+        errorText: 'Будь ласка, дайте дозвіл на отримання сповіщень у налаштуваннях телефону.',
+      })
     }
   }
 
@@ -61,7 +65,9 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
       setChallengeNotificationsEnabled((prev) => !prev)
     } else {
       setErrorText('Будь ласка, дайте дозвіл на отримання сповіщень у налаштуваннях телефону.')
-      handleChangeCommonStore({ errorText: 'Недостатньо монеток' })
+      handleChangeCommonStore({
+        errorText: 'Будь ласка, дайте дозвіл на отримання сповіщень у налаштуваннях телефону.',
+      })
     }
   }
 
