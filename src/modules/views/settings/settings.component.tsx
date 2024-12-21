@@ -20,6 +20,8 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
   const [challengeNotificationsEnabled, setChallengeNotificationsEnabled] = useState<boolean>(false)
   const [errorText, setErrorText] = useState('')
   const handleChangeCommonStore = useCommonStore((state) => state.handleChangeCommonStore)
+
+  // Проверка прав на получение уведомлений
   const checkNotificationPermission = async () => {
     const permissionStatus = await PushNotifications.checkPermissions()
     if (permissionStatus.receive === 'granted') {
@@ -31,6 +33,7 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
     }
   }
 
+  // Запрос разрешений на уведомления
   const requestNotificationPermission = async () => {
     const permissionStatus = await PushNotifications.requestPermissions()
 
@@ -45,11 +48,16 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
     }
   }
 
+  // Обработка переключателя трекера настроений
   const handleToggleMoodTracker = async () => {
     const permissionStatus = await PushNotifications.checkPermissions()
 
     if (permissionStatus.receive === 'granted') {
-      setMoodTrackerEnabled((prev) => !prev)
+      setMoodTrackerEnabled((prev) => {
+        const newValue = !prev
+        localStorage.setItem('moodTrackerEnabled', JSON.stringify(newValue)) // Сохранение в localStorage
+        return newValue
+      })
     } else {
       setErrorText('Будь ласка, дайте дозвіл на отримання сповіщень у налаштуваннях телефону.')
       handleChangeCommonStore({
@@ -58,11 +66,16 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
     }
   }
 
+  // Обработка переключателя уведомлений о челленджах
   const handleToggleChallengeNotifications = async () => {
     const permissionStatus = await PushNotifications.checkPermissions()
 
     if (permissionStatus.receive === 'granted') {
-      setChallengeNotificationsEnabled((prev) => !prev)
+      setChallengeNotificationsEnabled((prev) => {
+        const newValue = !prev
+        localStorage.setItem('challengeNotificationsEnabled', JSON.stringify(newValue)) // Сохранение в localStorage
+        return newValue
+      })
     } else {
       setErrorText('Будь ласка, дайте дозвіл на отримання сповіщень у налаштуваннях телефону.')
       handleChangeCommonStore({
@@ -71,7 +84,18 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
     }
   }
 
+  // Загрузка состояния из localStorage при монтировании компонента
   useEffect(() => {
+    const savedMoodTrackerEnabled = localStorage.getItem('moodTrackerEnabled')
+    const savedChallengeNotificationsEnabled = localStorage.getItem('challengeNotificationsEnabled')
+
+    if (savedMoodTrackerEnabled !== null) {
+      setMoodTrackerEnabled(JSON.parse(savedMoodTrackerEnabled))
+    }
+    if (savedChallengeNotificationsEnabled !== null) {
+      setChallengeNotificationsEnabled(JSON.parse(savedChallengeNotificationsEnabled))
+    }
+
     checkNotificationPermission()
   }, [])
 
