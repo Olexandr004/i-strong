@@ -2,12 +2,11 @@
 
 import { useRouter } from 'next/navigation'
 import { FC, useState, useEffect } from 'react'
-import { App } from '@capacitor/app'
+import { PushNotifications } from '@capacitor/push-notifications'
 import { ButtonComponent, ContactInfoComponent, PageHeaderComponent } from '@/shared/components'
 import { IconButtonComponent } from '@/shared/components/ui/icon-button'
 import ToggleBtnComponent from '@/shared/components/ui/toggle-btn/toggle-btn.component'
 import { IconEdit } from '@/shared/icons'
-import { PushNotifications } from '@capacitor/push-notifications'
 import styles from './settings.module.scss'
 import { useCommonStore } from '@/shared/stores'
 
@@ -25,11 +24,15 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
   const checkNotificationPermission = async () => {
     const permissionStatus = await PushNotifications.checkPermissions()
     if (permissionStatus.receive === 'granted') {
-      setMoodTrackerEnabled(true)
-      setChallengeNotificationsEnabled(true)
+      setMoodTrackerEnabled((prev) => prev ?? true) // Если нет сохраненного значения, установить в true
+      setChallengeNotificationsEnabled((prev) => prev ?? true) // Если нет сохраненного значения, установить в true
     } else {
       setMoodTrackerEnabled(false)
       setChallengeNotificationsEnabled(false)
+      setErrorText('Будь ласка, дайте дозвіл на отримання сповіщень у налаштуваннях телефону.')
+      handleChangeCommonStore({
+        errorText: 'Будь ласка, дайте дозвіл на отримання сповіщень у налаштуваннях телефону.',
+      })
     }
   }
 
@@ -50,44 +53,32 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
 
   // Обработка переключателя трекера настроений
   const handleToggleMoodTracker = async () => {
-    const permissionStatus = await PushNotifications.checkPermissions()
-
-    if (permissionStatus.receive === 'granted') {
-      setMoodTrackerEnabled((prev) => {
-        const newValue = !prev
-        localStorage.setItem('moodTrackerEnabled', JSON.stringify(newValue)) // Сохранение в localStorage
-        return newValue
-      })
-    } else {
-      setErrorText('Будь ласка, дайте дозвіл на отримання сповіщень у налаштуваннях телефону.')
-      handleChangeCommonStore({
-        errorText: 'Будь ласка, дайте дозвіл на отримання сповіщень у налаштуваннях телефону.',
-      })
+    if (errorText) {
+      return
     }
+    const newValue = !moodTrackerEnabled
+    setMoodTrackerEnabled(newValue)
+    localStorage.setItem('moodTrackerEnabled', JSON.stringify(newValue)) // Сохранение в localStorage
   }
 
   // Обработка переключателя уведомлений о челленджах
   const handleToggleChallengeNotifications = async () => {
-    const permissionStatus = await PushNotifications.checkPermissions()
-
-    if (permissionStatus.receive === 'granted') {
-      setChallengeNotificationsEnabled((prev) => {
-        const newValue = !prev
-        localStorage.setItem('challengeNotificationsEnabled', JSON.stringify(newValue)) // Сохранение в localStorage
-        return newValue
-      })
-    } else {
-      setErrorText('Будь ласка, дайте дозвіл на отримання сповіщень у налаштуваннях телефону.')
-      handleChangeCommonStore({
-        errorText: 'Будь ласка, дайте дозвіл на отримання сповіщень у налаштуваннях телефону.',
-      })
+    if (errorText) {
+      return
     }
+    const newValue = !challengeNotificationsEnabled
+    setChallengeNotificationsEnabled(newValue)
+    localStorage.setItem('challengeNotificationsEnabled', JSON.stringify(newValue)) // Сохранение в localStorage
   }
 
   // Загрузка состояния из localStorage при монтировании компонента
   useEffect(() => {
     const savedMoodTrackerEnabled = localStorage.getItem('moodTrackerEnabled')
     const savedChallengeNotificationsEnabled = localStorage.getItem('challengeNotificationsEnabled')
+
+    // Логирование для отладки
+    console.log('Loaded moodTrackerEnabled:', savedMoodTrackerEnabled)
+    console.log('Loaded challengeNotificationsEnabled:', savedChallengeNotificationsEnabled)
 
     if (savedMoodTrackerEnabled !== null) {
       setMoodTrackerEnabled(JSON.parse(savedMoodTrackerEnabled))
