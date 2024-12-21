@@ -6,7 +6,8 @@
   padding-bottom: 7rem;
 }
 .tracker_record__fixed_menu {
-  position: absolute;
+  position: fixed;
+  background: #f2f2f2;
   z-index: 50;
   left: 2.4rem;
   right: 2.4rem;
@@ -30,7 +31,6 @@
   display: grid;
   word-wrap: break-word;
   word-break: break-word;
-  margin-top: -50px;
 }
 .tracker_record__editor_box h4 {
   font-style: normal;

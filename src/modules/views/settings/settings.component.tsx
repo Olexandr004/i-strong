@@ -72,7 +72,7 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
     if (permissionStatus.receive !== 'granted') {
       setErrorText('Будь ласка, дайте дозвіл на отримання сповіщень у налаштуваннях телефону.')
       handleChangeCommonStore({
-        errorText: 'Будь ласка, дайте дозвіл на отримання сповіщень у налаштуваннях телефону.',
+        errorText: 'Будь ласка, надайте дозвіл на отримання сповіщень у налаштуваннях телефону.',
       })
       return
     }

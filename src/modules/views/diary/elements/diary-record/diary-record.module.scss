@@ -6,7 +6,8 @@
   padding-bottom: 7rem;
 
   &__fixed_menu {
-    position: absolute;
+    position: fixed;
+    background: #f2f2f2;
     z-index: 50;
     left: 2.4rem;
     right: 2.4rem;
@@ -35,7 +36,6 @@
     gap: 2.4rem;
     word-wrap: break-word;
     word-break: break-word;
-    margin-top: -50px;
   }
 
   &__title_input {
