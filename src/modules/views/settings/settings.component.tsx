@@ -41,28 +41,22 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
   }
 
   const handleToggleMoodTracker = async () => {
-    if (moodTrackerEnabled) {
-      setMoodTrackerEnabled(false)
+    const permissionStatus = await PushNotifications.checkPermissions()
+
+    if (permissionStatus.receive === 'granted') {
+      setMoodTrackerEnabled((prev) => !prev)
     } else {
-      const permissionStatus = await PushNotifications.checkPermissions()
-      if (permissionStatus.receive === 'granted') {
-        setMoodTrackerEnabled(true)
-      } else {
-        await requestNotificationPermission()
-      }
+      setErrorText('Будь ласка, дайте дозвіл на отримання сповіщень у налаштуваннях телефону.')
     }
   }
 
   const handleToggleChallengeNotifications = async () => {
-    if (challengeNotificationsEnabled) {
-      setChallengeNotificationsEnabled(false)
+    const permissionStatus = await PushNotifications.checkPermissions()
+
+    if (permissionStatus.receive === 'granted') {
+      setChallengeNotificationsEnabled((prev) => !prev)
     } else {
-      const permissionStatus = await PushNotifications.checkPermissions()
-      if (permissionStatus.receive === 'granted') {
-        setChallengeNotificationsEnabled(true)
-      } else {
-        await requestNotificationPermission()
-      }
+      setErrorText('Будь ласка, дайте дозвіл на отримання сповіщень у налаштуваннях телефону.')
     }
   }
 
