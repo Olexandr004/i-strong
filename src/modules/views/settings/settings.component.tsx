@@ -9,6 +9,7 @@ import ToggleBtnComponent from '@/shared/components/ui/toggle-btn/toggle-btn.com
 import { IconEdit } from '@/shared/icons'
 import { PushNotifications } from '@capacitor/push-notifications'
 import styles from './settings.module.scss'
+import { useCommonStore } from '@/shared/stores'
 
 interface ISettings {}
 
@@ -18,6 +19,7 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
   const [moodTrackerEnabled, setMoodTrackerEnabled] = useState<boolean>(false)
   const [challengeNotificationsEnabled, setChallengeNotificationsEnabled] = useState<boolean>(false)
   const [errorText, setErrorText] = useState('')
+  const handleChangeCommonStore = useCommonStore((state) => state.handleChangeCommonStore)
   const checkNotificationPermission = async () => {
     const permissionStatus = await PushNotifications.checkPermissions()
     if (permissionStatus.receive === 'granted') {
@@ -37,6 +39,7 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
       setChallengeNotificationsEnabled(true)
     } else {
       setErrorText('Будь ласка, дайте дозвіл на отримання сповіщень у налаштуваннях телефону.')
+      handleChangeCommonStore({ errorText: 'Недостатньо монеток' })
     }
   }
 
@@ -47,6 +50,7 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
       setMoodTrackerEnabled((prev) => !prev)
     } else {
       setErrorText('Будь ласка, дайте дозвіл на отримання сповіщень у налаштуваннях телефону.')
+      handleChangeCommonStore({ errorText: 'Недостатньо монеток' })
     }
   }
 
@@ -57,6 +61,7 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
       setChallengeNotificationsEnabled((prev) => !prev)
     } else {
       setErrorText('Будь ласка, дайте дозвіл на отримання сповіщень у налаштуваннях телефону.')
+      handleChangeCommonStore({ errorText: 'Недостатньо монеток' })
     }
   }
 
