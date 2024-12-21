@@ -29,10 +29,6 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
     } else {
       setMoodTrackerEnabled(false)
       setChallengeNotificationsEnabled(false)
-      setErrorText('Будь ласка, дайте дозвіл на отримання сповіщень у налаштуваннях телефону.')
-      handleChangeCommonStore({
-        errorText: 'Будь ласка, дайте дозвіл на отримання сповіщень у налаштуваннях телефону.',
-      })
     }
   }
 
@@ -53,9 +49,17 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
 
   // Обработка переключателя трекера настроений
   const handleToggleMoodTracker = async () => {
-    if (errorText) {
+    const permissionStatus = await PushNotifications.checkPermissions()
+
+    if (permissionStatus.receive !== 'granted') {
+      setErrorText('Будь ласка, дайте дозвіл на отримання сповіщень у налаштуваннях телефону.')
+      handleChangeCommonStore({
+        errorText: 'Будь ласка, дайте дозвіл на отримання сповіщень у налаштуваннях телефону.',
+      })
       return
     }
+
+    setErrorText('') // Очистить ошибку, если разрешение на уведомления предоставлено
     const newValue = !moodTrackerEnabled
     setMoodTrackerEnabled(newValue)
     localStorage.setItem('moodTrackerEnabled', JSON.stringify(newValue)) // Сохранение в localStorage
@@ -63,9 +67,17 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
 
   // Обработка переключателя уведомлений о челленджах
   const handleToggleChallengeNotifications = async () => {
-    if (errorText) {
+    const permissionStatus = await PushNotifications.checkPermissions()
+
+    if (permissionStatus.receive !== 'granted') {
+      setErrorText('Будь ласка, дайте дозвіл на отримання сповіщень у налаштуваннях телефону.')
+      handleChangeCommonStore({
+        errorText: 'Будь ласка, дайте дозвіл на отримання сповіщень у налаштуваннях телефону.',
+      })
       return
     }
+
+    setErrorText('') // Очистить ошибку, если разрешение на уведомления предоставлено
     const newValue = !challengeNotificationsEnabled
     setChallengeNotificationsEnabled(newValue)
     localStorage.setItem('challengeNotificationsEnabled', JSON.stringify(newValue)) // Сохранение в localStorage
@@ -75,10 +87,6 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
   useEffect(() => {
     const savedMoodTrackerEnabled = localStorage.getItem('moodTrackerEnabled')
     const savedChallengeNotificationsEnabled = localStorage.getItem('challengeNotificationsEnabled')
-
-    // Логирование для отладки
-    console.log('Loaded moodTrackerEnabled:', savedMoodTrackerEnabled)
-    console.log('Loaded challengeNotificationsEnabled:', savedChallengeNotificationsEnabled)
 
     if (savedMoodTrackerEnabled !== null) {
       setMoodTrackerEnabled(JSON.parse(savedMoodTrackerEnabled))
