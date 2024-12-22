@@ -40,7 +40,6 @@ export const NotesComponent: FC<Readonly<INotes>> = () => {
     console.log('allNotesByChallenge:', allNotesByChallenge) // Выводим в консоль, сколько записей получаем при раскрытии
   }, [diaryNotes, allNotesByChallenge])
 
-  //return
   return (
     <div className={styles.notes}>
       {notes?.map((challenge, index) => {
@@ -52,9 +51,9 @@ export const NotesComponent: FC<Readonly<INotes>> = () => {
             <div className={styles.notes__cards}>
               <div className={styles.diary__visible_cards}>
                 {/* Показываем только последние две записи, если месяц не развернут */}
-                {extendedNote === challenge.challenge.id.toString()
+                {/* {extendedNote === challenge.challenge.id.toString()
                   ? challenge.notes
-                      .slice(2)
+                      .slice(0, 3)
                       .map((item: any) => (
                         <DiaryNoteCardComponent
                           key={`${item.id}-${index}`}
@@ -63,14 +62,21 @@ export const NotesComponent: FC<Readonly<INotes>> = () => {
                         />
                       ))
                   : challenge.notes
-                      .slice(-2)
+                      .slice(-3)
                       .map((item: any) => (
                         <DiaryNoteCardComponent
                           key={`${item.id}-${index}`}
                           item={item}
                           type={'challenges'}
                         />
-                      ))}
+                      ))} */}
+                {challenge.notes.slice(0, 3).map((item: any) => (
+                  <DiaryNoteCardComponent
+                    key={`${item.id}-${index}`}
+                    item={item}
+                    type={'challenges'}
+                  />
+                ))}
               </div>
 
               {!isFetching && allNotesByChallenge && (
@@ -78,18 +84,20 @@ export const NotesComponent: FC<Readonly<INotes>> = () => {
                   className={`${styles.notes__hidden_cards} ${extendedNote === challenge.challenge.id.toString() && styles.extended}`}
                 >
                   <div className={styles.notes__hidden_wrapper}>
-                    {allNotesByChallenge?.notes.map((item: any, index) => (
-                      <DiaryNoteCardComponent
-                        key={`${index}--${item.id}`}
-                        item={item}
-                        type={'challenges'}
-                      />
-                    ))}
+                    {allNotesByChallenge?.notes
+                      .slice(3)
+                      .map((item: any, index) => (
+                        <DiaryNoteCardComponent
+                          key={`${index}--${item.id}`}
+                          item={item}
+                          type={'challenges'}
+                        />
+                      ))}
                   </div>
                 </div>
               )}
 
-              {challenge.notes.length > 1 && (
+              {challenge.notes.length > 3 && (
                 <div
                   className={`${styles.notes__arrow_btn} ${extendedNote === challenge.challenge.id.toString() && styles.extended}`}
                 >
