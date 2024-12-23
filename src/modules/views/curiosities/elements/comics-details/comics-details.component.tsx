@@ -34,6 +34,7 @@ const ComicsDetailsComponent: React.FC<{ comicId: string | number; onClose: () =
   const [error, setError] = useState<string | null>(null)
   const [currentTab, setCurrentTab] = useState(1) // Состояние текущей вкладки
   const [currentImageIndex, setCurrentImageIndex] = useState(0) // Индекс текущего изображения
+  const [currentImageIndexTab1, setCurrentImageIndexTab1] = useState(0)
   const [selectedTechnique, setSelectedTechnique] = useState<Technique | null>(null)
   const [learningData, setLearningData] = useState<any>(null)
   const [selectedContent, setSelectedContent] = useState<string>('')
@@ -42,6 +43,8 @@ const ComicsDetailsComponent: React.FC<{ comicId: string | number; onClose: () =
 
   const touchStartX = useRef(0)
   const touchEndX = useRef(0)
+  const touchStartXTab1 = useRef(0)
+  const touchEndXTab1 = useRef(0)
 
   useEffect(() => {
     if (!token) {
@@ -158,6 +161,22 @@ const ComicsDetailsComponent: React.FC<{ comicId: string | number; onClose: () =
     router.push('/')
   }
 
+  const handleSwipeTab1 = () => {
+    const threshold = 50 // Порог свайпа для вкладки 1
+
+    const images = comicDetails?.images // Сохраняем в локальную переменную для первой вкладки
+
+    if (!images || images.length === 0) return // Проверка наличия данных
+
+    if (touchStartXTab1.current - touchEndXTab1.current > threshold) {
+      // Свайп влево для вкладки 1
+      setCurrentImageIndexTab1((prevIndex) => (prevIndex < images.length - 1 ? prevIndex + 1 : 0))
+    } else if (touchEndXTab1.current - touchStartXTab1.current > threshold) {
+      // Свайп вправо для вкладки 1
+      setCurrentImageIndexTab1((prevIndex) => (prevIndex > 0 ? prevIndex - 1 : images.length - 1))
+    }
+  }
+
   const handleSwipe = () => {
     const threshold = 50 // Порог свайпа
 
@@ -208,36 +227,34 @@ const ComicsDetailsComponent: React.FC<{ comicId: string | number; onClose: () =
         {currentTab === 1 && (
           <div
             className={styles.tabContent}
-            onTouchStart={(e) => (touchStartX.current = e.touches[0].clientX)}
+            onTouchStart={(e) => (touchStartXTab1.current = e.touches[0].clientX)}
             onTouchEnd={(e) => {
-              touchEndX.current = e.changedTouches[0].clientX
-              handleSwipe()
+              touchEndXTab1.current = e.changedTouches[0].clientX
+              handleSwipeTab1()
             }}
           >
             <button onClick={onClose} className={styles.closeButton}>
               <IconArrow />
             </button>
-            {comicDetails.images && comicDetails.images.length > 0 ? (
+            {comicDetails?.images && comicDetails.images.length > 0 ? (
               <>
                 <img
-                  src={comicDetails.images[currentImageIndex].image}
-                  alt={`Image ${currentImageIndex + 1}`}
+                  src={comicDetails.images[currentImageIndexTab1].image}
+                  alt={`Image ${currentImageIndexTab1 + 1}`}
                   className={styles.sliderImage}
                 />
                 <div className={styles.dots}>
                   {comicDetails.images.map((_, index) => (
                     <button
                       key={index}
-                      className={`${styles.dot} ${
-                        index === currentImageIndex ? styles.activeDot : ''
-                      }`}
-                      onClick={() => setCurrentImageIndex(index)}
+                      className={`${styles.dot} ${index === currentImageIndexTab1 ? styles.activeDot : ''}`}
+                      onClick={() => setCurrentImageIndexTab1(index)}
                     />
                   ))}
                 </div>
               </>
             ) : (
-              <p></p>
+              <p>Изображения отсутствуют</p>
             )}
             <ButtonComponent size={'regular'} onClick={() => setCurrentTab(2)}>
               Далі
@@ -297,20 +314,24 @@ const ComicsDetailsComponent: React.FC<{ comicId: string | number; onClose: () =
                   alt={`Image ${currentImageIndex + 1}`}
                   className={styles.sliderImage}
                 />
-                <div className={styles.dots}>
-                  {selectedTechnique?.images.map((_, index) => (
-                    <button
-                      key={index}
-                      className={`${styles.dot} ${index === currentImageIndex ? styles.activeDot : ''}`}
-                      onClick={() => setCurrentImageIndex(index)}
-                    />
-                  ))}
-                </div>
+                {selectedTechnique.images.length > 1 && (
+                  <div className={styles.dots}>
+                    {selectedTechnique.images.map((_, index) => (
+                      <button
+                        key={index}
+                        className={`${styles.dot} ${index === currentImageIndex ? styles.activeDot : ''}`}
+                        onClick={() => setCurrentImageIndex(index)}
+                      />
+                    ))}
+                  </div>
+                )}
               </>
             ) : (
               <p></p>
             )}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <div
+              style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '10px' }}
+            >
               <ButtonComponent size={'regular'} onClick={() => setCurrentTab(4)}>
                 Далі
               </ButtonComponent>
