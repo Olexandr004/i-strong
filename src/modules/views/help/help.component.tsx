@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { FC, useState, useRef } from 'react'
+import { FC, useState, useRef, useEffect } from 'react'
 
 import { ButtonComponent } from '@/shared/components'
 import { IconArrow } from '@/shared/icons'
@@ -39,18 +39,39 @@ export const HelpComponent: FC<Readonly<IHelpComponent>> = () => {
   const touchStartX = useRef<number | null>(null) // Координата начала свайпа
   const touchEndX = useRef<number | null>(null) // Координата конца свайпа
 
+  const [visibleImages, setVisibleImages] = useState<Set<number>>(new Set()) // Отслеживание видимых изображений
+
   const currentImages = imageSets[currentSetIndex] // Текущий массив изображений
 
-  // Смена массива изображений
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const index = Number(entry.target.getAttribute('data-index'))
+            setVisibleImages((prev) => new Set(prev).add(index))
+          }
+        })
+      },
+      { threshold: 0.1 },
+    )
+
+    const slides = document.querySelectorAll(`.${styles.slide}`)
+    slides.forEach((slide) => observer.observe(slide))
+
+    return () => observer.disconnect()
+  }, [currentSetIndex])
+
   const handleNextSet = () => {
     setCurrentSetIndex((prevIndex) => (prevIndex + 1) % imageSets.length) // Следующий массив
     setCurrentSlide(0) // Сбрасываем индекс слайда
+    setVisibleImages(new Set()) // Сбрасываем видимые изображения
   }
+
   const backMain = () => {
     router.push('/')
   }
 
-  // Переключение слайда
   const handleSwipe = (direction: 'left' | 'right') => {
     setCurrentSlide((prev) => {
       if (direction === 'left') {
@@ -60,7 +81,6 @@ export const HelpComponent: FC<Readonly<IHelpComponent>> = () => {
     })
   }
 
-  // Обработчики для свайпа
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX
   }
@@ -86,7 +106,6 @@ export const HelpComponent: FC<Readonly<IHelpComponent>> = () => {
     touchEndX.current = null
   }
 
-  // Вызов номера телефона
   const handleCall = () => {
     window.location.href = 'tel: 0800100102'
   }
@@ -115,21 +134,28 @@ export const HelpComponent: FC<Readonly<IHelpComponent>> = () => {
             }}
           >
             {currentImages.map((image, index) => (
-              <div key={index} className={styles.slide} style={{ width: '100%' }}>
-                <Image
-                  src={image}
-                  alt={`Slide ${index + 1}`}
-                  sizes={'60vw'}
-                  width={600}
-                  height={600}
-                  style={{
-                    objectFit: 'cover',
-                    width: '100%',
-                    height: '100%',
-                    borderRadius: '24px',
-                  }}
-                  priority
-                />
+              <div
+                key={index}
+                className={styles.slide}
+                style={{ width: '100%' }}
+                data-index={index}
+              >
+                {visibleImages.has(index) && (
+                  <Image
+                    src={image}
+                    alt={`Slide ${index + 1}`}
+                    sizes={'60vw'}
+                    width={600}
+                    height={600}
+                    style={{
+                      objectFit: 'cover',
+                      width: '100%',
+                      height: '100%',
+                      borderRadius: '24px',
+                    }}
+                    priority={index === 0}
+                  />
+                )}
               </div>
             ))}
           </div>
