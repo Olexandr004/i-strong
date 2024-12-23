@@ -159,27 +159,18 @@ const ComicsDetailsComponent: React.FC<{ comicId: string | number; onClose: () =
   }
 
   const handleSwipe = () => {
-    const diff = touchEndX.current - touchStartX.current
+    const threshold = 50 // Порог свайпа
 
-    if (diff > 50) {
-      // Свайп вправо
-      prevImage()
-    } else if (diff < -50) {
+    const images = selectedTechnique?.images // Сохраняем в локальную переменную
+
+    if (!images || images.length === 0) return // Проверка наличия данных
+
+    if (touchStartX.current - touchEndX.current > threshold) {
       // Свайп влево
-      nextImage()
-    }
-  }
-  const nextImage = () => {
-    if (comicDetails && comicDetails.images.length > 1) {
-      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % comicDetails.images.length)
-    }
-  }
-
-  const prevImage = () => {
-    if (comicDetails.images.length > 1) {
-      setCurrentImageIndex(
-        (prevIndex) => (prevIndex - 1 + comicDetails.images.length) % comicDetails.images.length,
-      )
+      setCurrentImageIndex((prevIndex) => (prevIndex < images.length - 1 ? prevIndex + 1 : 0))
+    } else if (touchEndX.current - touchStartX.current > threshold) {
+      // Свайп вправо
+      setCurrentImageIndex((prevIndex) => (prevIndex > 0 ? prevIndex - 1 : images.length - 1))
     }
   }
 
