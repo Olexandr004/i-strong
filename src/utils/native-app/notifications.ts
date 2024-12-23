@@ -2,7 +2,7 @@ import { LocalNotifications } from '@capacitor/local-notifications'
 import { Preferences } from '@capacitor/preferences'
 import { IconArrow } from '@/shared/icons'
 
-const BASE_URL = `https://i-strong.vercel.app/`
+const BASE_URL = `https://front.istrongapp.com/`
 
 interface NotificationConfig {
   id: number

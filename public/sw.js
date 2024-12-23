@@ -1,5 +1,5 @@
 const CACHE_NAME = 'my-app-v2';
-const OFFLINE_URL = '/offline'; // Или ваш HTML-файл для отображения оффлайн
+const OFFLINE_URL = '/offline.html'; // Или ваш HTML-файл для отображения оффлайн
 
 const RESOURCES_TO_CACHE = [
     OFFLINE_URL,
