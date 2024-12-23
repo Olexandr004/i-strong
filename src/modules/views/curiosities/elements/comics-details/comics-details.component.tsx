@@ -47,6 +47,14 @@ const ComicsDetailsComponent: React.FC<{ comicId: string | number; onClose: () =
   const touchEndXTab1 = useRef(0)
 
   useEffect(() => {
+    console.log('Текущий рендер, вкладка:', currentTab) // Проверим, что компонент рендерится
+    if (currentTab === 2 || currentTab === 4) {
+      console.log('Сбрасываю индекс слайдера на 0') // Логируем, когда сбрасываем индекс
+      setCurrentImageIndex(0) // Сбрасываем индекс
+    }
+  }, [currentTab])
+
+  useEffect(() => {
     if (!token) {
       setError('Токен авторизации отсутствует.')
       setLoading(false)
