@@ -3,7 +3,6 @@
   display: grid;
   gap: 1rem;
   padding-bottom: 4rem;
-  min-height: 100vh;
 }
 .help h3 {
   font-style: normal;
