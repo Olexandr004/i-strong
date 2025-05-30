@@ -48,10 +48,10 @@ const PhoneStepComponent: FC<IPhoneStep> = ({ setPhoneNumber }) => {
             key={'phone_number'}
             onChange={onChange}
             onBlur={onBlur}
-            inputMode={'tel'}
+            inputMode='tel'
+            type='tel'
             error={!!error}
             errorText={error?.message}
-            withMask
           />
         )}
       />

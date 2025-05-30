@@ -71,3 +71,50 @@ img {
   height: auto;
   display: block;
 }
+
+.react-tel-input .form-control {
+  position: relative;
+  font-size: 1.6rem !important;
+  letter-spacing: 0.01rem;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-left: 48px;
+  margin-left: 0;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 5px;
+  line-height: 2.4rem !important;
+  height: 35px;
+  width: 300px;
+  outline: none;
+}
+
+.react-tel-input .flag-dropdown {
+  background-color: transparent !important;
+  border: none !important;
+  border-radius: 3px 0 0 3px;
+}
+
+.react-tel-input .selected-flag {
+  padding: 0 !important;
+}
+
+.react-tel-input .country-list {
+  position: static !important;
+  background-color: var(--bg-color-primary) !important;
+  max-width: 100%;
+  width: 100% !important;
+}
+
+.react-tel-input .country-list .search {
+  background-color: var(--bg-color-primary) !important;
+}
+
+.react-tel-input .flag-dropdown.open .selected-flag {
+  background: var(--bg-color-primary) !important;
+}
+
+.react-tel-input .selected-flag:hover,
+.react-tel-input .selected-flag:focus {
+  background-color: var(--bg-color-primary) !important;
+}

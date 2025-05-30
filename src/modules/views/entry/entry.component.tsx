@@ -140,6 +140,7 @@ export const EntryComponent: FC<Readonly<IEntry>> = () => {
               defaultValue={registerForm?.phone_number || ''}
               render={({ field: { value, onChange, onBlur }, fieldState: { error } }) => (
                 <InputComponent
+                  type='tel'
                   inputId={`${entryType}-phone_number`}
                   value={value || ``}
                   key={entryType}

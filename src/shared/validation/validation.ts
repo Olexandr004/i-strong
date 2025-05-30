@@ -5,8 +5,8 @@ export const lengthPattern: { value: any; message: string } = {
   message: 'Від 2 до 30 символів',
 }
 
-export const phoneNumberPattern: { value: any; message: string } = {
-  value: /^\+38 \(0\d{2}\) \d{3} \d{2} \d{2}$/,
+export const phoneNumberPattern = {
+  value: /^\+[1-9]\d{9,14}$/,
   message: 'Переконайся у правильності введеного номеру',
 }
 
