@@ -4,6 +4,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { AuthFormComponent, InputComponent } from '@/shared/components'
 import { usePasswordResetRequest } from '@/shared/hooks/useUserMutations'
 import { phoneNumberPattern, required } from '@/shared/validation'
+import { useTranslation } from 'react-i18next'
 
 interface IPhoneStep {
   setPhoneNumber: (phoneNumber: IPhoneData) => void
@@ -23,6 +24,7 @@ const PhoneStepComponent: FC<IPhoneStep> = ({ setPhoneNumber }) => {
     reValidateMode: 'onChange',
   })
   const { mutate } = usePasswordResetRequest()
+  const { t } = useTranslation()
 
   const handlePhone = (data: IPhoneData) => {
     mutate(data)
@@ -43,8 +45,8 @@ const PhoneStepComponent: FC<IPhoneStep> = ({ setPhoneNumber }) => {
           <InputComponent
             value={value || ''}
             inputId='phone_number'
-            label='Введи номер телефону'
-            placeholder='Телефон'
+            label={t('entry.enterPhone')}
+            placeholder={t('entry.phone')}
             key={'phone_number'}
             onChange={onChange}
             onBlur={onBlur}

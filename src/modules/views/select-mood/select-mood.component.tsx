@@ -7,6 +7,7 @@ import { MOODS } from '@/shared/constants/moods'
 import { useUserStore } from '@/shared/stores'
 import styles from './select-mood.module.scss'
 import { IconArrow } from '@/shared/icons'
+import { useTranslation } from 'react-i18next'
 
 interface ISelectMoodComponent {}
 
@@ -37,6 +38,7 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
   const handleChangeUserStore = useUserStore((state) => state.handleChangeUserStore)
   const user = useUserStore((state) => state.user)
   const router = useRouter()
+  const { t } = useTranslation()
 
   const [selectedMood, setSelectedMood] = useState<string>('Чудово') // Установка по умолчанию на "чудово"
   const [selectedAdditionalMoods, setSelectedAdditionalMoods] = useState<string[]>([])
@@ -126,7 +128,9 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
     <section className={`${styles.select_mood} ${selectedMood && styles.active}`}>
       <div className={styles.select_mood__head}>
         <h1 className={styles.title}>
-          Як ти себе <br /> почуваєш?
+          {t('selectMood.title1')}
+          <br />
+          {t('selectMood.title2')}
         </h1>
       </div>
 
@@ -147,7 +151,7 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
       </div>
 
       <div style={{ padding: '0 2rem' }}>
-        <h2>Я відчуваю:</h2>
+        <h2>{t('selectMood.iFeel')}</h2>
         <div className={styles.additional_moods}>
           {ADDITIONAL_MOODS.map((mood) => (
             <button
@@ -162,7 +166,7 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
       </div>
 
       <div className={styles.footer}>
-        <label htmlFor='description'>Чому я так почуваюсь?</label>
+        <label htmlFor='description'>{t('selectMood.why')}</label>
         <textarea
           name='description'
           id='description'
@@ -176,7 +180,7 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
 
       <div className={styles.select_mood__buttons}>
         <ButtonComponent onClick={handleSubmitMood} disabled={!selectedMood}>
-          Зберегти
+          {t('selectMood.save')}
         </ButtonComponent>
       </div>
 
@@ -189,7 +193,9 @@ export const SelectMoodComponent: FC<Readonly<ISelectMoodComponent>> = () => {
         <div className={styles.modal}>
           <div className={styles.modalContent}>
             <img src={validationImage} alt='Эмоция' />
-            <ButtonComponent onClick={handleModalClose}>Зрозуміло</ButtonComponent>
+            <ButtonComponent onClick={handleModalClose}>
+              {t('selectMood.understood')}
+            </ButtonComponent>
           </div>
         </div>
       ) : null}

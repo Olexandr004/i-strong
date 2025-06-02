@@ -8,6 +8,7 @@ import { IconArrow } from '@/shared/icons'
 import { useRouter } from 'next/navigation'
 
 import styles from './help.module.scss'
+import { useTranslation } from 'react-i18next'
 
 interface IHelpComponent {}
 
@@ -34,14 +35,15 @@ export const HelpComponent: FC<Readonly<IHelpComponent>> = () => {
     ],
   ]
 
-  const [currentSetIndex, setCurrentSetIndex] = useState(0) // Индекс текущего массива
-  const [currentSlide, setCurrentSlide] = useState(0) // Индекс текущего слайда
-  const touchStartX = useRef<number | null>(null) // Координата начала свайпа
-  const touchEndX = useRef<number | null>(null) // Координата конца свайпа
+  const [currentSetIndex, setCurrentSetIndex] = useState(0)
+  const [currentSlide, setCurrentSlide] = useState(0)
+  const touchStartX = useRef<number | null>(null)
+  const touchEndX = useRef<number | null>(null)
+  const { t } = useTranslation()
 
-  const [visibleImages, setVisibleImages] = useState<Set<number>>(new Set()) // Отслеживание видимых изображений
+  const [visibleImages, setVisibleImages] = useState<Set<number>>(new Set())
 
-  const currentImages = imageSets[currentSetIndex] // Текущий массив изображений
+  const currentImages = imageSets[currentSetIndex]
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -118,7 +120,9 @@ export const HelpComponent: FC<Readonly<IHelpComponent>> = () => {
         </button>
         <h1>SOS</h1>
         <h2>
-          Давай почнемо із стабілізаційних технік, <br /> ми впораємось!
+          {t('help.subtitlePart1')}
+          <br />
+          {t('help.subtitlePart2')}
         </h2>
 
         <div
@@ -171,17 +175,17 @@ export const HelpComponent: FC<Readonly<IHelpComponent>> = () => {
         </div>
       </div>
 
-      <h3>Тобі краще тепер?</h3>
+      <h3>{t('help.question')}</h3>
       <div className={styles.actions}>
-        <ButtonComponent onClick={backMain}>Так</ButtonComponent>
+        <ButtonComponent onClick={backMain}>{t('help.yes')}</ButtonComponent>
         <ButtonComponent
           onClick={
             currentSetIndex === imageSets.length - 1 ? () => setCurrentSetIndex(0) : handleNextSet
           }
         >
-          {currentSetIndex === imageSets.length - 1 ? 'Ні, почати спочатку' : 'Ні! Інша вправа'}
+          {currentSetIndex === imageSets.length - 1 ? t('help.restart') : t('help.no')}
         </ButtonComponent>
-        <ButtonComponent onClick={handleCall}>Подзвонити на лінію пітримки</ButtonComponent>
+        <ButtonComponent onClick={handleCall}>{t('help.call')}</ButtonComponent>
       </div>
     </section>
   )

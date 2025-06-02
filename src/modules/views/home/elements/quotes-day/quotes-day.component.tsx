@@ -5,6 +5,7 @@ import { useGetQuery } from '@/api/daily-quote'
 import { useUserStore } from '@/shared/stores'
 
 import styles from './quotes-day.module.scss'
+import { useTranslation } from 'react-i18next'
 
 interface IQuotesDay {}
 
@@ -13,18 +14,19 @@ export const QuotesDayComponent: FC<IQuotesDay> = () => {
   const token = useMemo(() => user?.access_token || '', [user])
 
   const { data, error, isLoading } = useGetQuery(token)
+  const { t } = useTranslation()
 
   return (
     <section className={styles.quotes}>
-      <h3 className={`text-3 ${styles.quotes__title}`}>Цитата дня</h3>
+      <h3 className={`text-3 ${styles.quotes__title}`}>{t('home.quote_of_the_day')}</h3>
 
       <div className={styles.quotes__content}>
         {/* Текст */}
         <div className={`text-4 ${styles.quotes__content_text}`}>
           {isLoading
-            ? 'Завантаження цитати...'
+            ? t('home.quote_loading')
             : error
-              ? 'Помилка завантаження'
+              ? t('home.quote_error')
               : (data as any).quote}
         </div>
 

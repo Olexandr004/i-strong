@@ -17,5 +17,110 @@
     "signUpButton": "Sign Up",
     "notRegistered": "Not registered yet?",
     "alreadyRegistered": "Already registered?"
+  },
+  "validation": {
+    "required": "This field is required",
+    "length": "Must be between 2 and 30 characters",
+    "phone": "Please check the phone number format",
+    "password": "8-15 characters, Latin letters, digits, at least one letter and one digit, no spaces",
+    "name": "2 to 30 characters, allowed letters, digits, and symbols: . ’ ` - _",
+    "pin": "Must be 4 digits without spaces"
+  },
+  "resetPassword": {
+    "title": "Password Reset",
+    "newPasswordText": "Create a new password to log in",
+    "phoneText": "Enter your phone number and we’ll send an SMS to reset your password",
+    "codeText": "Enter the code we sent you in the message to reset your password"
+  },
+  "home": {
+    "helpTitle": "If you’re overwhelmed by emotions",
+    "dailyChallenges": "Daily Challenges",
+    "quote_of_the_day": "Quote of the Day",
+    "quote_loading": "Loading quote...",
+    "quote_error": "Error loading quote"
+  },
+  "moodTracker": {
+    "title": "Mood Tracker",
+    "howAreYou": "How are you feeling today?",
+    "shareWithMe": "Share with me",
+    "statistics": "Statistics",
+    "lastUpdate": "Last update:",
+    "loading": "Loading...",
+    "error": "Failed to load data."
+  },
+  "month": {
+    "january": "January",
+    "february": "February",
+    "march": "March",
+    "april":"April",
+    "may": "May",
+    "june": "June",
+    "july": "July",
+    "august": "August",
+    "september": "September",
+    "october": "October",
+    "november": "November",
+    "december": "December"
+  },
+  "chest": "Chest",
+  "techniques": "Techniques",
+  "diary": "Diary",
+  "no_favorite_techniques": "No favorite techniques",
+  "no_favorite_entries": "No favorite entries",
+  "not_found_entry": "Entry not found",
+  "instructions_title": "Chest - Instructions",
+  "diaryPage": {
+    "title": "Diary",
+    "add_note": "Add Record",
+    "note_exists": "A record for today has already been created. Keep it up!",
+    "tab_notes": "Notes",
+    "tab_tracker": "Tracker",
+    "tab_challenges": "Challenges",
+    "guide_title": "Diary - write down your thoughts and feelings every day, it will help you track your progress",
+    "open_all": "open all"
+  },
+  "curiosities": {
+    "title": "Curiosities",
+    "modalTitle": "Curiosities – a section for engaging stories and comics",
+    "comics": "Comics",
+    "stories": "Stories",
+    "comicsListEmpty": "The list of comics is empty."
+  },
+  "help": {
+    "subtitlePart1": "Let's start with stabilization techniques,",
+    "subtitlePart2": "we will manage!",
+    "question": "Are you feeling better now?",
+    "yes": "Yes",
+    "no": "No! Another exercise",
+    "restart": "No, start over",
+    "call": "Call the support line"
+  },
+  "selectMood": {
+    "title1": "How do you",
+    "title2": "feel?",
+    "iFeel": "I feel:",
+    "why": "Why do I feel this way?",
+    "save": "Save",
+    "understood": "Understood"
+  },
+  "additionalMoods": {
+    "shame": "shame",
+    "disgust": "disgust",
+    "tension": "tension",
+    "confusion": "confusion",
+    "sadness": "sadness",
+    "fatigue": "fatigue",
+    "fear": "Страх",
+    "anger": "Злість",
+    "loneliness": "Самотність",
+    "guilt": "Провина",
+    "worry": "Хвилювання",
+    "hope": "Надія",
+    "pleasure": "Задоволення",
+    "gratitude": "Вдячність",
+    "calmness": "Спокій",
+    "surprise": "Здивування",
+    "joy": "Радість",
+    "happiness": "Щастя"
   }
 }

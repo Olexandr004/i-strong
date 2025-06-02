@@ -4,12 +4,14 @@ import { ModalGettingToInstructionsComponent } from '@/shared/components'
 import { useCommonStore, useUserStore } from '@/shared/stores'
 import styles from './curiosities.module.scss'
 import { ComicsListComponent, HistoryComponent } from '@/modules/views/curiosities/elements'
+import { useTranslation } from 'react-i18next'
 
 interface CuriositiesComponentProps {}
 const CuriositiesComponent: FC<Readonly<CuriositiesComponentProps>> = () => {
   const [showComics, setShowComics] = useState(false)
   const [showHistory, setShowHistory] = useState(false)
-  const [title, setTitle] = useState('Цікавинки')
+  const { t } = useTranslation()
+  const [title, setTitle] = useState(t('curiosities.title'))
 
   const [guideImages, setGuideImages] = useState<string[]>([])
   const { isModalActive, modalContent, handleChangeCommonStore } = useCommonStore((state) => ({
@@ -50,19 +52,19 @@ const CuriositiesComponent: FC<Readonly<CuriositiesComponentProps>> = () => {
   const handleComicsClick = () => {
     setShowComics(true)
     setShowHistory(false)
-    setTitle('Комікси')
+    setTitle(t('curiosities.comics'))
   }
 
   const handleStoriesClick = () => {
     setShowComics(false)
     setShowHistory(true)
-    setTitle('Історії')
+    setTitle(t('curiosities.stories'))
   }
 
   const handleBack = () => {
     setShowComics(false)
     setShowHistory(false)
-    setTitle('Цікавинки')
+    setTitle(t('curiosities.title'))
   }
 
   return (
@@ -80,10 +82,10 @@ const CuriositiesComponent: FC<Readonly<CuriositiesComponentProps>> = () => {
       ) : (
         <div className={styles.buttonContainer}>
           <button className={styles.button} onClick={handleComicsClick}>
-            Комікси
+            {t('curiosities.comics')}
           </button>
           <button className={styles.button} onClick={handleStoriesClick}>
-            Історії
+            {t('curiosities.stories')}
           </button>
         </div>
       )}

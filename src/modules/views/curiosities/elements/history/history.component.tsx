@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useUserStore } from '@/shared/stores'
 import styles from './history.module.scss'
 import { IconNextArrow, IconArrow } from '@/shared/icons'
+import { useTranslation } from 'react-i18next'
 
 interface Story {
   id: number
@@ -22,6 +23,7 @@ interface HistoryComponentProps {
 }
 
 const HistoryComponent: React.FC<HistoryComponentProps> = ({ onBack }) => {
+  const { t } = useTranslation()
   const [stories, setStories] = useState<Story[]>([])
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
@@ -105,7 +107,7 @@ const HistoryComponent: React.FC<HistoryComponentProps> = ({ onBack }) => {
           <IconArrow />
         </button>
       )}
-      {!selectedStory && <h1>Історії</h1>}
+      {!selectedStory && <h1>{t('curiosities.stories')}</h1>}
 
       {selectedStory ? (
         <div className={styles.storyContent}>

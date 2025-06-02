@@ -7,21 +7,24 @@ import { ButtonComponent } from '@/shared/components'
 import { useUserStore } from '@/shared/stores'
 import styles from './mood-tracker.module.scss'
 import { MOODS } from '@/shared/constants/moods'
+import { useTranslation } from 'react-i18next'
+import i18n from 'i18next'
 
+const t = i18n.t
 // Маппинг месяцев
 const monthNamesGenitive: { [key: string]: string } = {
-  січень: 'січня',
-  лютий: 'лютого',
-  березень: 'березня',
-  квітень: 'квітня',
-  травень: 'травня',
-  червень: 'червня',
-  липень: 'липня',
-  серпень: 'серпня',
-  вересень: 'вересня',
-  жовтень: 'жовтня',
-  листопад: 'листопада',
-  грудень: 'грудня',
+  січень: t('month.january'),
+  лютий: t('month.february'),
+  березень: t('month.march'),
+  квітень: t('month.april'),
+  травень: t('month.may'),
+  червень: t('month.june'),
+  липень: t('month.july'),
+  серпень: t('month.august'),
+  вересень: t('month.september'),
+  жовтень: t('month.october'),
+  листопад: t('month.november'),
+  грудень: t('month.december'),
 }
 
 // API-запрос
@@ -44,7 +47,7 @@ const MoodTrackerComponent: FC = () => {
   const token = useUserStore((state) => state.user?.access_token)
   const handleChangeUserStore = useUserStore((state) => state.handleChangeUserStore)
   const router = useRouter()
-
+  const { t } = useTranslation()
   const { data, isError, isLoading } = useQuery({
     queryKey: ['userProfile', token],
     queryFn: async () => {
@@ -56,11 +59,11 @@ const MoodTrackerComponent: FC = () => {
   })
 
   if (isLoading) {
-    return <div>Завантаження...</div>
+    return <div>{t('moodTracker.loading')}</div>
   }
 
   if (isError) {
-    return <div>Помилка завантаження даних.</div>
+    return <div>{t('moodTracker.error')}</div>
   }
 
   const user = data
@@ -84,7 +87,7 @@ const MoodTrackerComponent: FC = () => {
   if (!selectedMood) {
     return (
       <section className={styles.mood_tracker_passive} onClick={handleBlockClick}>
-        <h2 className={styles.mood_tracker__title}>Трекер настрою</h2>
+        <h2 className={styles.mood_tracker__title}>{t('moodTracker.title')}</h2>
         <div>
           <img
             src='/image/capibara_mood_tracker.png'
@@ -102,8 +105,8 @@ const MoodTrackerComponent: FC = () => {
                 </div>
               </div>
               <div className={styles.mood_tracker__top_passive}>
-                <span>Як твій настрій сьогодні?</span>
-                <span>Поділись зі мною</span>
+                <span>{t('moodTracker.howAreYou')}</span>
+                <span>{t('moodTracker.shareWithMe')}</span>
               </div>
               <button
                 className={styles.mood_tracker__btn}
@@ -121,7 +124,7 @@ const MoodTrackerComponent: FC = () => {
                 size='small'
                 variant='filled'
               >
-                Статистика
+                {t('moodTracker.statistics')}
               </ButtonComponent>
             </div>
           </div>
@@ -144,7 +147,7 @@ const MoodTrackerComponent: FC = () => {
             </div>
           </div>
           <div className={styles.mood_tracker__top}>
-            <span>Останнє оновлення:</span>
+            <span>{t('moodTracker.lastUpdate')}</span>
             <span className={styles.mood_tracker__time}>
               {moment(moodCreatedAt).isSame(new Date(), 'day')
                 ? `Сьогодні ${moment.utc(moodCreatedAt).local().format('HH:mm')}`
@@ -163,7 +166,7 @@ const MoodTrackerComponent: FC = () => {
         </div>
         <div className={styles.mood_tracker__statistics}>
           <ButtonComponent onClick={(e) => handleStatisticClick(e)} size='small' variant='filled'>
-            Статистика
+            {t('moodTracker.statistics')}
           </ButtonComponent>
         </div>
       </div>

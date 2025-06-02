@@ -7,6 +7,7 @@ import { PhotoTutorialComponent } from '@/modules/views/tutorials/elements/'
 import { DiaryNoteCardViewComponent } from '@/modules/views/diary/elements'
 import { ModalGettingToInstructionsComponent } from '@/shared/components'
 import { LoadingComponent } from '@/modules/layouts/loading'
+import { useTranslation } from 'react-i18next'
 
 const ChestComponent: React.FC = () => {
   const { view, setView } = useChestStore()
@@ -19,6 +20,7 @@ const ChestComponent: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [isDataLoaded, setIsDataLoaded] = useState(false)
   const token = useUserStore((state) => state.user?.access_token)
+  const { t } = useTranslation()
 
   useEffect(() => {
     setView('main')
@@ -208,7 +210,7 @@ const ChestComponent: React.FC = () => {
         return (
           <div className={styles.box__chest}>
             <IconArrow onClick={goBack} className={styles.backBtn__chest} />
-            <h1>Техніки</h1>
+            <h1>{t('techniques')}</h1>
 
             {/* Показываем индикатор загрузки, если данные еще не загружены */}
             {isLoading && !isDataLoaded ? (
@@ -223,7 +225,7 @@ const ChestComponent: React.FC = () => {
                 ))}
               </ul>
             ) : (
-              <p>Немає вибраних технік</p> // Показываем сообщение, если нет данных
+              <p>{t('no_favorite_techniques')}</p>
             )}
           </div>
         )
@@ -231,7 +233,7 @@ const ChestComponent: React.FC = () => {
         return (
           <div>
             <IconArrow onClick={goBack} className={styles.backBtn__chest} />
-            <h1>Щоденник</h1>
+            <h1>{t('diary')}</h1>
 
             {/* Показываем индикатор загрузки, если данные не загружены */}
             {isLoading && !isDataLoaded ? (
@@ -245,7 +247,7 @@ const ChestComponent: React.FC = () => {
                     note: stripHtmlTags(entry.note || ''),
                     description:
                       entry.type === 'challenges' || entry.type === 'tracker'
-                        ? 'Запис не знайдено'
+                        ? t('not_found_entry')
                         : stripHtmlTags(entry.description || ''),
                   }}
                   type={entry.type}
@@ -253,16 +255,16 @@ const ChestComponent: React.FC = () => {
                 />
               ))
             ) : (
-              <p className={styles.box_chestText}>Немає вибраних записів</p>
+              <p className={styles.box_chestText}>{t('no_favorite_entries')}</p>
             )}
           </div>
         )
       default:
         return (
           <div className={styles.box__chest}>
-            <h1>Скарбничка</h1>
+            <h1>{t('chest')}</h1>
             <button onClick={() => setView('techniques')} className={styles.btnDiaryTech}>
-              Техніки
+              {t('techniques')}
             </button>
             <button
               onClick={() => {
@@ -272,7 +274,7 @@ const ChestComponent: React.FC = () => {
               }}
               className={styles.btnDiaryTech}
             >
-              Щоденник
+              {t('diary')}
             </button>
             {/* Добавляем IconGuides для открытия модала */}
             <div className={styles.iconGuides} onClick={handleIconGuidesClick}>

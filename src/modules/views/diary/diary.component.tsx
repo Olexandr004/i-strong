@@ -17,6 +17,7 @@ import { IconButtonComponent } from '@/shared/components/ui/icon-button'
 import { IconUpArrow, IconGuides } from '@/shared/icons'
 import { useUserStore, useTabStore, useCommonStore } from '@/shared/stores'
 import styles from './diary.module.scss'
+import { useTranslation } from 'react-i18next'
 
 //interface
 interface IDiary {}
@@ -24,6 +25,7 @@ interface IDiary {}
 export const DiaryComponent: FC<Readonly<IDiary>> = () => {
   const router = useRouter()
   const token = useUserStore((state) => state.user?.access_token)
+  const { t } = useTranslation()
 
   const { activeTab, setActiveTab } = useTabStore()
   const scrollContainerRef = useRef<HTMLDivElement>(null)
@@ -47,9 +49,9 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
   )
 
   const tabs = [
-    { id: 'main', text: 'Нотатки', isActive: activeTab === 'main' },
-    { id: 'tracker', text: 'Трекер', isActive: activeTab === 'tracker' },
-    { id: 'challenges', text: 'Челенджі', isActive: activeTab === 'challenges' },
+    { id: 'main', text: t('diaryPage.tab_notes'), isActive: activeTab === 'main' },
+    { id: 'tracker', text: t('diaryPage.tab_tracker'), isActive: activeTab === 'tracker' },
+    { id: 'challenges', text: t('diaryPage.tab_challenges'), isActive: activeTab === 'challenges' },
   ]
 
   const handleCreateNewRecord = () => {
@@ -139,7 +141,7 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
   return (
     <section ref={scrollContainerRef} className={`${styles.diary} container`}>
       <div className={styles.titleAndGuide}>
-        <h1 className={styles.title}>Щоденник</h1>
+        <h1 className={styles.title}>{t('diaryPage.title')}</h1>
         <div className={styles.iconGuides} onClick={handleIconGuidesClick}>
           <IconGuides />
         </div>
@@ -153,12 +155,10 @@ export const DiaryComponent: FC<Readonly<IDiary>> = () => {
         <>
           {!diaryRecords?.has_note_today ? (
             <ButtonComponent variant={'outlined'} onClick={handleCreateNewRecord}>
-              Додати запис
+              {t('diaryPage.add_note')}
             </ButtonComponent>
           ) : (
-            <p className={styles.diary__disable_new_record}>
-              Запис про сьогоднішній день вже створено. Так тримати!
-            </p>
+            <p className={styles.diary__disable_new_record}>{t('diaryPage.note_exists')}</p>
           )}
         </>
       )}

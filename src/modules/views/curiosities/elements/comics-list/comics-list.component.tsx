@@ -3,6 +3,7 @@ import styles from './comics-list.module.scss'
 import { useUserStore } from '@/shared/stores'
 import { ComicsDetailsComponent } from '@/modules/views/curiosities/elements'
 import { IconNextArrow, IconArrow } from '@/shared/icons'
+import { useTranslation } from 'react-i18next'
 
 interface Comic {
   id: string | number
@@ -14,6 +15,7 @@ interface ComicsListComponentProps {
 }
 
 const ComicsListComponent: React.FC<ComicsListComponentProps> = ({ onBack }) => {
+  const { t } = useTranslation()
   const [comics, setComics] = useState<Comic[]>([])
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
@@ -77,7 +79,7 @@ const ComicsListComponent: React.FC<ComicsListComponentProps> = ({ onBack }) => 
           <IconArrow />
         </div>
       )}
-      {!selectedComicId && <h1>Комікси</h1>}
+      {!selectedComicId && <h1>{t('curiosities.comics')}</h1>}
 
       {selectedComicId ? (
         <ComicsDetailsComponent comicId={selectedComicId} onClose={handleCloseDetails} />
@@ -91,7 +93,7 @@ const ComicsListComponent: React.FC<ComicsListComponentProps> = ({ onBack }) => 
               </li>
             ))
           ) : (
-            <p className={styles.empty}>Список коміксів порожній.</p>
+            <p className={styles.empty}>{t('curiosities.comicsListEmpty')}</p>
           )}
         </ul>
       )}

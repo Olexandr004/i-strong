@@ -7,6 +7,7 @@ import { useUserStore } from '@/shared/stores'
 import { PhotoTutorialComponent } from '@/modules/views/tutorials/elements'
 import { LoadingComponent } from '@/modules/layouts/loading'
 import styles from './tutorials.module.scss'
+import { useTranslation } from 'react-i18next'
 
 interface IFavoriteTechnique {
   technique: {
@@ -49,6 +50,7 @@ export const TutorialsComponent: FC<Readonly<ITutorialsComponent>> = () => {
   const [isModalActive, setIsModalActive] = useState<boolean>(false)
   const [isModalTechniqueActive, setIsModalTechniqueActive] = useState<boolean>(false)
   const [categoryImages, setCategoryImages] = useState<string[]>([])
+  const { t } = useTranslation()
 
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null)
   const [selectedTechnique, setSelectedTechnique] = useState<number | null>(null)
@@ -244,12 +246,12 @@ export const TutorialsComponent: FC<Readonly<ITutorialsComponent>> = () => {
 
   const getTitle = () => {
     if (selectedTechniqueData) {
-      return selectedTechniqueData.name || 'Техніки'
+      return selectedTechniqueData.name || t('techniques')
     } else if (selectedCategory) {
       const selectedCategoryData = categories.find((category) => category.id === selectedCategory)
-      return selectedCategoryData?.name || 'Техніки'
+      return selectedCategoryData?.name || t('techniques')
     } else {
-      return 'Техніки'
+      return t('techniques')
     }
   }
 

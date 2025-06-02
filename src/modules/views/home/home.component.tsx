@@ -13,6 +13,7 @@ import { AvatarPreviewComponent } from '@/modules/views/profile/elements'
 import styles from './home.module.scss'
 import Link from 'next/link'
 import { IconSos } from '@/shared/icons'
+import { useTranslation } from 'react-i18next'
 
 //interface
 interface IHome {}
@@ -21,7 +22,7 @@ interface IHome {}
 export const HomeComponent: FC<Readonly<IHome>> = () => {
   useBackButtonExit()
   const { challengeCurrentDetailsMutate, status, challenges } = useCurrentChallengeDetails()
-
+  const { t } = useTranslation()
   useEffect(() => {
     challengeCurrentDetailsMutate()
   }, [])
@@ -32,7 +33,7 @@ export const HomeComponent: FC<Readonly<IHome>> = () => {
       <AvatarPreviewComponent></AvatarPreviewComponent>
       <h1 className={`${styles.home__title} title`}>IStrong</h1>
       <div className={styles.help_block}>
-        <h2>Якщо тебе накривають емоції</h2>
+        <h2>{t('home.helpTitle')}</h2>
         <Link href={'/help'} className={styles.help}>
           <IconSos />
         </Link>
@@ -40,7 +41,7 @@ export const HomeComponent: FC<Readonly<IHome>> = () => {
       <MoodTrackerComponent />
       {/* <MyComponent /> */}
       <SectionSwiperComponent
-        title={'Щоденні челенджі'}
+        title={t('home.dailyChallenges')}
         data={challenges}
         type={'Challenge'}
         status={status}

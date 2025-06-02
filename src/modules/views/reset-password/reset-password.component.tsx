@@ -16,6 +16,7 @@ import {
 } from '../../../shared/hooks/useUserMutations'
 
 import styles from './reset-password.module.scss'
+import { useTranslation } from 'react-i18next'
 
 interface IResetPassword {}
 
@@ -31,24 +32,25 @@ export const ResetPasswordComponent: FC<Readonly<IResetPassword>> = () => {
   const { mutate: verifyMutate } = usePasswordResetVerify()
   const { mutate: conditionalMutate } = usePasswordResetRequest()
   const { mutate: newPasswordMutate } = useNewPassword()
+  const { t } = useTranslation()
   // return
   return (
     <section className={`${styles.reset_password__container} container`}>
       <div className={styles.reset_password__wrap}>
-        <PageHeaderComponent title='Зміна пароля' />
+        <PageHeaderComponent title={t('resetPassword.title')} />
         {step === `new-password` && (
           <p className={`${styles.reset_password__text} text_medium`}>
-            Придумай новий пароль для входу
+            {t('resetPassword.newPasswordText')}
           </p>
         )}
         {step === null && (
           <p className={`${styles.reset_password__text} text_medium`}>
-            Вкажи свій номер телефону і на нього прийде SMS-повідомлення для створення нового пароля
+            {t('resetPassword.phoneText')}
           </p>
         )}
         {step === 'code' && (
           <p className={`${styles.reset_password__text} text_medium`}>
-            Введи код, який ми надіслали тобі у повідомлення для зміни пароля
+            {t('resetPassword.codeText')}
           </p>
         )}
       </div>
