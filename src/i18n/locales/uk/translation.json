@@ -1,0 +1,21 @@
+{
+  "entry": {
+    "signInTitle": "Вхід",
+    "signUpTitle": "Реєстрація",
+    "enterName": "Введи своє ім’я",
+    "name": "Ім’я",
+    "enterPhone": "Введи номер телефону",
+    "phone": "Телефон",
+    "createPassword": "Придумай пароль",
+    "enterPassword": "Введи пароль",
+    "password": "Пароль",
+    "passwordHint": "* Від 8 до 15 символів без пробілів, латинські літери, цифри, щонайменше одна літера і одна цифра",
+    "agreeText": "Я погоджуюсь з",
+    "privacyPolicy": "Політикою Конфіденційності",
+    "forgotPassword": "Забув(-ла) пароль?",
+    "signInButton": "Увійти",
+    "signUpButton": "Зареєструватися",
+    "notRegistered": "Ще не зареєстрований(-а)?",
+    "alreadyRegistered": "Вже зареєстрований(-на)?"
+  }
+}

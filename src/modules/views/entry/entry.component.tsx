@@ -14,6 +14,7 @@ import { useBackButtonExit } from '@/shared/hooks/useBackButtonExit'
 import { IconBackground, IconInvisible, IconVisible } from '@/shared/icons'
 import { useCommonStore, useUserCodeStore, useUserStore } from '@/shared/stores'
 import { namePattern, passwordPattern, phoneNumberPattern, required } from '@/shared/validation'
+import { useTranslation } from 'react-i18next'
 
 import styles from './entry.module.scss'
 
@@ -83,6 +84,8 @@ export const EntryComponent: FC<Readonly<IEntry>> = () => {
     router.push('/reset-password')
   }
 
+  const { t } = useTranslation()
+
   useEffect(() => {
     const subscription = watch((value) => {
       handleChangeCommonStore({ registerForm: value })
@@ -98,7 +101,7 @@ export const EntryComponent: FC<Readonly<IEntry>> = () => {
 
       <div className={styles.entry__inner}>
         <h1 className={`${styles.entry__title} title`}>
-          {entryType === 'signIn' ? 'Вхід' : 'Реєстрація'}
+          {entryType === 'signIn' ? t('entry.signInTitle') : t('entry.signUpTitle')}
         </h1>
 
         <form
@@ -120,9 +123,9 @@ export const EntryComponent: FC<Readonly<IEntry>> = () => {
                     onChange={onChange}
                     onBlur={onBlur}
                     inputMode={'text'}
-                    label={'Введи своє ім’я'}
+                    label={t('entry.enterName')}
                     error={!!error}
-                    placeholder={'Ім’я'}
+                    placeholder={t('entry.name')}
                     errorText={error?.message}
                   />
                 )}
@@ -147,8 +150,8 @@ export const EntryComponent: FC<Readonly<IEntry>> = () => {
                   onChange={onChange}
                   onBlur={onBlur}
                   inputMode={'tel'}
-                  label={'Введи номер телефону'}
-                  placeholder={'Телефон'}
+                  label={t('entry.enterPhone')}
+                  placeholder={t('entry.phone')}
                   error={!!error}
                   errorText={error?.message}
                   withMask
@@ -174,14 +177,12 @@ export const EntryComponent: FC<Readonly<IEntry>> = () => {
                     onBlur={onBlur}
                     onChange={onChange}
                     type={isPasswordVisible ? 'text' : 'password'}
-                    label={entryType === 'signUp' ? 'Придумай пароль' : 'Введи пароль'}
-                    placeholder={'Пароль'}
-                    inputMode={'text'}
-                    hint={
-                      entryType === 'signUp'
-                        ? '* Від 8 до 15 символів без пробілів, латинські літери, цифри, щонайменше одна літера і одна цифра'
-                        : undefined
+                    label={
+                      entryType === 'signUp' ? t('entry.createPassword') : t('entry.enterPassword')
                     }
+                    placeholder={t('entry.password')}
+                    inputMode={'text'}
+                    hint={entryType === 'signUp' ? t('entry.passwordHint') : undefined}
                     key={entryType}
                     error={!!error}
                     errorText={error?.message}
@@ -207,7 +208,8 @@ export const EntryComponent: FC<Readonly<IEntry>> = () => {
                     }
                   />
                   <label htmlFor='agreement' className='text-4'>
-                    Я погоджуюсь з <Link href={'privacy-policy'}>Політикою Конфіденційності</Link>
+                    {t('entry.agreeText')}{' '}
+                    <Link href={'privacy-policy'}>{t('entry.privacyPolicy')}</Link>
                   </label>
                 </div>
               )}
@@ -217,7 +219,7 @@ export const EntryComponent: FC<Readonly<IEntry>> = () => {
                   onClick={handleForgetPassword}
                   className={styles.entry__forget_btn}
                 >
-                  Забув(-ла) пароль?
+                  {t('entry.forgotPassword')}
                 </button>
               )}
             </div>
@@ -228,11 +230,11 @@ export const EntryComponent: FC<Readonly<IEntry>> = () => {
               type={'submit'}
               disabled={!isValid || (entryType === 'signUp' && !isAgreedForm)}
             >
-              {entryType === 'signIn' ? 'Увійти' : 'Зареєструватися'}
+              {entryType === 'signIn' ? t('entry.signInButton') : t('entry.signUpButton')}
             </ButtonComponent>
 
             <div className={styles.entry__navigation}>
-              {entryType === 'signIn' ? 'Ще не зареєстрований(-а)?' : 'Вже зареєстрований(-на)?'}
+              {entryType === 'signIn' ? t('entry.notRegistered') : t('entry.alreadyRegistered')}
               <button
                 type={'button'}
                 onClick={() => {
@@ -243,7 +245,7 @@ export const EntryComponent: FC<Readonly<IEntry>> = () => {
                 }}
                 className={styles.entry__sign_in}
               >
-                {entryType === 'signIn' ? 'Зареєструватися' : 'Увійти'}
+                {entryType === 'signIn' ? t('entry.signUpButton') : t('entry.signInButton')}
               </button>
             </div>
           </div>

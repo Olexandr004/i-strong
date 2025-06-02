@@ -1,4 +1,5 @@
 'use client'
+import '@/i18n' // 🔹 Добавлен импорт i18n
 import type { Metadata, Viewport } from 'next'
 import { FC, ReactNode, useEffect, useState } from 'react'
 import '@/styles/globals.scss'
@@ -13,7 +14,7 @@ import { mainFont } from '@/fonts'
 import { initialMetadata, initialViewport } from '@/metadata'
 import { RootLayoutComponent } from '@/modules/layouts'
 import { useTanStackClient } from '@/packages/tanstack-client'
-import { useCommonStore } from '@/shared/stores' // Проверьте правильность импорта
+import { useCommonStore } from '@/shared/stores'
 import useKeyboard from '@/utils/native-app/keyboard'
 import {
   scheduleNotifications,
@@ -63,14 +64,12 @@ const RootLayout: FC<Readonly<IRootLayout>> = ({ home, entry }) => {
           'challengeNotificationsEnabled',
         )
 
-        // Запланировать уведомления для трекера настроения
         if (moodTrackerEnabled) {
           await scheduleNotifications(
             notifications.filter((notification) => [2, 3].includes(notification.id)),
           )
         }
 
-        // Запланировать уведомления для челленджей
         if (challengeNotificationsEnabled) {
           await scheduleNotifications(
             notifications.filter((notification) => [1].includes(notification.id)),
@@ -84,7 +83,6 @@ const RootLayout: FC<Readonly<IRootLayout>> = ({ home, entry }) => {
     checkAndScheduleNotifications()
   }, [])
 
-  // Обработчики состояния сети
   useEffect(() => {
     const handleOnline = () => {
       setIsOnline(true)
@@ -95,9 +93,8 @@ const RootLayout: FC<Readonly<IRootLayout>> = ({ home, entry }) => {
       setIsOnline(false)
       handleChangeCommonStore({ errorText: 'Немає підключення до Інтернету.' })
 
-      // Автоматически закрываем уведомление через 2 секунды
       setTimeout(() => {
-        handleChangeCommonStore({ errorText: null }) // Сбрасываем текст ошибки
+        handleChangeCommonStore({ errorText: null })
       }, 2000)
 
       setTimeout(() => {
@@ -116,7 +113,6 @@ const RootLayout: FC<Readonly<IRootLayout>> = ({ home, entry }) => {
     }
   }, [router])
 
-  // Регистрация Service Worker
   useEffect(() => {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker

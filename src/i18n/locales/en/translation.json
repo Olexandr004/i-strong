@@ -1,0 +1,21 @@
+{
+  "entry": {
+    "signInTitle": "Sign In",
+    "signUpTitle": "Sign Up",
+    "enterName": "Enter your name",
+    "name": "Name",
+    "enterPhone": "Enter your phone number",
+    "phone": "Phone",
+    "createPassword": "Create a password",
+    "enterPassword": "Enter password",
+    "password": "Password",
+    "passwordHint": "* From 8 to 15 characters without spaces, Latin letters, digits, at least one letter and one digit",
+    "agreeText": "I agree with",
+    "privacyPolicy": "Privacy Policy",
+    "forgotPassword": "Forgot password?",
+    "signInButton": "Sign In",
+    "signUpButton": "Sign Up",
+    "notRegistered": "Not registered yet?",
+    "alreadyRegistered": "Already registered?"
+  }
+}
