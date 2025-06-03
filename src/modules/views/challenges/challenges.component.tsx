@@ -13,6 +13,7 @@ import {
 } from '@/shared/components'
 import { useCommonStore, useUserStore } from '@/shared/stores'
 import styles from './challenges.module.scss'
+import { useTranslation } from 'react-i18next'
 
 interface IChallengesComponent {}
 
@@ -20,6 +21,7 @@ export const ChallengesComponent: FC<Readonly<IChallengesComponent>> = () => {
   const shopContainerRef = useRef(null)
   const { activeChallengeTypeButton, handleButtonClick, buttonInfos } = useChallengeButtons()
   const { challenges, statusChallengesByType } = useChallenges(activeChallengeTypeButton)
+  const { t } = useTranslation()
 
   const { isModalActive, modalContent, handleChangeCommonStore } = useCommonStore((state) => ({
     isModalActive: state.isModalActive,
@@ -66,7 +68,7 @@ export const ChallengesComponent: FC<Readonly<IChallengesComponent>> = () => {
   return (
     <section className={`${styles.challenge}`}>
       <div ref={shopContainerRef} className={styles.challenge__scroll}>
-        <PageHeaderComponent title='Челенджі' />
+        <PageHeaderComponent title={t('profile.challenges')} />
 
         {/* Кнопка IconGuides с обработчиком клика */}
         <div className={styles.iconGuides} onClick={handleIconGuidesClick}>

@@ -5,12 +5,14 @@ import { ButtonComponent, PageHeaderComponent, StepNewPassword } from '@/shared/
 import { useSettingPasswordResetRequest } from '@/shared/hooks/useSettingsMutations'
 
 import styles from './settings-reset-password.module.scss'
+import { useTranslation } from 'react-i18next'
 
 interface IResetPassword {}
 
 export const SettingsResetPasswordComponent: FC<Readonly<IResetPassword>> = () => {
   const searchParams = useSearchParams()
   const step = searchParams.get('step')
+  const { t } = useTranslation()
 
   const { passwordReset } = useSettingPasswordResetRequest()
   const router = useRouter()
@@ -27,11 +29,11 @@ export const SettingsResetPasswordComponent: FC<Readonly<IResetPassword>> = () =
   return (
     <section className={`${styles.reset_password__container} container`}>
       <div className={styles.reset_password__wrap}>
-        <PageHeaderComponent title={`Конфіденційність`} />
+        <PageHeaderComponent title={t('reset_password.title')} />
 
         {step === `new-password` && (
           <p className={`${styles.reset_password__text} text_medium`}>
-            Придумай новий пароль для входу
+            {t('reset_password.new_password_text')}
           </p>
         )}
       </div>
@@ -39,13 +41,15 @@ export const SettingsResetPasswordComponent: FC<Readonly<IResetPassword>> = () =
       {step === null && (
         <div className={`${styles.reset}`}>
           <div className={`${styles.reset__block}`}>
-            <p className={`${styles.reset__block_text} text-3-gray`}>Пароль для входу</p>
+            <p className={`${styles.reset__block_text} text-3-gray`}>
+              {t('reset_password.login_password')}
+            </p>
             <ButtonComponent onClick={handlePushNewPass} variant={'outlined'}>
-              Змінити
+              {t('reset_password.change')}
             </ButtonComponent>
           </div>
 
-          <ButtonComponent onClick={handlePushSetting}>Зберегти</ButtonComponent>
+          <ButtonComponent onClick={handlePushSetting}>{t('reset_password.save')}</ButtonComponent>
         </div>
       )}
 

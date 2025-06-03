@@ -122,5 +122,80 @@
     "surprise": "Здивування",
     "joy": "Радість",
     "happiness": "Щастя"
+  },
+  "profile": {
+    "myCabinet": "My Cabinet",
+    "challenges": "Challenges",
+    "fashion": "Kapi Fashion",
+    "settings": "Settings",
+    "privacy": "Privacy Policy",
+    "logout": "Log Out",
+    "phone": "Tel. +"
+  },
+  "avatar": {
+    "takePhoto": "Take photo",
+    "uploadFromGallery": "Upload from gallery",
+    "delete": "Delete",
+    "save": "Save",
+    "saving": "Saving...",
+    "cameraGalleryAccessError": "Camera and gallery access is required",
+    "cameraAccessError": "Camera access is required",
+    "invalidFormat": "Invalid file format. Supported formats: jpg, jpeg, png, heif.",
+    "fileTooLarge": "Image size is too large",
+    "imageUrlError": "Failed to get image URL",
+    "uploadError": "Error occurred while uploading image",
+    "unknownError": "Unknown error",
+    "updateError": "Failed to update avatar",
+    "imageLoadError": "Unable to load image"
+  },
+  "new": "New",
+  "inProgress": "In progress",
+  "completed": "Completed",
+  "storePage": {
+    "title":"Capi Fashion",
+    "storeGiftPageTitle": "Gift",
+    "balanceLabel": "Balance:",
+    "tabAll": "All",
+    "tabBought": "Purchased",
+    "buy_question": "Do you want to buy?",
+    "yes": "Yes",
+    "no": "No",
+    "not_enough_coins": "Not enough coins"
+  },
+  "settings": {
+    "title": "Settings",
+    "privacy": "Privacy",
+    "password": "Login password",
+    "notifications": "Notifications",
+    "mood_tracker": "Mood tracker",
+    "challenge_notifications": "Challenge notifications",
+    "delete_account": "Delete account",
+    "notification_permission_error": "Please allow notifications in your phone settings."
+  },
+  "contact_info": {
+    "title_with_balance": "Contact Information",
+    "title": "Contact Info",
+    "name": "Name",
+    "phone": "Phone",
+    "balance": "Balance",
+    "save": "Save",
+    "name_label": "Name:",
+    "name_placeholder": "Name",
+    "phone_placeholder": "Your phone"
+  },
+  "reset_password": {
+    "title": "Privacy",
+    "new_password_text": "Create a new login password",
+    "login_password": "Login password",
+    "change": "Change",
+    "save": "Save"
+  },
+  "step_new_password": {
+    "button": "Next",
+    "new_password_label": "New password",
+    "new_password_placeholder": "Password",
+    "confirm_password_label": "Repeat password",
+    "confirm_password_placeholder": "Password",
+    "password_mismatch": "Passwords do not match"
   }
 }

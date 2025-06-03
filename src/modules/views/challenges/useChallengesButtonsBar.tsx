@@ -4,6 +4,9 @@ import { useEffect } from 'react'
 
 import { ChallengeType } from '@/interfaces/challenge'
 import { useCommonStore } from '@/shared/stores'
+import i18n from 'i18next'
+
+const t = i18n.t
 
 const useChallengeButtons = () => {
   const router = useRouter()
@@ -26,9 +29,13 @@ const useChallengeButtons = () => {
   }
 
   const buttonInfos = [
-    { id: 'new', text: 'Нові', isActive: activeChallengeTypeButton === 'new' },
-    { id: 'in_progress', text: 'В процесі', isActive: activeChallengeTypeButton === 'in_progress' },
-    { id: 'completed', text: 'Завершені', isActive: activeChallengeTypeButton === 'completed' },
+    { id: 'new', text: t('new'), isActive: activeChallengeTypeButton === 'new' },
+    {
+      id: 'in_progress',
+      text: t('inProgress'),
+      isActive: activeChallengeTypeButton === 'in_progress',
+    },
+    { id: 'completed', text: t('completed'), isActive: activeChallengeTypeButton === 'completed' },
   ]
 
   return {

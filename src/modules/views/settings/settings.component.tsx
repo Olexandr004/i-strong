@@ -9,6 +9,7 @@ import ToggleBtnComponent from '@/shared/components/ui/toggle-btn/toggle-btn.com
 import { IconEdit } from '@/shared/icons'
 import styles from './settings.module.scss'
 import { useCommonStore } from '@/shared/stores'
+import { useTranslation } from 'react-i18next'
 
 interface ISettings {}
 
@@ -19,6 +20,7 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
   const [challengeNotificationsEnabled, setChallengeNotificationsEnabled] = useState<boolean>(false)
   const [errorText, setErrorText] = useState('')
   const handleChangeCommonStore = useCommonStore((state) => state.handleChangeCommonStore)
+  const { t } = useTranslation()
 
   // Проверка прав на получение уведомлений
   const checkNotificationPermission = async () => {
@@ -70,9 +72,9 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
     const permissionStatus = await PushNotifications.checkPermissions()
 
     if (permissionStatus.receive !== 'granted') {
-      setErrorText('Будь ласка, дайте дозвіл на отримання сповіщень у налаштуваннях телефону.')
+      setErrorText(t('settings.notification_permission_error'))
       handleChangeCommonStore({
-        errorText: 'Будь ласка, надайте дозвіл на отримання сповіщень у налаштуваннях телефону',
+        errorText: t('settings.notification_permission_error'),
       })
       return
     }
@@ -100,14 +102,14 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
 
   return (
     <section className={`${styles.settings} container`}>
-      <PageHeaderComponent title={'Налаштування'} />
+      <PageHeaderComponent title={t('settings.title')} />
 
       <div className={styles.settings__cards}>
         <ContactInfoComponent balance={false} color={`BLUE`} />
 
         <div className={`${styles.settings_card} ${styles.green}`}>
           <div className={styles.settings_card__header}>
-            <h2>Конфіденційність</h2>
+            <h2>{t('settings.privacy')}</h2>
 
             <IconButtonComponent
               name={'Edit'}
@@ -119,7 +121,7 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
 
           <div className={styles.settings_card__content}>
             <div className={styles.settings_card__field}>
-              <span>Пароль для входу</span>
+              <span>{t('settings.password')}</span>
               <span className={styles.settings_card__field_value}>********</span>
             </div>
           </div>
@@ -127,19 +129,19 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
 
         <div className={`${styles.settings_card} ${styles.yellow}`}>
           <div className={styles.settings_card__header}>
-            <h2>Сповіщення</h2>
+            <h2>{t('settings.notifications')}</h2>
           </div>
 
           <div className={styles.settings_card__content}>
             <div className={styles.settings_card__field}>
-              <span>Трекер настрою</span>
+              <span>{t('settings.mood_tracker')}</span>
               <ToggleBtnComponent
                 isChecked={moodTrackerEnabled}
                 onToggle={handleToggleMoodTracker}
               />
             </div>
             <div className={styles.settings_card__field}>
-              <span>Сповіщення про челенджі</span>
+              <span>{t('settings.challenge_notifications')}</span>
               <ToggleBtnComponent
                 isChecked={challengeNotificationsEnabled}
                 onToggle={handleToggleChallengeNotifications}
@@ -150,7 +152,7 @@ export const SettingsComponent: FC<Readonly<ISettings>> = () => {
       </div>
 
       <ButtonComponent onClick={() => router.push('/account-deletion')}>
-        Видалити аккаунт
+        {t('settings.delete_account')}
       </ButtonComponent>
     </section>
   )

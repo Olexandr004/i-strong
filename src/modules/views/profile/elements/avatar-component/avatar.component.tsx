@@ -11,6 +11,7 @@ import { ImageAvatar } from '@/shared/images'
 import { useCommonStore, useUserStore } from '@/shared/stores'
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera'
 import styles from './avatar.module.scss'
+import { useTranslation } from 'react-i18next'
 
 interface ErrorResponse {
   error?: string
@@ -32,6 +33,7 @@ const AvatarComponent: FC = () => {
   }))
 
   const token = user?.access_token
+  const { t } = useTranslation()
 
   const [currentImage, setCurrentImage] = useState<string>(avatarImage || ImageAvatar.src)
   const [isSaveButtonDisabled, setIsSaveButtonDisabled] = useState(true)
@@ -53,7 +55,7 @@ const AvatarComponent: FC = () => {
         const status = await Camera.requestPermissions({ permissions: ['camera', 'photos'] })
 
         if (status.camera !== 'granted' || status.photos !== 'granted') {
-          setError('Необхідно надати доступ до камери та галереї')
+          setError(t('avatar.cameraGalleryAccessError'))
           return
         }
       }
@@ -63,7 +65,7 @@ const AvatarComponent: FC = () => {
         const status = await Camera.requestPermissions({ permissions: ['camera'] })
 
         if (status.camera !== 'granted') {
-          setError('Необхідно надати доступ до камери')
+          setError(t('avatar.cameraAccessError'))
           return
         }
       }
@@ -97,14 +99,12 @@ const AvatarComponent: FC = () => {
 
         // Проверка формата изображения
         if (!validFormats.includes(blob.type)) {
-          throw new Error(
-            'Неприпустимий формат файлу. Формати, що підтримуються: jpg, jpeg, png, heif.',
-          )
+          throw new Error(t('avatar.invalidFormat'))
         }
 
         // Проверка размера файла
         if (blob.size > 5 * 1024 * 1024) {
-          throw new Error('Завеликий розмір зображення')
+          throw new Error(t('avatar.fileTooLarge'))
         }
 
         // Устанавливаем новое изображение
@@ -112,10 +112,10 @@ const AvatarComponent: FC = () => {
         setIsSaveButtonDisabled(false)
         setError(null)
       } else {
-        throw new Error('Не вдалося отримати URL зображення')
+        throw new Error(t('avatar.imageUrlError'))
       }
     } catch (err) {
-      const errorMessage = (err as Error).message || 'Виникла помилка при завантаженні зображення'
+      const errorMessage = (err as Error).message || t('avatar.uploadError')
       setError(errorMessage)
       // Восстанавливаем предыдущее изображение, если произошла ошибка
       setCurrentImage(previousImage)
@@ -164,13 +164,13 @@ const AvatarComponent: FC = () => {
         })
 
         if (!fileResponse.ok) {
-          throw new Error('Не вдалося оновити аватар')
+          throw new Error(t('avatar.updateError'))
         }
 
         const blob = await fileResponse.blob()
         return URL.createObjectURL(blob)
       } catch (error) {
-        throw new Error('Не вдалося оновити аватар')
+        throw new Error(t('avatar.updateError'))
       }
     },
     onSuccess: (avatarUrl) => {
@@ -201,7 +201,7 @@ const AvatarComponent: FC = () => {
       handleChangeCommonStore({ isModalActive: false })
     },
     onError: (error: unknown) => {
-      let errorMessage = 'Невідома помилка'
+      let errorMessage = t('avatar.unknownError')
       if (error instanceof Error) {
         errorMessage = error.message
       }
@@ -216,7 +216,7 @@ const AvatarComponent: FC = () => {
 
       mutation.mutate(file)
     } catch (error) {
-      let errorMessage = 'Невідома помилка'
+      let errorMessage = t('avatar.unknownError')
       if (error instanceof Error) {
         errorMessage = error.message
       }
@@ -246,33 +246,33 @@ const AvatarComponent: FC = () => {
             objectFit='cover'
             priority
             onError={() => {
-              setError('Неможливо завантажити зображення')
+              setError(t('avatar.imageLoadError'))
             }}
           />
         </div>
         {error && <div className={styles.error}>{error}</div>}
         <div className={styles.buttons}>
           <ButtonComponent variant={'outlined'} onClick={() => handleButtonClick('Зробити фото')}>
-            Зробити фото
+            {t('avatar.takePhoto')}
           </ButtonComponent>
           <ButtonComponent
             variant={'outlined'}
             onClick={() => handleButtonClick('Завантажити з галереї')}
           >
-            Завантажити з галереї
+            {t('avatar.uploadFromGallery')}
           </ButtonComponent>
         </div>
         <div className={styles.footer}>
           <button onClick={handleDeleteClick} className={styles.button}>
             <IconDelete />
-            <span>Видалити</span>
+            <span>{t('avatar.delete')}</span>
           </button>
           <ButtonComponent
             size={'regular'}
             onClick={handleSaveClick}
             disabled={isSaveButtonDisabled || isLoading}
           >
-            {isLoading ? 'Збереження...' : 'Зберегти'}
+            {isLoading ? t('avatar.saving') : t('avatar.save')}
           </ButtonComponent>
         </div>
       </div>

@@ -121,6 +121,81 @@
     "surprise": "Здивування",
     "joy": "Радість",
     "happiness": "Щастя"
+  },
+  "profile": {
+    "myCabinet": "Мій кабінет",
+    "challenges": "Челенджі",
+    "fashion": "Капі Fashion",
+    "settings": "Налаштування",
+    "privacy": "Політика конфіденційності",
+    "logout": "Вийти",
+    "phone": "Тел. +"
+  },
+  "avatar": {
+    "takePhoto": "Зробити фото",
+    "uploadFromGallery": "Завантажити з галереї",
+    "delete": "Видалити",
+    "save": "Зберегти",
+    "saving": "Збереження...",
+    "cameraGalleryAccessError": "Необхідно надати доступ до камери та галереї",
+    "cameraAccessError": "Необхідно надати доступ до камери",
+    "invalidFormat": "Неприпустимий формат файлу. Формати, що підтримуються: jpg, jpeg, png, heif.",
+    "fileTooLarge": "Завеликий розмір зображення",
+    "imageUrlError": "Не вдалося отримати URL зображення",
+    "uploadError": "Виникла помилка при завантаженні зображення",
+    "unknownError": "Невідома помилка",
+    "updateError": "Не вдалося оновити аватар",
+    "imageLoadError": "Неможливо завантажити зображення"
+  },
+  "new": "Нові",
+  "inProgress": "В процесі",
+  "completed": "Завершені",
+  "storePage": {
+    "title":"Капі Fashion",
+    "storeGiftPageTitle": "Подарунок",
+    "balanceLabel": "Баланс:",
+    "tabAll": "Усі",
+    "tabBought": "Придбані",
+    "buy_question": "Купуємо?",
+    "yes": "Так",
+    "no": "Ні",
+    "not_enough_coins": "Недостатньо монеток"
+  },
+  "settings": {
+    "title": "Налаштування",
+    "privacy": "Конфіденційність",
+    "password": "Пароль для входу",
+    "notifications": "Сповіщення",
+    "mood_tracker": "Трекер настрою",
+    "challenge_notifications": "Сповіщення про челенджі",
+    "delete_account": "Видалити аккаунт",
+    "notification_permission_error": "Будь ласка, дайте дозвіл на отримання сповіщень у налаштуваннях телефону."
+  },
+  "contact_info": {
+    "title_with_balance": "Контактні данні",
+    "title": "Контакта інформація",
+    "name": "Ім’я",
+    "phone": "Телефон",
+    "balance": "Баланс",
+    "save": "Зберегти",
+    "name_label": "Ім’я:",
+    "name_placeholder": "Ім’я",
+    "phone_placeholder": "Ваш телефон"
+  },
+  "reset_password": {
+    "title": "Конфіденційність",
+    "new_password_text": "Придумай новий пароль для входу",
+    "login_password": "Пароль для входу",
+    "change": "Змінити",
+    "save": "Зберегти"
+  },
+  "step_new_password": {
+    "button": "Далі",
+    "new_password_label": "Новий пароль",
+    "new_password_placeholder": "Пароль",
+    "confirm_password_label": "Повтори пароль",
+    "confirm_password_placeholder": "Пароль",
+    "password_mismatch": "Пароль не збігається"
   }
 }
 

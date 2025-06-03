@@ -15,6 +15,7 @@ import { useGiftDetails, useGifts } from '@/shared/hooks/useStoreMutations'
 import { useUserStore } from '@/shared/stores'
 
 import styles from './store.module.scss'
+import { useTranslation } from 'react-i18next'
 
 interface IStoreComponent {}
 
@@ -26,7 +27,7 @@ export const StoreComponent: FC<Readonly<IStoreComponent>> = () => {
   const { giftDetailsMutate, status, product } = useGiftDetails()
   const { user } = useUserStore()
   const [selectedCard, setSelectedCard] = useState<number | null>(null) // Changed to number | null to represent selected product ID
-
+  const { t } = useTranslation()
   // State for active tab
   const [activeTab, setActiveTab] = useState<'all' | 'bought'>('all')
 
@@ -149,12 +150,14 @@ export const StoreComponent: FC<Readonly<IStoreComponent>> = () => {
   return (
     <section className={`${styles.shop}`}>
       <div ref={shopContainerRef} className={styles.shop__scroll}>
-        <PageHeaderComponent title={!giftId ? 'Капі Fashion' : 'Подарунок'} />
+        <PageHeaderComponent
+          title={!giftId ? t('storePage.title') : t('storePage.storeGiftPageTitle')}
+        />
 
         {!giftId && (
           <div className={styles.shop__balance}>
             <div className={styles.shop__balance_block}>
-              <p className='text-5-grey'>Баланс:</p>
+              <p className='text-5-grey'>{t('storePage.balanceLabel')}</p>
               <CoinsDisplayComponent coin={user?.coins} />
             </div>
           </div>
@@ -172,13 +175,13 @@ export const StoreComponent: FC<Readonly<IStoreComponent>> = () => {
               className={`${styles.shop__tab} ${activeTab === 'all' ? styles.shop__tab_active : ''}`}
               onClick={() => setActiveTab('all')}
             >
-              Усі
+              {t('storePage.tabAll')}
             </button>
             <button
               className={`${styles.shop__tab} ${activeTab === 'bought' ? styles.shop__tab_active : ''}`}
               onClick={() => setActiveTab('bought')}
             >
-              Придбані
+              {t('storePage.tabBought')}
             </button>
           </div>
         )}

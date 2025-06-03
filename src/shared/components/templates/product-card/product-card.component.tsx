@@ -11,6 +11,7 @@ import { ButtonComponent } from '@/shared/components'
 import { CoinsDisplayComponent } from '../../ui/coins-display'
 
 import styles from './product-card.module.scss'
+import { useTranslation } from 'react-i18next'
 
 const ProductCardComponent: React.FC<
   IProductCard & {
@@ -26,7 +27,7 @@ const ProductCardComponent: React.FC<
     triggerOnce: true,
     threshold: 0.5,
   })
-
+  const { t } = useTranslation()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
   const [isBought, setIsBought] = useState(product.is_bought)
@@ -37,8 +38,8 @@ const ProductCardComponent: React.FC<
   const handleCardClick = async () => {
     // Перевіряємо, чи вистачає монет для покупки
     if (!isBought && (user?.coins ?? 0) < product.price) {
-      setErrorText('Недостатньо монеток')
-      handleChangeCommonStore({ errorText: 'Недостатньо монеток' })
+      setErrorText(t('storePage.not_enough_coins'))
+      handleChangeCommonStore({ errorText: t('storePage.not_enough_coins') })
 
       // Відображаємо помилку на 1 секунду
       setTimeout(() => {
@@ -156,7 +157,7 @@ const ProductCardComponent: React.FC<
         <div className={styles.modalOverlay}>
           <div className={styles.modal}>
             <div style={{ padding: '0 30px' }}>
-              <h2>Купуємо?</h2>
+              <h2>{t('storePage.buy_question')}</h2>
               <div className={styles.card__img_wrap}>
                 <Image
                   className={`${styles.card__img} ${selectedCard === product.id && isBought ? styles.active : ''}`}
@@ -182,14 +183,14 @@ const ProductCardComponent: React.FC<
             </div>
             <div className={styles.modalButtons}>
               <ButtonComponent size={'regular'} onClick={handlePurchase} disabled={isProcessing}>
-                Так
+                {t('storePage.yes')}
               </ButtonComponent>
               <ButtonComponent
                 size={'regular'}
                 variant={'outlined'}
                 onClick={() => setIsModalOpen(false)}
               >
-                Ні
+                {t('storePage.no')}
               </ButtonComponent>
             </div>
           </div>

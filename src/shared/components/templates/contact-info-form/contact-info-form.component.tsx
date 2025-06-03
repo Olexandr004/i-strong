@@ -10,6 +10,7 @@ import { ButtonComponent, InputComponent } from '../../ui'
 import { IconButtonComponent } from '../../ui/icon-button'
 
 import styles from './contact-info-form.module.scss'
+import { useTranslation } from 'react-i18next'
 //interface
 interface IContactInfo {
   balance: boolean
@@ -38,6 +39,7 @@ export const ContactInfoComponent: FC<IContactInfo> = ({
   const handleClick = () => {
     setUserForm(true)
   }
+  const { t } = useTranslation()
 
   const handleSendForm = (data: any) => {
     const updatedData = {
@@ -59,7 +61,9 @@ export const ContactInfoComponent: FC<IContactInfo> = ({
       {!userForm ? (
         <>
           <div className={styles.settings_card__header}>
-            <h2 className={`text-3`}>{balance ? 'Контактні данні ' : 'Контакта інформація'}</h2>
+            <h2 className={`text-3`}>
+              {balance ? t('contact_info.title_with_balance') : t('contact_info.title')}
+            </h2>
 
             <IconButtonComponent name={'Edit'} onClick={handleClick}>
               <IconEdit />
@@ -67,7 +71,7 @@ export const ContactInfoComponent: FC<IContactInfo> = ({
           </div>
           <div className={styles.settings_card__content}>
             <div className={styles.settings_card__field}>
-              <span>Ім’я</span>
+              <span>{t('contact_info.name')}</span>
 
               <span className={styles.settings_card__field_value}>
                 {userData ? userData.username : user?.name}
@@ -75,7 +79,7 @@ export const ContactInfoComponent: FC<IContactInfo> = ({
             </div>
 
             <div className={styles.settings_card__field}>
-              <span>Телефон</span>
+              <span>{t('contact_info.phone')}</span>
 
               <span className={styles.settings_card__field_value}>
                 +{userData ? userData.phone_number : user?.phone_number}
@@ -83,7 +87,7 @@ export const ContactInfoComponent: FC<IContactInfo> = ({
             </div>
             {balance && (
               <div className={styles.settings_card__user_info}>
-                <p className={`text-5-grey `}>Баланс:</p>
+                <p className={`text-5-grey `}>{t('contact_info.balance')}:</p>
                 <div className={`text-5-grey ${styles.settings_card__user_info_balance}`}>
                   <div className={styles.settings_card__user_info_svg}>
                     <IconCoin />
@@ -97,7 +101,7 @@ export const ContactInfoComponent: FC<IContactInfo> = ({
       ) : (
         <>
           <div className={styles.settings_card__header}>
-            <h2>Контактні данні</h2>
+            <h2>{t('contact_info.title_with_balance')}</h2>
           </div>
           <form autoComplete={'off'} onSubmit={handleSubmit(handleSendForm)}>
             <div className={styles.settings_card_iput_wrap}>
@@ -113,9 +117,9 @@ export const ContactInfoComponent: FC<IContactInfo> = ({
                     onChange={onChange}
                     onBlur={onBlur}
                     inputMode={'text'}
-                    label={'Ім’я:'}
+                    label={t('contact_info.name_label')}
                     error={!!error}
-                    placeholder={'Ім’я'}
+                    placeholder={t('contact_info.name_placeholder')}
                     errorText={error?.message}
                   />
                 )}
@@ -132,13 +136,13 @@ export const ContactInfoComponent: FC<IContactInfo> = ({
                   return (
                     <InputComponent
                       type='tel'
-                      label='Телефон'
+                      label={t('contact_info.phone')}
                       value={value}
                       onChange={onChange}
                       onBlur={onBlur}
                       error={!!error}
                       errorText={error?.message}
-                      placeholder='Ваш телефон'
+                      placeholder={t('contact_info.phone_placeholder')}
                       withMask
                       inputMode='tel'
                       inputId='phone_number'
@@ -153,7 +157,7 @@ export const ContactInfoComponent: FC<IContactInfo> = ({
 
               {balance && (
                 <div className={styles.settings_card__user_info}>
-                  <p className={`text-5-grey `}>Баланс:</p>
+                  <p className={`text-5-grey `}>{t('contact_info.balance')}:</p>
                   <div className={`text-5-grey ${styles.settings_card__user_info_balance}`}>
                     <div className={styles.settings_card__user_info_svg}>
                       <IconCoin />
@@ -165,7 +169,7 @@ export const ContactInfoComponent: FC<IContactInfo> = ({
             </div>
             <div className={styles.settings_card__bottom}>
               <ButtonComponent type='submit' size={'small'}>
-                Зберегти
+                {t('contact_info.save')}
               </ButtonComponent>
             </div>
           </form>

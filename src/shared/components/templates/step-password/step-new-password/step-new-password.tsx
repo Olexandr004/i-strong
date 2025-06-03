@@ -7,6 +7,7 @@ import { IconInvisible, IconVisible } from '@/shared/icons'
 import { passwordPattern, pinPattern, required } from '@/shared/validation'
 
 import { AuthFormComponent } from '../../auth-form'
+import { useTranslation } from 'react-i18next'
 
 interface IStepNewPassword {
   namePass: `new-pin-code` | `new-password`
@@ -28,6 +29,7 @@ const StepNewPassword: FC<IStepNewPassword> = ({ phoneNumber, mutate, namePass }
 
   const [isNewPasswordVisible, setIsNewPasswordVisible] = useState(false)
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false)
+  const { t } = useTranslation()
 
   const toggleNewPasswordVisibility = useCallback(() => {
     setIsNewPasswordVisible((prev) => !prev)
@@ -54,7 +56,11 @@ const StepNewPassword: FC<IStepNewPassword> = ({ phoneNumber, mutate, namePass }
 
   const currentPassword = watch('new_password')
   return (
-    <AuthFormComponent onSubmit={handleSubmit(onSubmit)} textButton='Далі' isFormValid={isValid}>
+    <AuthFormComponent
+      onSubmit={handleSubmit(onSubmit)}
+      textButton={t('step_new_password.button')}
+      isFormValid={isValid}
+    >
       <Controller
         name='new_password'
         control={control}
@@ -70,10 +76,10 @@ const StepNewPassword: FC<IStepNewPassword> = ({ phoneNumber, mutate, namePass }
             value={value || ``}
             onChange={onChange}
             onBlur={onBlur}
-            label='Новий пароль'
+            label={t('step_new_password.new_password_label')}
             onKeyPress={handleKeyPress}
             error={!!error}
-            placeholder='Пароль'
+            placeholder={t('step_new_password.new_password_placeholder')}
             errorText={error?.message}
             sideAction={toggleNewPasswordVisibility}
             icon={isNewPasswordVisible ? <IconInvisible /> : <IconVisible />}
@@ -87,7 +93,8 @@ const StepNewPassword: FC<IStepNewPassword> = ({ phoneNumber, mutate, namePass }
         control={control}
         rules={{
           required: required,
-          validate: (value) => value === currentPassword || 'Пароль не збігається',
+          validate: (value) =>
+            value === currentPassword || t('step_new_password.password_mismatch'),
         }}
         render={({ field: { value, onChange, onBlur }, fieldState: { error } }) => (
           <InputComponent
@@ -97,10 +104,10 @@ const StepNewPassword: FC<IStepNewPassword> = ({ phoneNumber, mutate, namePass }
             value={value || ``}
             onChange={onChange}
             onBlur={onBlur}
-            label='Повтори пароль'
+            label={t('step_new_password.confirm_password_label')}
             onKeyPress={handleKeyPress}
             error={!!error}
-            placeholder='Пароль'
+            placeholder={t('step_new_password.confirm_password_placeholder')}
             errorText={error?.message}
             sideAction={toggleConfirmPasswordVisibility}
             icon={isConfirmPasswordVisible ? <IconInvisible /> : <IconVisible />}

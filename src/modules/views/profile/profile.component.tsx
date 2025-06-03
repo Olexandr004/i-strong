@@ -14,18 +14,21 @@ import { ImageAvatar } from '@/shared/images'
 import { useCommonStore, useUserStore } from '@/shared/stores'
 
 import styles from './profile.module.scss'
-
+import { useTranslation } from 'react-i18next'
+import i18n from 'i18next'
 //interface
 interface IProfile {}
 
+const tr = i18n.t
+
 const PROFILE_LINKS = (activeChallengeTypeButton: ChallengeType) => [
   {
-    title: 'Челенджі',
+    title: tr('profile.challenges'),
     icon: <IconChallenge />,
     link: `/challenges?path=${activeChallengeTypeButton}`,
   },
-  { title: 'Капі Fashion', icon: <IconShop />, link: '/store' },
-  { title: 'Налаштування', icon: <IconSetting />, link: '/settings' },
+  { title: tr('profile.fashion'), icon: <IconShop />, link: '/store' },
+  { title: tr('profile.settings'), icon: <IconSetting />, link: '/settings' },
 ]
 
 // Функция для получения аватарки с сервера
@@ -71,6 +74,7 @@ export const ProfileComponent: FC<Readonly<IProfile>> = () => {
       isAvatarModalActive: state.isModalActive,
       handleChangeCommonStore: state.handleChangeCommonStore,
     }))
+  const { t } = useTranslation()
   const { user } = useUserStore()
   const handleSignOut = () => {
     handleChangeUserStore({ user: null })
@@ -112,7 +116,7 @@ export const ProfileComponent: FC<Readonly<IProfile>> = () => {
         <button className={styles.profile__back_btn} onClick={handleGoBack}>
           <IconArrow />
         </button>
-        <h1 className={`title`}>Мій кабінет</h1>
+        <h1 className={`title`}>{t('profile.myCabinet')}</h1>
 
         <div className={styles.profile__user}>
           <div className={styles.profile__photo} onClick={handleAvatarClick}>
@@ -128,7 +132,10 @@ export const ProfileComponent: FC<Readonly<IProfile>> = () => {
           <div className={styles.profile__info}>
             <div>
               <h2 className={styles.profile__name}>{user?.name}</h2>
-              <span className={styles.profile__phone}>Тел. +{user?.phone_number}</span>
+              <span className={styles.profile__phone}>
+                {t('profile.phone')}
+                {user?.phone_number}
+              </span>
             </div>
             <CoinsDisplayComponent coin={user?.coins} />
           </div>
@@ -142,11 +149,11 @@ export const ProfileComponent: FC<Readonly<IProfile>> = () => {
           ))}
         </ul>
         <Link className={`text-4-grey ${styles.profile_privacy}`} href={`/privacy-policy`}>
-          Політика конфіденційності
+          {t('profile.privacy')}
         </Link>
       </div>
 
-      <ButtonComponent onClick={handleSignOut}>Вийти</ButtonComponent>
+      <ButtonComponent onClick={handleSignOut}>{t('profile.logout')}</ButtonComponent>
       {isAvatarModalActive && <AvatarComponent />}
     </section>
   )
