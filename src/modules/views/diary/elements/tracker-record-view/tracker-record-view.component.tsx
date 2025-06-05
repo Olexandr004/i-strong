@@ -20,6 +20,7 @@ import { IconArrow } from '@/shared/icons'
 import { useUserStore } from '@/shared/stores'
 
 import styles from './tracker-record-view.module.scss'
+import { useTranslation } from 'react-i18next'
 
 // interface
 interface ITrackerRecord {}
@@ -30,6 +31,7 @@ export const TrackerRecordViewComponent: FC<Readonly<ITrackerRecord>> = () => {
   const { control, watch } = useForm()
   const searchParams = useSearchParams()
   const router = useRouter()
+  const { t } = useTranslation()
 
   const handleBackClick = () => {
     router.back()
@@ -45,7 +47,7 @@ export const TrackerRecordViewComponent: FC<Readonly<ITrackerRecord>> = () => {
     content: '',
     extensions: [
       Placeholder.configure({
-        placeholder: 'Тут ще немає тексту',
+        placeholder: t('diaryPage.placeholder'),
       }),
       Color.configure({ types: [TextStyle.name, ListItem.name] }),
       TextStyle.configure(),
@@ -111,7 +113,7 @@ export const TrackerRecordViewComponent: FC<Readonly<ITrackerRecord>> = () => {
 
       {status !== 'pending' && singleTracker ? (
         <div className={styles.tracker_record__editor_box}>
-          <h4>Мій стан:</h4>
+          <h4>{t('diaryPage.my_condition')}</h4>
           <Controller
             control={control}
             name={'emotions'}
@@ -132,7 +134,7 @@ export const TrackerRecordViewComponent: FC<Readonly<ITrackerRecord>> = () => {
           <EditorContent editor={editor} />
         </div>
       ) : (
-        <div>Завантаження</div>
+        <div></div>
       )}
     </section>
   )

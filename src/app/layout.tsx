@@ -21,6 +21,7 @@ import {
   notifications,
   getNotificationState,
 } from '@/utils/native-app/notifications'
+import { useTranslation } from 'react-i18next'
 
 // interface
 interface IRootLayout {
@@ -37,6 +38,7 @@ const RootLayout: FC<Readonly<IRootLayout>> = ({ home, entry }) => {
   const successfulText = useCommonStore((state) => state.successfulText)
   const { queryClient } = useTanStackClient()
   const [isOnline, setIsOnline] = useState(true)
+  const { t } = useTranslation()
 
   useEffect(() => {
     const handleClick = () => {
@@ -86,12 +88,12 @@ const RootLayout: FC<Readonly<IRootLayout>> = ({ home, entry }) => {
   useEffect(() => {
     const handleOnline = () => {
       setIsOnline(true)
-      handleChangeCommonStore({ successfulText: `З'єднання відновлено!` })
+      handleChangeCommonStore({ successfulText: t('connectionRestored') })
     }
 
     const handleOffline = () => {
       setIsOnline(false)
-      handleChangeCommonStore({ errorText: 'Немає підключення до Інтернету.' })
+      handleChangeCommonStore({ errorText: t('noInternet') })
 
       setTimeout(() => {
         handleChangeCommonStore({ errorText: null })

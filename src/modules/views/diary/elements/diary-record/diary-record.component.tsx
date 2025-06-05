@@ -23,6 +23,7 @@ import { useUserStore } from '@/shared/stores'
 import { namePattern, required } from '@/shared/validation'
 
 import styles from './diary-record.module.scss'
+import { useTranslation } from 'react-i18next'
 
 interface IDiaryRecord {}
 
@@ -33,6 +34,7 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
   const [isDelayed, setIsDelayed] = useState(false)
 
   const router = useRouter()
+  const { t } = useTranslation()
 
   const handleBackClick = () => {
     router.back()
@@ -56,7 +58,7 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
     content: '',
     extensions: [
       Placeholder.configure({
-        placeholder: 'Тут ще немає тексту',
+        placeholder: t('diaryPage.placeholder'),
       }),
       Color.configure({ types: [TextStyle.name, ListItem.name] }),
       TextStyle.configure(),
@@ -153,7 +155,7 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
             </IconButtonComponent>
 
             <ButtonComponent size={'small'} onClick={handleSave}>
-              Зберегти
+              {t('diaryPage.save')}
             </ButtonComponent>
           </div>
 
@@ -175,7 +177,7 @@ export const DiaryRecordComponent: FC<Readonly<IDiaryRecord>> = () => {
                 value={value}
                 onChange={onChange}
                 className={styles.diary_record__title_input}
-                placeholder={'Що сталося сьогодні?'}
+                placeholder={t('diaryPage.what_happened_today')}
               />
             )}
             rules={{

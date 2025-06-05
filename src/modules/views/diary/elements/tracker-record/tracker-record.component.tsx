@@ -22,6 +22,7 @@ import { useUserStore } from '@/shared/stores'
 import { namePattern, required } from '@/shared/validation'
 
 import styles from './tracker-record.module.scss'
+import { useTranslation } from 'react-i18next'
 
 // interface
 interface ITrackerRecord {}
@@ -33,6 +34,7 @@ export const TrackerRecordComponent: FC<Readonly<ITrackerRecord>> = () => {
   const searchParams = useSearchParams()
   const [isDelayed, setIsDelayed] = useState(false)
   const router = useRouter()
+  const { t } = useTranslation()
 
   const handleBackClick = () => {
     router.back()
@@ -48,7 +50,7 @@ export const TrackerRecordComponent: FC<Readonly<ITrackerRecord>> = () => {
     content: '',
     extensions: [
       Placeholder.configure({
-        placeholder: 'Тут ще немає тексту',
+        placeholder: t('diaryPage.placeholder'),
       }),
       Color.configure({ types: [TextStyle.name, ListItem.name] }),
       TextStyle.configure(),
@@ -139,7 +141,7 @@ export const TrackerRecordComponent: FC<Readonly<ITrackerRecord>> = () => {
             </IconButtonComponent>
 
             <ButtonComponent size={'small'} onClick={handleSave}>
-              Зберегти
+              {t('diaryPage.save')}
             </ButtonComponent>
           </div>
 
@@ -156,7 +158,7 @@ export const TrackerRecordComponent: FC<Readonly<ITrackerRecord>> = () => {
 
       {isDelayed && status !== 'pending' && singleTracker ? (
         <div className={styles.tracker_record__editor_box}>
-          <h4>Мій стан:</h4>
+          <h4>{t('diaryPage.my_condition')}</h4>
           <Controller
             control={control}
             name={'emotions'}

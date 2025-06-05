@@ -86,10 +86,10 @@
 </head>
 <body>
 <div class="offline">
-	<h1>Упс!</h1>
-	<p>Здається, щось пішло не так!</p>
-	<img src="/image/error-text.png" alt="error-text" class="error_text">
-	<img src="/image/error-capibara.png" alt="error-capibara" class="error_capibara">
+	<h1 id="title">Упс!</h1>
+	<p id="subtitle">Здається, щось пішло не так!</p>
+	<img src="/image/error-text.png" alt="error-text" class="error_text" />
+	<img src="/image/error-capibara.png" alt="error-capibara" class="error_capibara" />
 </div>
 
 <button class="actionButton" id="actionButton">
@@ -98,6 +98,30 @@
 
 <script>
 	// Проверка состояния сети
+	const userLang = navigator.language || navigator.userLanguage;
+	const translations = {
+		uk: {
+			title: 'Упс!',
+			subtitle: 'Здається, щось пішло не так!',
+			button: "Перевірити з'єднання",
+			pageTitle: 'Упс! Немає підключення',
+		},
+		en: {
+			title: 'Oops!',
+			subtitle: 'Something went wrong!',
+			button: 'Check connection',
+			pageTitle: 'Oops! No Connection',
+		},
+	};
+	// Выбор перевода
+	const isUkrainian = userLang.startsWith('uk');
+	const t = isUkrainian ? translations.uk : translations.en;
+	
+	// Применение перевода
+	document.getElementById('title').innerText = t.title;
+	document.getElementById('subtitle').innerText = t.subtitle;
+	document.getElementById('actionButton').innerText = t.button;
+	document.getElementById('pageTitle').innerText = t.pageTitle;
 	const actionButton = document.getElementById('actionButton');
 	
 	actionButton.addEventListener('click', () => {

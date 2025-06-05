@@ -23,6 +23,7 @@ import { useUserStore } from '@/shared/stores'
 import { namePattern, required } from '@/shared/validation'
 
 import styles from './diary-record-view.module.scss'
+import { useTranslation } from 'react-i18next'
 
 //interface
 interface IDiaryRecord {}
@@ -33,6 +34,7 @@ export const DiaryRecordViewComponent: FC<Readonly<IDiaryRecord>> = () => {
   const searchParams = useSearchParams()
 
   const router = useRouter()
+  const { t } = useTranslation()
 
   const handleBackClick = () => {
     router.back()
@@ -57,7 +59,7 @@ export const DiaryRecordViewComponent: FC<Readonly<IDiaryRecord>> = () => {
     content: '',
     extensions: [
       Placeholder.configure({
-        placeholder: 'Як ти?',
+        placeholder: t('diaryPage.how_are_you'),
       }),
       Color.configure({ types: [TextStyle.name, ListItem.name] }),
       TextStyle.configure(),
@@ -148,8 +150,8 @@ export const DiaryRecordViewComponent: FC<Readonly<IDiaryRecord>> = () => {
                 value={value}
                 onChange={onChange}
                 className={styles.diary_record__title_input}
-                placeholder={'Що сталося сьогодні?'}
-                disabled // Отключаем поле для редактирования
+                placeholder={t('diaryPage.what_happened_today')}
+                disabled
               />
             )}
             rules={{
@@ -161,7 +163,7 @@ export const DiaryRecordViewComponent: FC<Readonly<IDiaryRecord>> = () => {
           <EditorContent editor={editor} />
         </div>
       ) : (
-        <div>Завантаження</div>
+        <div></div>
       )}
     </section>
   )

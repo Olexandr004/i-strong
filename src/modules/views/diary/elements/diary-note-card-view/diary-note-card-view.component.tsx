@@ -8,6 +8,7 @@ import { IconTrashBin, IconFavorite } from '@/shared/icons'
 import { useUserStore } from '@/shared/stores'
 import { ModalComponent } from '@/shared/components/ui'
 import styles from './diary-note-card-view.module.scss'
+import { useTranslation } from 'react-i18next'
 
 interface IDiaryNoteCard {
   item: {
@@ -30,6 +31,7 @@ export const DiaryNoteCardViewComponent: FC<Readonly<IDiaryNoteCard>> = ({
   showActions = true,
 }) => {
   const router = useRouter()
+  const { t } = useTranslation()
   const token = useUserStore((state) => state.user?.access_token)
   const queryClient = useQueryClient()
 
@@ -100,7 +102,7 @@ export const DiaryNoteCardViewComponent: FC<Readonly<IDiaryNoteCard>> = ({
   const openModal = () => setIsModalOpen(true)
   const closeModal = () => setIsModalOpen(false)
 
-  const modifiedNote = item.note.slice(1, -1) || 'Тут ще немає тексту'
+  const modifiedNote = item.note.slice(1, -1) || t('diaryPage.placeholder')
   const createdAt = moment(item.created_at)
   const formattedDate = createdAt.format('DD.MM.YYYY')
 
@@ -150,7 +152,9 @@ export const DiaryNoteCardViewComponent: FC<Readonly<IDiaryNoteCard>> = ({
           ) : (
             <>
               <p className={styles.diary_card__title}>{item?.title}</p>
-              <p className={styles.diary_card__text}>{modifiedNote || 'Тут ще немає тексту'}</p>
+              <p className={styles.diary_card__text}>
+                {modifiedNote || t('diaryPage.placeholder')}
+              </p>
             </>
           )}
         </div>
@@ -159,7 +163,7 @@ export const DiaryNoteCardViewComponent: FC<Readonly<IDiaryNoteCard>> = ({
       {/* Модальное окно */}
       <ModalComponent
         isOpen={isModalOpen}
-        title='Ти впевнений(-а) що хочеш видалити цей запис?'
+        title={t('diaryPage.delete_note_confirm')}
         onConfirm={handleDeleteRecord}
         onCancel={closeModal}
       />

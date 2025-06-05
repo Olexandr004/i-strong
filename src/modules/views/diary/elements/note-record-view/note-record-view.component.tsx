@@ -21,6 +21,7 @@ import { useUserStore } from '@/shared/stores'
 import { namePattern, required } from '@/shared/validation'
 
 import styles from './note-record-view.module.scss'
+import { useTranslation } from 'react-i18next'
 
 //interface
 interface INoteRecord {}
@@ -32,6 +33,7 @@ export const NoteRecordViewComponent: FC<Readonly<INoteRecord>> = () => {
   const searchParams = useSearchParams()
 
   const router = useRouter()
+  const { t } = useTranslation()
 
   const handleBackClick = () => {
     router.back()
@@ -48,7 +50,7 @@ export const NoteRecordViewComponent: FC<Readonly<INoteRecord>> = () => {
     content: '',
     extensions: [
       Placeholder.configure({
-        placeholder: 'Тут ще немає тексту',
+        placeholder: t('diaryPage.placeholder'),
       }),
       Color.configure({ types: [TextStyle.name, ListItem.name] }),
       TextStyle.configure(),
@@ -134,7 +136,7 @@ export const NoteRecordViewComponent: FC<Readonly<INoteRecord>> = () => {
                 value={value}
                 onChange={onChange}
                 className={styles.diary_record__title_input}
-                placeholder={'Заголовок'}
+                placeholder={t('diaryPage.title_placeholder')}
                 disabled // Сделать поле только для чтения
               />
             )}
@@ -147,7 +149,7 @@ export const NoteRecordViewComponent: FC<Readonly<INoteRecord>> = () => {
           <EditorContent editor={editor} />
         </div>
       ) : (
-        <div>Завантаження</div>
+        <div></div>
       )}
     </section>
   )

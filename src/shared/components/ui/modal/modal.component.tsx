@@ -1,6 +1,7 @@
 import { FC } from 'react'
 import styles from './modal.module.scss'
 import { ButtonComponent } from '@/shared/components/ui'
+import { useTranslation } from 'react-i18next'
 
 interface IModalProps {
   isOpen: boolean
@@ -10,6 +11,7 @@ interface IModalProps {
 }
 
 export const ModalComponent: FC<IModalProps> = ({ isOpen, title, onConfirm, onCancel }) => {
+  const { t } = useTranslation()
   if (!isOpen) return null
 
   return (
@@ -19,10 +21,10 @@ export const ModalComponent: FC<IModalProps> = ({ isOpen, title, onConfirm, onCa
         <img src='/image/delete-capi-diary.png' alt='delete' />
         <div className={styles.modal_buttons}>
           <ButtonComponent size={'regular'} variant={'outlined'} onClick={onConfirm}>
-            Так
+            {t('storePage.yes')}
           </ButtonComponent>
           <ButtonComponent size={'regular'} onClick={onCancel}>
-            Ні
+            {t('storePage.no')}
           </ButtonComponent>
         </div>
       </div>

@@ -9,6 +9,7 @@ import { useDeleteAccount } from '@/shared/hooks/useSettingsMutations'
 import { ImageCapybaraDeletion } from '@/shared/images'
 
 import styles from './account-deletion.module.scss'
+import { useTranslation } from 'react-i18next'
 
 //interface
 interface ISettings {}
@@ -17,6 +18,7 @@ interface ISettings {}
 export const AccountDeletionComponent: FC<Readonly<ISettings>> = () => {
   const router = useRouter()
   const { mutate } = useDeleteAccount()
+  const { t } = useTranslation()
 
   const handleUserDelete = () => {
     mutate()
@@ -30,10 +32,7 @@ export const AccountDeletionComponent: FC<Readonly<ISettings>> = () => {
   return (
     <section className={`${styles.account_deletion} container`}>
       <div>
-        <PageHeaderComponent
-          title={'Ти впевнений(-а), що хочеш видалити аккаунт?'}
-          gapSize={`large`}
-        />
+        <PageHeaderComponent title={t('diaryPage.delete_account_confirm')} gapSize={`large`} />
         <p className={`${styles.account_deletion__text} text-4-grey`}>
           (Можна відновити протягом 6 місяців)
         </p>
@@ -46,9 +45,9 @@ export const AccountDeletionComponent: FC<Readonly<ISettings>> = () => {
       />
       <div className={styles.account_deletion__btn_wrap}>
         <ButtonComponent variant={'outlined'} onClick={handleUserDelete}>
-          Так
+          {t('storePage.yes')}
         </ButtonComponent>
-        <ButtonComponent onClick={handleNotUserDelete}>Ні</ButtonComponent>
+        <ButtonComponent onClick={handleNotUserDelete}>{t('storePage.no')}</ButtonComponent>
       </div>
     </section>
   )
