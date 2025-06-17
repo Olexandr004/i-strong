@@ -58,16 +58,26 @@ export const HelpComponent: FC<Readonly<IHelpComponent>> = () => {
       { threshold: 0.1 },
     )
 
-    const slides = document.querySelectorAll(`.${styles.slide}`)
-    slides.forEach((slide) => observer.observe(slide))
+    const raf = requestAnimationFrame(() => {
+      const slides = document.querySelectorAll(`.${styles.slide}`)
+      slides.forEach((slide) => observer.observe(slide))
+    })
 
-    return () => observer.disconnect()
+    return () => {
+      cancelAnimationFrame(raf)
+      observer.disconnect()
+    }
   }, [currentSetIndex])
 
   const handleNextSet = () => {
-    setCurrentSetIndex((prevIndex) => (prevIndex + 1) % imageSets.length) // Следующий массив
-    setCurrentSlide(0) // Сбрасываем индекс слайда
-    setVisibleImages(new Set()) // Сбрасываем видимые изображения
+    // Обнуляем сначала все, чтобы дать времени перерендериться
+    setVisibleImages(new Set())
+    setCurrentSlide(0)
+
+    // Делаем переход через requestAnimationFrame
+    requestAnimationFrame(() => {
+      setCurrentSetIndex((prevIndex) => (prevIndex + 1) % imageSets.length)
+    })
   }
 
   const backMain = () => {
@@ -180,11 +190,18 @@ export const HelpComponent: FC<Readonly<IHelpComponent>> = () => {
         <ButtonComponent onClick={backMain}>{t('help.yes')}</ButtonComponent>
         <ButtonComponent
           onClick={
-            currentSetIndex === imageSets.length - 1 ? () => setCurrentSetIndex(0) : handleNextSet
+            currentSetIndex === imageSets.length - 1
+              ? () => {
+                  setVisibleImages(new Set())
+                  setCurrentSlide(0)
+                  requestAnimationFrame(() => setCurrentSetIndex(0))
+                }
+              : handleNextSet
           }
         >
           {currentSetIndex === imageSets.length - 1 ? t('help.restart') : t('help.no')}
         </ButtonComponent>
+
         <ButtonComponent onClick={handleCall}>{t('help.call')}</ButtonComponent>
       </div>
     </section>
