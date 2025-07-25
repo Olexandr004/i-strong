@@ -1,11 +1,11 @@
 import { useMutation } from '@tanstack/react-query'
 
-import { useRequest } from '@/api/useRequest'
+import { request } from '@/api/useRequest'
 import { useUserStore } from '@/shared/stores'
 
 export const patchUserActivities = async (token: string, activity_type: string) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  return useRequest(`users/activities/${activity_type}/`, {
+  return request(`users/activities/${activity_type}/`, {
     method: 'PATCH',
     headers: {
       Authorization: `Bearer ${token}`,

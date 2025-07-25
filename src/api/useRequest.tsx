@@ -4,7 +4,7 @@ interface IErrorResponse {
   error: string
 }
 
-export const useRequest = async (
+export const request = async (
   url: string = '',
   options: {
     method?: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE'

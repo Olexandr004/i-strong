@@ -1,4 +1,4 @@
-import { useRequest } from '@/api/useRequest'
+import { request } from '@/api/useRequest'
 
 export const getGifts = async (token: string, bought?: boolean) => {
   const queryParams = bought !== undefined ? `?bought=${bought}` : ''
@@ -26,7 +26,7 @@ export const getGifts = async (token: string, bought?: boolean) => {
 
 export const getGiftDetails = async (token: string, giftId: number) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  return useRequest(`shop/gifts/${giftId}/`, {
+  return request(`shop/gifts/${giftId}/`, {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -41,7 +41,7 @@ export const postPlaceOrder = async (
   phoneNumber: string,
 ) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  return useRequest('shop/orders/', {
+  return request('shop/orders/', {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -58,7 +58,7 @@ export const postPlaceOrder = async (
 
 export const postAddToWishlist = async (token: string, giftId: number) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  return useRequest('users/wishlist/', {
+  return request('users/wishlist/', {
     method: 'POST',
     body: {
       gift_id: giftId,
@@ -71,7 +71,7 @@ export const postAddToWishlist = async (token: string, giftId: number) => {
 
 export const deleteFromWishlist = async (token: string, giftId: number) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  return useRequest(`users/wishlist/${giftId}/`, {
+  return request(`users/wishlist/${giftId}/`, {
     method: 'DELETE',
     headers: {
       Authorization: `Bearer ${token}`,

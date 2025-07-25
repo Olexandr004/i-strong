@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 
-import { useRequest } from '@/api/useRequest'
+import { request } from '@/api/useRequest'
 import { ISignIn } from '@/interfaces/entry'
 
 export const useGetNotes = (token: string) => {
@@ -10,7 +10,7 @@ export const useGetNotes = (token: string) => {
 export const getNotes = async (token: string): Promise<{ notes: any[] }> => {
   // @ts-ignore
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  return useRequest(`users/diary/notes/`, {
+  return request(`users/diary/notes/`, {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -32,7 +32,7 @@ export const getAllNotesByChallenge = async (
 ): Promise<{ notes: any[] }> => {
   // @ts-ignore
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  return useRequest(`users/diary/notes/by-challenge/${id}`, {
+  return request(`users/diary/notes/by-challenge/${id}`, {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -59,7 +59,7 @@ export const getSingleNote = async (
 }> => {
   // @ts-ignore
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  return useRequest(`users/diary/notes/${note_id}`, {
+  return request(`users/diary/notes/${note_id}`, {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -69,7 +69,7 @@ export const getSingleNote = async (
 
 export const updateNoteRecord = (form: ISignIn, token: string, note_id: string) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  return useRequest(`users/diary/notes/${note_id}/`, {
+  return request(`users/diary/notes/${note_id}/`, {
     method: 'PUT',
     body: form,
     headers: {

@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
 
-import { useRequest } from '@/api/useRequest'
+import { request } from '@/api/useRequest'
 
 export const putResetUserPassword = async (token: string, new_password: string) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  return useRequest(`users/profile/password/  `, {
+  return request(`users/profile/password/  `, {
     method: 'PUT',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -17,7 +17,7 @@ export const putResetUserPassword = async (token: string, new_password: string) 
 
 export const putResetUserPin = async (token: string, new_password: number) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  return useRequest(`users/profile/dairy-password/  `, {
+  return request(`users/profile/dairy-password/  `, {
     method: 'PUT',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -30,7 +30,7 @@ export const putResetUserPin = async (token: string, new_password: number) => {
 
 export const putUpdateUserInfo = async (token: string, username: string, phone_number: string) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  return useRequest('users/profile/contact-info/', {
+  return request('users/profile/contact-info/', {
     method: 'PUT',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -44,7 +44,7 @@ export const putUpdateUserInfo = async (token: string, username: string, phone_n
 
 export const deleteAccount = async (token: string) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  return useRequest(`users/profile/`, {
+  return request(`users/profile/`, {
     method: 'DELETE',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -63,7 +63,7 @@ export const useGetUserProfile = (token: string) => {
 export const getUserProfile = async (token: string): Promise<any> => {
   // @ts-ignore
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  return useRequest(`users/profile/`, {
+  return request(`users/profile/`, {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${token}`,

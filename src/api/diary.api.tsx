@@ -2,7 +2,7 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 
 import { useState } from 'react'
 
-import { useRequest } from '@/api/useRequest'
+import { request } from '@/api/useRequest'
 import { ISignIn } from '@/interfaces/entry'
 import { IPinCodeData } from '@/interfaces/user'
 import { useUserStore } from '@/shared/stores'
@@ -32,7 +32,7 @@ export const useGetTrackerRecords = () => {
 }
 export const postDiaryRecord = (form: ISignIn, token: string) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  return useRequest(`users/diary/main/`, {
+  return request(`users/diary/main/`, {
     method: 'POST',
     body: form,
     headers: {
@@ -43,7 +43,7 @@ export const postDiaryRecord = (form: ISignIn, token: string) => {
 
 export const updateDiaryRecord = (form: ISignIn, token: string, note_id: string) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  return useRequest(`users/diary/main/${note_id}/`, {
+  return request(`users/diary/main/${note_id}/`, {
     method: 'PUT',
     body: form,
     headers: {
@@ -54,7 +54,7 @@ export const updateDiaryRecord = (form: ISignIn, token: string, note_id: string)
 
 export const postDeleteRecord = (note_id: string, token: string) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  return useRequest(`users/diary/main/${note_id}/`, {
+  return request(`users/diary/main/${note_id}/`, {
     method: 'DELETE',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -71,7 +71,7 @@ export const getDiaryRecords = async (
 ): Promise<{ notes: { year: number; months: any[] }[]; has_note_today: boolean }> => {
   // @ts-ignore
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  return useRequest(`users/diary/main/`, {
+  return request(`users/diary/main/`, {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -98,7 +98,7 @@ export const getSingleRecord = async (
 }> => {
   // @ts-ignore
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  return useRequest(`users/diary/main/${record_id}`, {
+  return request(`users/diary/main/${record_id}`, {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -121,7 +121,7 @@ export const getRecordsByDate = async (
 ): Promise<{ notes: { id: number; title: string; note: string; created_at: string }[] }> => {
   // @ts-ignore
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  return useRequest(`users/diary/main/by-date/${year}/${month}`, {
+  return request(`users/diary/main/by-date/${year}/${month}`, {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -131,7 +131,7 @@ export const getRecordsByDate = async (
 
 export const postCheckPinCode = async (token: string, pinCodeData: IPinCodeData) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  return useRequest(`users/diary/check-password/`, {
+  return request(`users/diary/check-password/`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,

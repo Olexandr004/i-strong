@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
 
-import { useRequest } from './useRequest'
+import { request } from './useRequest'
 
 export const getDailyQuote = async (token: string) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  return useRequest(`main/daily-quote`, {
+  return request(`main/daily-quote`, {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${token}`,
