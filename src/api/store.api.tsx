@@ -1,4 +1,3 @@
-'use client'
 import { request } from '@/api/useRequest'
 
 export const getGifts = async (token: string, bought?: boolean) => {

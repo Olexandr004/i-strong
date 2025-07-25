@@ -1,4 +1,3 @@
-'use client'
 import { request } from '@/api/useRequest'
 import { ChallengeType } from '@/interfaces/challenge'
 import i18n from 'i18next'

@@ -1,4 +1,3 @@
-'use client'
 import { request } from '@/api/useRequest'
 import { INewPassword, IPasswordReset, ISignIn, ISignUp, IVerifyCode } from '@/interfaces/entry'
 
