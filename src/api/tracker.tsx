@@ -1,5 +1,5 @@
 // hooks/useTracker.ts
-
+'use client'
 import { useQuery, useMutation, UseQueryOptions } from '@tanstack/react-query'
 
 interface Note {
