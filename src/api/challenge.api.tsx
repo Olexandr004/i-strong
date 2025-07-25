@@ -1,53 +1,59 @@
 import { useRequest } from '@/api/useRequest'
 import { ChallengeType } from '@/interfaces/challenge'
+import i18n from 'i18next'
 
 export const getChallengeDetails = async (token: string | null) => {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const langHeader = i18n.language === 'uk' ? 'ua' : 'en'
   return useRequest(`users/challenges`, {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${token}`,
+      'Accept-Language': langHeader,
     },
   })
 }
 
 export const getChallengesByType = async (token: string | null, type: ChallengeType) => {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const langHeader = i18n.language === 'uk' ? 'ua' : 'en'
   return useRequest(`users/challenges/by-type/${type}/`, {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${token}`,
+      'Accept-Language': langHeader,
     },
   })
 }
 
 export const getChallengeById = async (token: string | null, challengeId: number) => {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const langHeader = i18n.language === 'uk' ? 'ua' : 'en'
   return useRequest(`users/challenges/${challengeId}/`, {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${token}`,
+      'Accept-Language': langHeader,
     },
   })
 }
 
 export const postChallengeById = async (token: string | null, challengeData: any) => {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const langHeader = i18n.language === 'uk' ? 'ua' : 'en'
   return useRequest(`users/challenges/`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,
+      'Accept-Language': langHeader,
     },
     body: challengeData,
   })
 }
 
 export const getCurrentChallengeDetails = async (token: string | null) => {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const langHeader = i18n.language === 'uk' ? 'ua' : 'en'
   return useRequest(`users/challenges/current`, {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${token}`,
+      'Accept-Language': langHeader,
     },
   })
 }
