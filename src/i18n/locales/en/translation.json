@@ -243,5 +243,24 @@
     "text16": "This application may contain third-party advertisements and links to third-party websites. iStrong makes no representations regarding the accuracy or suitability of any information contained in these advertisements or on these websites and assumes no responsibility for the behavior or content of these advertisements and websites, as well as offers made by third parties.\n\nThird-party advertisements and links to other sites advertising goods or services do not constitute endorsement or recommendation by iStrong of those sites, goods, or services. iStrong is not responsible for the content of any advertisements, any promises made, or the quality/reliability of products or services offered in all advertisements."
   },
   "noInternet": "No internet connection.",
-  "connectionRestored": "Connection restored!"
+  "connectionRestored": "Connection restored!",
+  "shame": "Shame",
+  "disgust": "Disgust",
+  "tension": "Tension",
+  "perplexity": "Perplexity",
+  "sadness": "Sadness",
+  "fatigue": "Fatigue",
+  "fear": "Fear",
+  "malice": "Malice",
+  "solitude": "Solitude",
+  "fault": "Fault",
+  "concern": "Concern",
+  "hope": "Hope",
+  "pleasure": "Pleasure",
+  "appreciation": "Appreciation",
+  "rest": "Rest",
+  "surprise": "Surprise",
+  "joy": "Joy",
+  "happiness": "Happiness"
+
 }

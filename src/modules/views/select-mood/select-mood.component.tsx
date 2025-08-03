@@ -8,28 +8,31 @@ import { useUserStore } from '@/shared/stores'
 import styles from './select-mood.module.scss'
 import { IconArrow } from '@/shared/icons'
 import { useTranslation } from 'react-i18next'
+import i18n from 'i18next'
 
 interface ISelectMoodComponent {}
 
+const t = i18n.t
+
 const ADDITIONAL_MOODS = [
-  'Сором',
-  'Відраза',
-  'Напруження',
-  'Розгубленість',
-  'Сум',
-  'Втома',
-  'Страх',
-  'Злість',
-  'Самотність',
-  'Провина',
-  'Хвилювання',
-  'Надія',
-  'Задоволення',
-  'Вдячність',
-  'Спокій',
-  'Здивування',
-  'Радість',
-  'Щастя',
+  t('shame'),
+  t('digust'),
+  t('tension'),
+  t('perplexity'),
+  t('sumy'),
+  t('fatigue'),
+  t('fear'),
+  t('malice'),
+  t('solitude'),
+  t('fault'),
+  t('concern'),
+  t('hope'),
+  t('pleasure'),
+  t('appreciation'),
+  t('rest'),
+  t('surprise'),
+  t('joy'),
+  t('happiness'),
 ]
 
 // компонент
