@@ -261,6 +261,11 @@
   "rest": "Rest",
   "surprise": "Surprise",
   "joy": "Joy",
-  "happiness": "Happiness"
-
+  "happiness": "Happiness",
+  "emotions": {
+    "bad": "Not great",
+    "fine": "Great",
+    "normal": "Okay",
+    "awful": "Angry"
+  }
 }

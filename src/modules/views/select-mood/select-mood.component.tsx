@@ -19,7 +19,7 @@ const ADDITIONAL_MOODS = [
   t('digust'),
   t('tension'),
   t('perplexity'),
-  t('sumy'),
+  t('sadness'),
   t('fatigue'),
   t('fear'),
   t('malice'),
