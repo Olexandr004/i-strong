@@ -46,7 +46,8 @@
     "statistics": "Statistics",
     "lastUpdate": "Last update:",
     "loading": "Loading...",
-    "error": "Failed to load data."
+    "error": "Failed to load data.",
+    "today": "Today"
   },
   "month": {
     "january": "January",
@@ -267,5 +268,27 @@
     "fine": "Great",
     "normal": "Okay",
     "awful": "Angry"
+  },
+  "emotions_chart": {
+    "no_data_title": "It seems you haven't tracked your mood during this period.",
+    "no_data_subtitle": "To see statistics, you need to track your mood at least once a day."
+  },
+  "statistics": {
+    "title": "Statistics",
+    "advice_title": "Tip",
+    "advice_text": "Write in your journal what caused you to feel certain emotions so you can analyze the causes and effects and feel better."
+  },
+  "periods": {
+    "day": "Today",
+    "week": "Week",
+    "month": "Month",
+    "custom_one": "1 day",
+    "custom_many": "Days: {{count}}"
+  },
+  "learningDetails": {
+    "what_is_it": "What is {{comicName}}?",
+    "what_it_gives": "What does {{comicName}} give?",
+    "tips": "Tips from Capybara",
+    "remember": "Reminders"
   }
 }

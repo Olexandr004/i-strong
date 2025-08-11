@@ -5,6 +5,7 @@ import { FC, useState } from 'react'
 import { IconUpArrow } from '@/shared/icons'
 
 import styles from './select.module.scss'
+import { useTranslation } from 'react-i18next'
 
 // animation
 const variants = {
@@ -37,12 +38,13 @@ export const SelectComponent: FC<Readonly<ISelect>> = ({
   setSelectedValue,
   duration,
 }) => {
+  const { t } = useTranslation()
   const [isExpanded, setIsExpanded] = useState(false)
 
   const periods = [
-    { value: 'day', title: 'Сьогодні' },
-    { value: 'week', title: 'Тиждень' },
-    { value: 'month', title: 'Місяць' },
+    { value: 'day', title: t('periods.day') },
+    { value: 'week', title: t('periods.week') },
+    { value: 'month', title: t('periods.month') },
   ]
 
   const periodsWithCustom =
@@ -54,8 +56,8 @@ export const SelectComponent: FC<Readonly<ISelect>> = ({
             value: 'custom',
             title:
               duration <= 0.1
-                ? '1 день' // По умолчанию "1 день"
-                : `Дні: ${Math.round(duration) + 1}`, // Для остальных значений
+                ? t('periods.custom_one') // По умолчанию "1 день"
+                : t('periods.custom_many', { count: Math.round(duration) + 1 }), // Для остальных значений
           },
         ]
 

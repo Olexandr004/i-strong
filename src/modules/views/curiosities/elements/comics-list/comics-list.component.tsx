@@ -4,6 +4,7 @@ import { useUserStore } from '@/shared/stores'
 import { ComicsDetailsComponent } from '@/modules/views/curiosities/elements'
 import { IconNextArrow, IconArrow } from '@/shared/icons'
 import { useTranslation } from 'react-i18next'
+import i18n from 'i18next'
 
 interface Comic {
   id: string | number
@@ -33,12 +34,17 @@ const ComicsListComponent: React.FC<ComicsListComponentProps> = ({ onBack }) => 
       try {
         setLoading(true)
         setError(null)
-        const response = await fetch('https://istrongapp.com/api/curiosities/comixes/', {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${token}`,
+        const currentLang = i18n.language
+        const langPrefix = currentLang === 'uk' ? 'uk' : 'en'
+        const response = await fetch(
+          `https://istrongapp.com/${langPrefix}/api/curiosities/comixes/`,
+          {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           },
-        })
+        )
 
         if (!response.ok) {
           throw new Error(`Ошибка: ${response.status}`)

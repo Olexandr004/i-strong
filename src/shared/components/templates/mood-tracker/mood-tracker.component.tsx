@@ -150,7 +150,7 @@ const MoodTrackerComponent: FC = () => {
             <span>{t('moodTracker.lastUpdate')}</span>
             <span className={styles.mood_tracker__time}>
               {moment(moodCreatedAt).isSame(new Date(), 'day')
-                ? `Сьогодні ${moment.utc(moodCreatedAt).local().format('HH:mm')}`
+                ? `${t('moodTracker.today')} ${moment.utc(moodCreatedAt).local().format('HH:mm')}`
                 : moment.utc(moodCreatedAt).local().format('dddd HH:mm')}
             </span>
           </div>

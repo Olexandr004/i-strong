@@ -13,6 +13,7 @@ import { useQuerySearchParams } from '@/shared/hooks/useQuerySearchParams'
 import { IconCalendar, IconGuides } from '@/shared/icons'
 import { useCommonStore, useUserStore } from '@/shared/stores'
 import styles from './statistics.module.scss'
+import { useTranslation } from 'react-i18next'
 
 // interface
 interface IStatistics {}
@@ -26,6 +27,7 @@ interface IEmotions {
 
 // component
 export const StatisticsComponent: FC<Readonly<IStatistics>> = () => {
+  const { t } = useTranslation()
   const searchParams = useSearchParams()
   const { setQuery } = useQuerySearchParams()
 
@@ -176,7 +178,7 @@ export const StatisticsComponent: FC<Readonly<IStatistics>> = () => {
 
   return (
     <section className={`${styles.statistics} container`}>
-      <PageHeaderComponent title={'Статистика'} />
+      <PageHeaderComponent title={t('statistics.title')} />
 
       <div className={styles.statistics__settings}>
         <div className={styles.statistics__select_wrapper}>
@@ -213,12 +215,9 @@ export const StatisticsComponent: FC<Readonly<IStatistics>> = () => {
       )}
 
       <div className={styles.statistics__advice}>
-        <h2 className={styles.statistics__advice_title}>Порада</h2>
+        <h2 className={styles.statistics__advice_title}>{t('statistics.advice_title')}</h2>
 
-        <p>
-          Записуй у щоденнику що викликало у тебе ті чи інші почуття, щоб аналізувати причини та
-          наслідки і почувати себе краще.
-        </p>
+        <p>{t('statistics.advice_text')}</p>
       </div>
 
       {isModalActive && activeModal === 'mood-stats' && (

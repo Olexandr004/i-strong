@@ -7,6 +7,7 @@ import { IEmotions } from '@/interfaces/common'
 import { IconMoodBlue, IconMoodGreen, IconMoodRed, IconMoodYellow } from '@/shared/icons'
 
 import styles from './emotions-chart.module.scss'
+import { useTranslation } from 'react-i18next'
 
 const MOODS = [
   { icon: <IconMoodRed />, color: '#e79999', key: 'Зле' },
@@ -23,6 +24,7 @@ interface IEmotionsChart {
 
 //component
 export const EmotionsChartComponent: FC<Readonly<IEmotionsChart>> = ({ emotions }) => {
+  const { t } = useTranslation()
   const getPercent = (key: string) => {
     switch (key) {
       case 'Не дуже':
@@ -68,10 +70,8 @@ export const EmotionsChartComponent: FC<Readonly<IEmotionsChart>> = ({ emotions 
         </section>
       ) : (
         <div className={styles.emotions_chart__no_data}>
-          <p>Здається, ти не відзначав свій настрій протягом цього періоду.</p>
-          <span>
-            Аби отримати статистику тобі потрібно відзначити свій настрій принаймні раз на день.
-          </span>
+          <p>{t('emotions_chart.no_data_title')}</p>
+          <span>{t('emotions_chart.no_data_subtitle')}</span>
         </div>
       )}
     </>

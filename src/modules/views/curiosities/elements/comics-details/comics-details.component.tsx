@@ -5,6 +5,7 @@ import { ButtonComponent } from '@/shared/components'
 import { LearningDetailsComponent } from '@/modules/views/curiosities/elements'
 import { IconArrow } from '@/shared/icons'
 import { useRouter } from 'next/navigation'
+import i18n from 'i18next'
 
 interface ComicsDetailsComponentProps {
   comicId: string // Assuming comicId is a string, change it if needed
@@ -64,12 +65,17 @@ const ComicsDetailsComponent: React.FC<{ comicId: string | number; onClose: () =
     const fetchComicDetails = async () => {
       try {
         setLoading(true)
-        const response = await fetch(`https://istrongapp.com/api/curiosities/comixes/${comicId}`, {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${token}`,
+        const currentLang = i18n.language
+        const langPrefix = currentLang === 'uk' ? 'uk' : 'en'
+        const response = await fetch(
+          `https://istrongapp.com/${langPrefix}/api/curiosities/comixes/${comicId}`,
+          {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           },
-        })
+        )
 
         if (!response.ok) {
           throw new Error(`Ошибка: ${response.status}`)
@@ -94,12 +100,17 @@ const ComicsDetailsComponent: React.FC<{ comicId: string | number; onClose: () =
 
   const fetchTechniqueDetails = async (techniqueId: string) => {
     try {
-      const response = await fetch(`https://istrongapp.com/api/techniques/${techniqueId}/`, {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const currentLang = i18n.language
+      const langPrefix = currentLang === 'uk' ? 'uk' : 'en'
+      const response = await fetch(
+        `https://istrongapp.com/${langPrefix}/api/techniques/${techniqueId}/`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      })
+      )
 
       if (!response.ok) {
         throw new Error(`Ошибка: ${response.status}`)
@@ -122,8 +133,10 @@ const ComicsDetailsComponent: React.FC<{ comicId: string | number; onClose: () =
 
   const fetchLearningDetails = async (type: string) => {
     try {
+      const currentLang = i18n.language
+      const langPrefix = currentLang === 'uk' ? 'uk' : 'en'
       const response = await fetch(
-        `https://istrongapp.com/api/curiosities/comixes/${comicId}/learning/`,
+        `https://istrongapp.com/${langPrefix}/api/curiosities/comixes/${comicId}/learning/`,
         {
           method: 'GET',
           headers: {
@@ -308,7 +321,7 @@ const ComicsDetailsComponent: React.FC<{ comicId: string | number; onClose: () =
             </button>
             <h4>{selectedTechnique?.name}</h4>
             <p>
-              {selectedTechnique?.description.split('\n').map((line, index) => (
+              {(selectedTechnique?.description ?? '').split('\n').map((line, index) => (
                 <span key={index}>
                   {line}
                   <br />

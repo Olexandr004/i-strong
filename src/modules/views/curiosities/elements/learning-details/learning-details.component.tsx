@@ -1,5 +1,6 @@
 import React from 'react'
 import styles from './learning-details.module.scss'
+import { useTranslation } from 'react-i18next'
 
 interface LearningDetailsComponentProps {
   content: string
@@ -12,13 +13,14 @@ const LearningDetailsComponent: React.FC<LearningDetailsComponentProps> = ({
   type,
   comicName,
 }) => {
+  const { t } = useTranslation()
   return (
     <div className={styles.learning_content}>
       {/* Условный рендеринг заголовков */}
-      {type === 'what_is_it' && <h3>Що таке {comicName}?</h3>}
-      {type === 'what_it_gives' && <h3>Що дає {comicName}?</h3>}
-      {type === 'tips' && <h3>Поради від Капібари</h3>}
-      {type === 'remember' && <h3>Пам&apos;ятки</h3>}
+      {type === 'what_is_it' && <h3>{t('learningDetails.what_is_it', { comicName })}</h3>}
+      {type === 'what_it_gives' && <h3>{t('learningDetails.what_it_gives', { comicName })}</h3>}
+      {type === 'tips' && <h3>{t('learningDetails.tips')}</h3>}
+      {type === 'remember' && <h3>{t('learningDetails.remember')}</h3>}
 
       {/* Контент, который будет всегда */}
       <div dangerouslySetInnerHTML={{ __html: content }} />

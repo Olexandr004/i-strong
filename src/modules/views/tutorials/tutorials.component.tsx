@@ -8,6 +8,7 @@ import { PhotoTutorialComponent } from '@/modules/views/tutorials/elements'
 import { LoadingComponent } from '@/modules/layouts/loading'
 import styles from './tutorials.module.scss'
 import { useTranslation } from 'react-i18next'
+import i18n from 'i18next'
 
 interface IFavoriteTechnique {
   technique: {
@@ -60,13 +61,18 @@ export const TutorialsComponent: FC<Readonly<ITutorialsComponent>> = () => {
 
   useEffect(() => {
     const fetchCategories = async () => {
+      const currentLang = i18n.language
+      const langPrefix = currentLang === 'uk' ? 'uk' : 'en'
       try {
-        const response = await fetch('https://istrongapp.com/api/techniques/categories/', {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${token}`,
+        const response = await fetch(
+          `https://istrongapp.com/${langPrefix}/api/techniques/categories/`,
+          {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           },
-        })
+        )
 
         if (response.ok) {
           const data = await response.json()
@@ -106,8 +112,10 @@ export const TutorialsComponent: FC<Readonly<ITutorialsComponent>> = () => {
     if (selectedCategory) {
       const fetchTechniques = async () => {
         try {
+          const currentLang = i18n.language
+          const langPrefix = currentLang === 'uk' ? 'uk' : 'en'
           const response = await fetch(
-            `https://istrongapp.com/api/techniques/category/${selectedCategory}/`,
+            `https://istrongapp.com/${langPrefix}/api/techniques/category/${selectedCategory}/`,
             {
               method: 'GET',
               headers: {
@@ -140,8 +148,10 @@ export const TutorialsComponent: FC<Readonly<ITutorialsComponent>> = () => {
     if (selectedTechnique) {
       const fetchTechniqueData = async () => {
         try {
+          const currentLang = i18n.language
+          const langPrefix = currentLang === 'uk' ? 'uk' : 'en'
           const response = await fetch(
-            `https://istrongapp.com/api/techniques/${selectedTechnique}/`,
+            `https://istrongapp.com/${langPrefix}/api/techniques/${selectedTechnique}/`,
             {
               method: 'GET',
               headers: {
@@ -175,10 +185,11 @@ export const TutorialsComponent: FC<Readonly<ITutorialsComponent>> = () => {
     }
 
     try {
-      // Если техника уже в избранном
+      const currentLang = i18n.language
+      const langPrefix = currentLang === 'uk' ? 'uk' : 'en'
       if (isFavorite) {
         const response = await fetch(
-          `https://istrongapp.com/api/users/favorites/techniques/${selectedTechnique}/`,
+          `https://istrongapp.com/${langPrefix}/api/users/favorites/techniques/${selectedTechnique}/`,
           {
             method: 'DELETE', // Удаляем технику из избранного
             headers: {
@@ -194,15 +205,19 @@ export const TutorialsComponent: FC<Readonly<ITutorialsComponent>> = () => {
           console.error('Ошибка при удалении техники из избранного:', response.status)
         }
       } else {
-        // Если техники нет в избранном
-        const response = await fetch('https://istrongapp.com/api/users/favorites/techniques/', {
-          method: 'POST', // Добавляем технику в избранное
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
+        const currentLang = i18n.language
+        const langPrefix = currentLang === 'uk' ? 'uk' : 'en'
+        const response = await fetch(
+          `https://istrongapp.com/${langPrefix}/api/users/favorites/techniques/`,
+          {
+            method: 'POST', // Добавляем технику в избранное
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ technique_id: selectedTechnique, is_favorite: true }), // Передаем данные
           },
-          body: JSON.stringify({ technique_id: selectedTechnique, is_favorite: true }), // Передаем данные
-        })
+        )
 
         if (response.ok) {
           setIsFavorite(true) // Обновляем состояние на true

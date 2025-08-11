@@ -3,6 +3,7 @@ import { useUserStore } from '@/shared/stores'
 import styles from './history.module.scss'
 import { IconNextArrow, IconArrow } from '@/shared/icons'
 import { useTranslation } from 'react-i18next'
+import i18n from 'i18next'
 
 interface Story {
   id: number
@@ -35,13 +36,18 @@ const HistoryComponent: React.FC<HistoryComponentProps> = ({ onBack }) => {
       try {
         setLoading(true)
         setError(null)
+        const currentLang = i18n.language
+        const langPrefix = currentLang === 'uk' ? 'uk' : 'en'
 
-        const response = await fetch('https://istrongapp.com/api/curiosities/stories/', {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${token}`, // Если токен нужен для авторизации
+        const response = await fetch(
+          `https://istrongapp.com/${langPrefix}/api/curiosities/stories/`,
+          {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${token}`, // Если токен нужен для авторизации
+            },
           },
-        })
+        )
 
         if (!response.ok) {
           throw new Error(`Ошибка: ${response.status}`)
@@ -67,13 +73,18 @@ const HistoryComponent: React.FC<HistoryComponentProps> = ({ onBack }) => {
     try {
       setLoading(true)
       setError(null)
+      const currentLang = i18n.language
+      const langPrefix = currentLang === 'uk' ? 'uk' : 'en'
 
-      const response = await fetch(`https://istrongapp.com/api/curiosities/stories/${id}`, {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const response = await fetch(
+        `https://istrongapp.com/${langPrefix}/api/curiosities/stories/${id}`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      })
+      )
 
       if (!response.ok) {
         throw new Error(`Ошибка: ${response.status}`)

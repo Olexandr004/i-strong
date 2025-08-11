@@ -8,6 +8,7 @@ import { DiaryNoteCardViewComponent } from '@/modules/views/diary/elements'
 import { ModalGettingToInstructionsComponent } from '@/shared/components'
 import { LoadingComponent } from '@/modules/layouts/loading'
 import { useTranslation } from 'react-i18next'
+import i18n from 'i18next'
 
 const ChestComponent: React.FC = () => {
   const { view, setView } = useChestStore()
@@ -55,12 +56,17 @@ const ChestComponent: React.FC = () => {
       // Симулируем задержку для показа загрузки хотя бы на 1 секунду
       setTimeout(async () => {
         try {
-          const response = await fetch('https://istrongapp.com/api/users/favorites/techniques/', {
-            method: 'GET',
-            headers: {
-              Authorization: `Bearer ${token}`,
+          const currentLang = i18n.language
+          const langPrefix = currentLang === 'uk' ? 'uk' : 'en'
+          const response = await fetch(
+            `https://istrongapp.com/${langPrefix}/api/users/favorites/techniques/`,
+            {
+              method: 'GET',
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
             },
-          })
+          )
 
           if (response.ok) {
             const data = await response.json()
@@ -84,7 +90,9 @@ const ChestComponent: React.FC = () => {
 
   const fetchTechniqueById = async (id: string) => {
     try {
-      const response = await fetch(`https://istrongapp.com/api/techniques/${id}/`, {
+      const currentLang = i18n.language
+      const langPrefix = currentLang === 'uk' ? 'uk' : 'en'
+      const response = await fetch(`https://istrongapp.com/${langPrefix}/api/techniques/${id}/`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -110,12 +118,17 @@ const ChestComponent: React.FC = () => {
       // Симулируем задержку для показа загрузки хотя бы на 1 секунду
       setTimeout(async () => {
         try {
-          const response = await fetch('https://istrongapp.com/api/users/favorites/diary/', {
-            method: 'GET',
-            headers: {
-              Authorization: `Bearer ${token}`,
+          const currentLang = i18n.language
+          const langPrefix = currentLang === 'uk' ? 'uk' : 'en'
+          const response = await fetch(
+            `https://istrongapp.com/${langPrefix}/api/users/favorites/diary/`,
+            {
+              method: 'GET',
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
             },
-          })
+          )
 
           if (response.ok) {
             const data = await response.json()
