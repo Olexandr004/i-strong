@@ -1,6 +1,7 @@
 import { LocalNotifications } from '@capacitor/local-notifications'
 import { Preferences } from '@capacitor/preferences'
 import { IconArrow } from '@/shared/icons'
+import i18n from '@/i18n'
 
 const BASE_URL = `https://front.istrongapp.com/`
 
@@ -31,7 +32,7 @@ export const notifications: NotificationConfig[] = [
   {
     id: 1,
     title: 'IStrong',
-    body: 'А ось і новий челендж🔥Що там цікавого підготувала Капібара цього разу?',
+    body: i18n.t('notifications.challenge'),
     url: `${BASE_URL}/challenges?path=new`,
     schedule: { at: adjustNotificationTime(10, 0), every: 'day', repeats: true }, // 10:00
     smallIcon: 'ic_stat_icon1',
@@ -39,7 +40,7 @@ export const notifications: NotificationConfig[] = [
   {
     id: 2,
     title: 'IStrong',
-    body: 'Привіт, ти як? Поділись своїм станом з Капібарою та отримай монетку.',
+    body: i18n.t('notifications.moodTrackerMorning'),
     url: `${BASE_URL}/select-mood`,
     schedule: { at: adjustNotificationTime(9, 0), every: 'day', repeats: true }, // 9:00
     smallIcon: 'ic_stat_icon1',
@@ -47,7 +48,7 @@ export const notifications: NotificationConfig[] = [
   {
     id: 3,
     title: 'IStrong',
-    body: 'Хей, як пройшов твій день? Розкажи Капібарі - і монетка твоя!',
+    body: i18n.t('notifications.moodTrackerEvening'),
     url: `${BASE_URL}/diary`,
     schedule: { at: adjustNotificationTime(18, 0), every: 'day', repeats: true }, // 18:00
     smallIcon: 'ic_stat_icon1',
@@ -79,16 +80,30 @@ export const scheduleNotifications = async (enabledNotifications: NotificationCo
   const permissionsGranted = await requestPermissions()
   if (!permissionsGranted) return
 
-  // Проверка, что уведомления разрешены (например, для moodTracker или challenge)
+  // Проверяем, разрешены ли уведомления глобально
   const moodTrackerEnabled = await getNotificationState('moodTrackerNotificationsEnabled')
   const challengeEnabled = await getNotificationState('challengeNotificationsEnabled')
 
   if (!moodTrackerEnabled && !challengeEnabled) {
     console.log('Уведомления отключены, не будет отправлено уведомлений')
-    return // Если оба типа уведомлений отключены, прекращаем выполнение
+    return
   }
 
   try {
+    // Получаем все текущие запланированные уведомления
+    const pending = await LocalNotifications.getPending()
+
+    // Берем только те уведомления, которые собираемся планировать
+    const pendingIds = pending.notifications.map((n) => n.id)
+    const newIds = enabledNotifications.map((n) => n.id)
+
+    // Отменяем только те, которые пересекаются с новыми, чтобы не создавать дубликаты
+    const idsToCancel = newIds.filter((id) => pendingIds.includes(id))
+    if (idsToCancel.length > 0) {
+      await cancelNotifications(idsToCancel)
+    }
+
+    // Планируем уведомления
     await LocalNotifications.schedule({
       notifications: enabledNotifications.map((notification) => ({
         title: notification.title,
