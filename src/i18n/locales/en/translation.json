@@ -290,5 +290,10 @@
     "what_it_gives": "What does {{comicName}} give?",
     "tips": "Tips from Capybara",
     "remember": "Reminders"
+  },
+  "notifications": {
+    "challenge": "Here’s a new challenge🔥 What did Capybara prepare this time?",
+    "moodTrackerMorning": "Hi, how are you? Share your mood with Capybara and get a coin.",
+    "moodTrackerEvening": "Hey, how was your day? Tell Capybara – and you’ll get a coin!"
   }
 }

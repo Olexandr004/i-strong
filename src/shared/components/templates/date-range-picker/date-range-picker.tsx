@@ -1,8 +1,8 @@
 'use client'
 
-import moment from 'moment/moment'
-
-import { FC, useState } from 'react'
+import moment from 'moment'
+import 'moment/locale/uk' // подключаем украинскую локаль
+import { FC, useState, useEffect } from 'react'
 
 import { ButtonComponent } from '@/shared/components'
 import { useQuerySearchParams } from '@/shared/hooks/useQuerySearchParams'
@@ -10,16 +10,26 @@ import { IconUpArrow } from '@/shared/icons'
 import { useCommonStore } from '@/shared/stores'
 
 import styles from './date-range-picker.module.scss'
+import { useTranslation } from 'react-i18next'
 
 interface IDatePicker {
   value: { first?: string; second?: string }
   onChange: (value: any) => void
 }
 
-// component
 const DateRangePicker: FC<IDatePicker> = ({ onChange, value }) => {
+  const { t, i18n } = useTranslation()
   const { setQuery } = useQuerySearchParams()
   const handleChangeCommonStore = useCommonStore((state) => state.handleChangeCommonStore)
+
+  // 👇 синхронизация moment локали с i18n
+  useEffect(() => {
+    if (i18n.language === 'uk') {
+      moment.locale('uk')
+    } else {
+      moment.locale('en')
+    }
+  }, [i18n.language])
 
   const [currentDate, setCurrentDate] = useState(moment())
 
@@ -31,6 +41,7 @@ const DateRangePicker: FC<IDatePicker> = ({ onChange, value }) => {
     return { day, weekNumber }
   })
 
+  // 👇 теперь moment.weekdaysShort() будет на нужной локали
   const daysOfWeek = moment.weekdaysShort().slice(1).concat(moment.weekdaysShort().slice(0, 1))
 
   const changePeriod = (amount: number, period: 'month' | 'year') => {
@@ -61,7 +72,6 @@ const DateRangePicker: FC<IDatePicker> = ({ onChange, value }) => {
     }
   }
 
-  // return
   return (
     <div className={styles.date_picker}>
       <div className={styles.date_picker__top}>
@@ -69,6 +79,7 @@ const DateRangePicker: FC<IDatePicker> = ({ onChange, value }) => {
           <IconUpArrow />
         </button>
 
+        {/* 👇 месяц теперь будет переводиться */}
         {currentDate.format('MMMM YYYY')}
 
         <button
@@ -81,7 +92,7 @@ const DateRangePicker: FC<IDatePicker> = ({ onChange, value }) => {
 
       {value.first && (
         <div className={styles.date_picker__selected_dates}>
-          {value.second && <span>від</span>}
+          {value.second && <span>{t('date.from')}</span>}
 
           <div className={styles.date_picker__selected_date}>
             {moment(value.first).format('DD.MM')}
@@ -89,7 +100,7 @@ const DateRangePicker: FC<IDatePicker> = ({ onChange, value }) => {
 
           {value.second && (
             <>
-              <span>до</span>
+              <span>{t('date.to')}</span>
 
               <div className={styles.date_picker__selected_date}>
                 {moment(value.second).format('DD.MM')}
@@ -130,7 +141,7 @@ const DateRangePicker: FC<IDatePicker> = ({ onChange, value }) => {
 
       <div className={styles.date_picker__bottom}>
         <ButtonComponent size={'small'} onClick={saveDatePeriod} variant={'outlined'}>
-          Зберегти
+          {t('reset_password.save')}
         </ButtonComponent>
       </div>
     </div>
